@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  walter-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: walter-marketing
+    ports:
+      - "3002:3000"
+    networks:
+      walter-network:
+        ipv4_address: 172.25.0.10
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_placeholder}
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-pk_test_placeholder}
+      - LMS_API_URL=${LMS_API_URL:-http://lms.localhost:8000}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  walter-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1
