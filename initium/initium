@@ -1,0 +1,53 @@
+#!/bin/bash
+# Initium CLI - Main Entry Point
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Import utilities
+source "$SCRIPT_DIR/scripts/utils/colors.sh" 2>/dev/null || {
+    print_error() { echo "ERROR: $1" >&2; }
+    print_success() { echo "SUCCESS: $1"; }
+    print_status() { echo "INFO: $1"; }
+}
+
+show_usage() {
+    echo "🚀 Initium - AI-Powered Development Toolkit"
+    echo "==========================================="
+    echo ""
+    echo "Usage: ./initium <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  wizard              - Interactive project setup wizard"
+    echo "  create              - Create new project from template"
+    echo "  docs                - Generate documentation"
+    echo "  claude              - Access Claude Flow tools"
+    echo "  list                - List available templates"
+    echo "  update              - Update all components"
+    echo ""
+}
+
+case "${1:-help}" in
+    "wizard")
+        exec "$SCRIPT_DIR/scripts/commands/wizard.sh" "${@:2}"
+        ;;
+    "create")
+        exec "$SCRIPT_DIR/scripts/commands/create.sh" "${@:2}"
+        ;;
+    "docs")
+        exec "$SCRIPT_DIR/scripts/commands/docs.sh" "${@:2}"
+        ;;
+    "claude")
+        exec "$SCRIPT_DIR/claude-flow/claude-flow.sh" "${@:2}"
+        ;;
+    "list")
+        exec "$SCRIPT_DIR/scripts/commands/list.sh" "${@:2}"
+        ;;
+    "update")
+        exec "$SCRIPT_DIR/scripts/commands/update.sh" "${@:2}"
+        ;;
+    *)
+        show_usage
+        ;;
+esac
