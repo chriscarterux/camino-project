@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-09-30.clover",
-});
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-09-30.clover",
+    })
+  : null;
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -11,6 +13,10 @@ export async function GET(request: NextRequest) {
 
   if (!tier) {
     return NextResponse.json({ error: "Tier is required" }, { status: 400 });
+  }
+
+  if (!stripe) {
+    return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
   }
 
   try {
