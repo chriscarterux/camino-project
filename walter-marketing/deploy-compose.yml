@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  walter-marketing:
+    image: node:24-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run build && npm start"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_placeholder}
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-pk_test_placeholder}
+      - LMS_API_URL=${LMS_API_URL:-http://lms.localhost:8000}
+    volumes:
+      - /root/walter-project/walter-marketing:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
