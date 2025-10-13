@@ -33,8 +33,9 @@ RUN adduser --system --uid 1001 nextjs
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Copy public folder if it exists
-COPY --from=builder --chown=nextjs:nodejs /app/public* ./public/ 2>/dev/null || true
+# Create public directory
+RUN mkdir -p ./public
+RUN chown nextjs:nodejs ./public
 
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
