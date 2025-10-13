@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Award, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Circle, Award, Download } from "lucide-react";
 import { ProgressRing } from "@/components/lms/ProgressRing";
 import courseLibrary from "@/data/course-library.json";
 
