@@ -19,30 +19,25 @@ export default function LibraryLessonPage() {
   useEffect(() => {
     async function loadLesson() {
       try {
-        // TODO: Fetch actual lesson from Frappe API
-        // For now, mock data
-        const mockLesson = {
-          id: lessonId,
-          number: parseInt(lessonId.replace('lesson-', '')),
-          title: `Lesson ${lessonId.replace('lesson-', '')}`,
-          content: `
-            <h2>Welcome to this lesson</h2>
-            <p>This lesson content comes from the Training Manual document.</p>
-            <p>In production, this content will be loaded from Frappe LMS where admins have added the full lesson text from the Word documents.</p>
-            <h3>Key Topics:</h3>
-            <ul>
-              <li>Understanding core concepts</li>
-              <li>Practical application</li>
-              <li>Real-world examples</li>
-            </ul>
-            <p>Complete this lesson to continue your learning journey.</p>
-          `,
-          completed: false,
-        };
+        // Fetch real lesson from Frappe API
+        const response = await fetch(`/api/lms/lesson/${lessonId}`);
 
-        setLesson(mockLesson);
+        if (!response.ok) {
+          throw new Error('Lesson not found');
+        }
+
+        const { lesson: frappeLesson } = await response.json();
+
+        setLesson({
+          id: frappeLesson.name,
+          number: frappeLesson.idx || 1,
+          title: frappeLesson.title,
+          content: frappeLesson.body || '<p>Lesson content loading...</p>',
+          completed: false, // TODO: Check actual completion status
+        });
       } catch (error) {
         console.error('Error loading lesson:', error);
+        setLesson(null);
       } finally {
         setIsLoading(false);
       }
