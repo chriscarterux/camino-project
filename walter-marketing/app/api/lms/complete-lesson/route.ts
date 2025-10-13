@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { completeLesson } from '@/lib/lms/progress';
+import { completelesson } from '@/lib/lms/progress';
 
 /**
  * Mark a lesson as complete
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Mark lesson complete in Frappe
-    await completeLesson(lessonId, user.email!, profile.lms_api_token);
+    await completelesson(lessonId, user.email!, profile.lms_api_token);
 
     // TODO: Update progress cache in Supabase for fast dashboard queries
 
