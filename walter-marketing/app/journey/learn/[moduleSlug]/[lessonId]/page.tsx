@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import dynamic from 'next/dynamic';
 
 // Dynamic import to avoid SSR issues with react-player
-const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 interface LessonData {
   id: string;
