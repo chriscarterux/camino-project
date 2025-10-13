@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resend, RESEND_FROM } from '@/lib/resend';
-import { DailyReminderEmail } from '@/lib/emails/daily-reminder';
+import DailyReminderEmail from '@/lib/emails/daily-reminder';
+import React from 'react';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
       from: RESEND_FROM,
       to: email,
       subject: `Your daily reflection awaits ${streakDays > 0 ? `🔥 ${streakDays} day streak!` : ''}`,
-      react: DailyReminderEmail({ name, prompt, streakDays }),
+      react: React.createElement(DailyReminderEmail, { name, prompt, streakDays }),
     });
 
     if (error) {

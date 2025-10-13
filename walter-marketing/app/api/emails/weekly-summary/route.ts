@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resend, RESEND_FROM } from '@/lib/resend';
-import { WeeklySummaryEmail } from '@/lib/emails/weekly-summary';
+import WeeklySummaryEmail from '@/lib/emails/weekly-summary';
+import React from 'react';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
       from: RESEND_FROM,
       to: email,
       subject: 'Your weekly reflection summary',
-      react: WeeklySummaryEmail({ name, themes, reflectionCount }),
+      react: React.createElement(WeeklySummaryEmail, { name, themes, reflectionCount }),
     });
 
     if (error) {

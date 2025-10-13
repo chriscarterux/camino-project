@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resend, RESEND_FROM } from '@/lib/resend';
-import { WelcomeEmail } from '@/lib/emails/welcome';
+import WelcomeEmail from '@/lib/emails/welcome';
+import React from 'react';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
       from: RESEND_FROM,
       to: email,
       subject: 'Welcome to your Camino',
-      react: WelcomeEmail({ name }),
+      react: React.createElement(WelcomeEmail, { name }),
     });
 
     if (error) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resend, RESEND_FROM } from '@/lib/resend';
-import { ContactNotificationEmail } from '@/lib/emails/contact-notification';
+import ContactNotificationEmail from '@/lib/emails/contact-notification';
+import React from 'react';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
       to: 'support@camino.app', // Update with actual support email
       replyTo: email,
       subject: `Contact Form: ${subject}`,
-      react: ContactNotificationEmail({ name, email, subject, message }),
+      react: React.createElement(ContactNotificationEmail, { name, email, subject, message }),
     });
 
     if (error) {
