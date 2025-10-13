@@ -4,9 +4,10 @@ import { createClient } from '@/lib/supabase/server';
 // GET - Fetch single reflection
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -38,9 +39,10 @@ export async function GET(
 // PATCH - Update reflection
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -75,9 +77,10 @@ export async function PATCH(
 // DELETE - Delete reflection
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 

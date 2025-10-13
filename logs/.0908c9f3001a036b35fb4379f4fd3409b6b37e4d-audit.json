@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/chriscarter/Documents/GitHub/walter-project/logs/.0908c9f3001a036b35fb4379f4fd3409b6b37e4d-audit.json",
+    "files": [
+        {
+            "date": 1760320991792,
+            "name": "/Users/chriscarter/Documents/GitHub/walter-project/logs/mcp-puppeteer-2025-10-12.log",
+            "hash": "11e32df5894826fb0c54c96c334dea0f8e39c8765159ea68e6ce4c564c1267fc"
+        }
+    ],
+    "hashType": "sha256"
+}
