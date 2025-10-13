@@ -39,6 +39,12 @@ export default function SignupPage() {
         throw signUpError;
       }
 
+      // Sync user to Frappe LMS
+      await fetch('/api/lms/sync-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
       // Send welcome email
       await fetch('/api/emails/welcome', {
         method: 'POST',

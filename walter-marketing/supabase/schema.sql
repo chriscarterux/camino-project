@@ -10,6 +10,9 @@ create table public.profiles (
   name text,
   plan text not null default 'reflect' check (plan in ('reflect', 'journey', 'coach')),
   streak_days integer not null default 0,
+  lms_user_id text, -- Frappe user email
+  lms_api_token text, -- Encrypted Frappe API token
+  lms_synced_at timestamp with time zone,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
