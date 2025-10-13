@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Download, ExternalLink, Bell, Trash2 } from "lucide-react";
 
