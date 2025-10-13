@@ -126,7 +126,10 @@ async function uploadCourse(courseData) {
         published: 1,
         paid_course: 0, // Access controlled by Camino subscription
         enable_certification: 1,
-        category: courseData.categoryId,
+        category: courseData.categoryName, // Use full category name
+        instructors: [
+          { instructor: 'Administrator' }
+        ],
         // Add metadata to track Camino theme
         custom_theme: courseData.theme,
       }),

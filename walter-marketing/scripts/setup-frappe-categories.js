@@ -19,9 +19,8 @@ async function createCategory(category) {
         'Authorization': `token ${FRAPPE_API_KEY}:${FRAPPE_API_SECRET}`,
       },
       body: JSON.stringify({
-        category_name: category.name,
+        category: category.name,
         name: category.id,
-        description: category.description,
       }),
     });
 
