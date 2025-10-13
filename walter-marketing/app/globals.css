@@ -76,6 +76,17 @@
   --shadow-2xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.45);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+
+  /* Camino Design System */
+  --camino-gold: #E2C379;
+  --camino-sandstone: #F4E9D8;
+  --camino-slate: #2D2F33;
+  --camino-ivory: #FFFBF5;
+  --camino-midnight: #1A1B1C;
+
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --transition-base: 200ms ease-in-out;
 }
 
 .dark {
@@ -142,3 +153,403 @@
   --transition-base: 200ms ease-in-out;
 }
 
+/* =====================================================
+   ACCESSIBILITY: REDUCED MOTION SUPPORT
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Hide decorative animations entirely */
+  .animate-ping,
+  .animate-pulse,
+  .animate-spin,
+  .animate-bounce {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   LESSON CONTENT TYPOGRAPHY STYLES
+   Styled for mammoth.js parsed Word documents
+   ===================================================== */
+
+@layer components {
+  .lesson-content {
+    @apply text-[#2D2F33] leading-relaxed;
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  /* Headings */
+  .lesson-content h2,
+  .lesson-content .lesson-heading {
+    @apply font-serif font-bold text-[#2D2F33] mt-12 mb-6;
+    font-size: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--camino-sandstone);
+  }
+
+  .lesson-content h3,
+  .lesson-content .section-heading {
+    @apply font-serif font-bold text-[#2D2F33] mt-10 mb-4;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .lesson-content h4,
+  .lesson-content .subsection-heading {
+    @apply font-serif font-semibold text-[#2D2F33] mt-8 mb-3;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  /* First paragraph special styling */
+  .lesson-content > div > p:first-child {
+    @apply text-xl;
+    line-height: 1.7;
+    color: rgba(45, 47, 51, 0.9);
+  }
+
+  /* Paragraphs */
+  .lesson-content p {
+    @apply mb-6;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .lesson-content p:last-child {
+    @apply mb-0;
+  }
+
+  /* Links */
+  .lesson-content a {
+    @apply text-[#E2C379] underline decoration-[#E2C379]/30 underline-offset-2;
+    transition: all 200ms ease-in-out;
+  }
+
+  .lesson-content a:hover {
+    @apply decoration-[#E2C379];
+    color: #d4b568;
+  }
+
+  /* Strong and Emphasis */
+  .lesson-content strong,
+  .lesson-content b {
+    @apply font-semibold text-[#2D2F33];
+    font-weight: 600;
+  }
+
+  .lesson-content em,
+  .lesson-content i {
+    @apply italic text-[#2D2F33]/90;
+  }
+
+  /* Lists */
+  .lesson-content ul,
+  .lesson-content ol {
+    @apply mb-6 pl-8 space-y-3;
+  }
+
+  .lesson-content ul {
+    list-style-type: none;
+  }
+
+  .lesson-content ul li {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .lesson-content ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--camino-gold);
+    border-radius: 50%;
+  }
+
+  .lesson-content ol {
+    list-style: none;
+    counter-reset: item;
+  }
+
+  .lesson-content ol li {
+    position: relative;
+    padding-left: 2rem;
+    counter-increment: item;
+  }
+
+  .lesson-content ol li::before {
+    content: counter(item) ".";
+    position: absolute;
+    left: 0;
+    font-weight: 600;
+    color: var(--camino-gold);
+    font-family: var(--font-serif);
+  }
+
+  .lesson-content li {
+    @apply leading-relaxed;
+  }
+
+  .lesson-content li p {
+    @apply mb-3;
+  }
+
+  /* Nested lists */
+  .lesson-content ul ul,
+  .lesson-content ol ul,
+  .lesson-content ul ol,
+  .lesson-content ol ol {
+    @apply mt-3 mb-3;
+  }
+
+  /* Blockquotes */
+  .lesson-content blockquote {
+    @apply my-8 pl-6 pr-6 py-6 rounded-xl;
+    background: linear-gradient(135deg, var(--camino-sandstone) 0%, var(--camino-ivory) 100%);
+    border-left: 4px solid var(--camino-gold);
+    font-size: 1.125rem;
+    line-height: 1.7;
+    font-style: italic;
+    color: rgba(45, 47, 51, 0.85);
+  }
+
+  .lesson-content blockquote.highlight {
+    background: linear-gradient(135deg, #fff4d9 0%, var(--camino-sandstone) 100%);
+    border-left-width: 6px;
+    box-shadow: 0 4px 12px rgba(226, 195, 121, 0.15);
+  }
+
+  .lesson-content blockquote p {
+    @apply mb-4;
+  }
+
+  .lesson-content blockquote p:last-child {
+    @apply mb-0;
+  }
+
+  .lesson-content blockquote::before {
+    content: '"';
+    font-size: 3rem;
+    line-height: 0;
+    color: var(--camino-gold);
+    font-family: Georgia, serif;
+    opacity: 0.3;
+    float: left;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Code blocks */
+  .lesson-content code {
+    @apply px-2 py-1 rounded bg-[#2D2F33]/5 border border-[#2D2F33]/10;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: #2D2F33;
+  }
+
+  .lesson-content pre {
+    @apply my-6 p-6 rounded-xl overflow-x-auto;
+    background: #2D2F33;
+    border: 1px solid rgba(226, 195, 121, 0.2);
+  }
+
+  .lesson-content pre code {
+    @apply px-0 py-0 bg-transparent border-0;
+    color: var(--camino-sandstone);
+    font-size: 0.95rem;
+  }
+
+  /* Tables */
+  .lesson-content .table-wrapper {
+    @apply my-8 overflow-x-auto rounded-xl border border-[#F4E9D8];
+  }
+
+  .lesson-content table {
+    @apply w-full;
+    border-collapse: collapse;
+    font-size: 1rem;
+  }
+
+  .lesson-content th {
+    @apply font-semibold text-left px-4 py-3;
+    background: var(--camino-sandstone);
+    color: var(--camino-slate);
+    border-bottom: 2px solid var(--camino-gold);
+  }
+
+  .lesson-content td {
+    @apply px-4 py-3 border-b border-[#F4E9D8];
+    color: rgba(45, 47, 51, 0.9);
+  }
+
+  .lesson-content tr:last-child td {
+    border-bottom: none;
+  }
+
+  .lesson-content tr:hover {
+    background: rgba(244, 233, 216, 0.3);
+  }
+
+  /* Horizontal rules */
+  .lesson-content hr {
+    @apply my-12 border-0 h-px;
+    background: linear-gradient(to right, transparent, var(--camino-gold), transparent);
+  }
+
+  /* Images - Hide broken ones, style valid ones */
+  .lesson-content img {
+    @apply my-8 rounded-xl shadow-lg max-w-full h-auto mx-auto;
+  }
+
+  .lesson-content img[src=""],
+  .lesson-content img:not([src]),
+  .lesson-content img[src^="data:image"] {
+    display: none;
+  }
+
+  /* Callout boxes (if present in Word styles) */
+  .lesson-content .callout,
+  .lesson-content .note,
+  .lesson-content .warning,
+  .lesson-content .tip {
+    @apply my-6 p-6 rounded-xl border-l-4;
+  }
+
+  .lesson-content .note {
+    background: #e3f2fd;
+    border-color: #2196f3;
+  }
+
+  .lesson-content .warning {
+    background: #fff3e0;
+    border-color: #ff9800;
+  }
+
+  .lesson-content .tip {
+    background: #f1f8e9;
+    border-color: #8bc34a;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .lesson-content {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .lesson-content h2,
+    .lesson-content .lesson-heading {
+      font-size: 1.75rem;
+      margin-top: 2rem;
+    }
+
+    .lesson-content h3,
+    .lesson-content .section-heading {
+      font-size: 1.375rem;
+      margin-top: 1.75rem;
+    }
+
+    .lesson-content h4,
+    .lesson-content .subsection-heading {
+      font-size: 1.125rem;
+      margin-top: 1.5rem;
+    }
+
+    .lesson-content blockquote {
+      @apply pl-4 pr-4 py-4 text-base;
+    }
+
+    .lesson-content ul,
+    .lesson-content ol {
+      @apply pl-6;
+    }
+
+    .lesson-content p {
+      text-align: left;
+      hyphens: none;
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .lesson-content {
+      font-size: 12pt;
+      line-height: 1.6;
+    }
+
+    .lesson-content h2,
+    .lesson-content h3,
+    .lesson-content h4 {
+      page-break-after: avoid;
+    }
+
+    .lesson-content p,
+    .lesson-content blockquote {
+      page-break-inside: avoid;
+    }
+  }
+}
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes confetti {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-confetti {
+  animation: confetti linear forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out;
+}

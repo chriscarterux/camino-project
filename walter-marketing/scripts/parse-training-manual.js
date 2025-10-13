@@ -20,25 +20,41 @@ async function parseTrainingManual(docxPath) {
   }
 
   try {
-    // Convert Word doc to HTML
+    // Convert Word doc to HTML with improved options
     const result = await mammoth.convertToHtml(
       { path: docxPath },
       {
+        // Map Word styles to semantic HTML
         styleMap: [
-          "p[style-name='Heading 1'] => h2:fresh",
-          "p[style-name='Heading 2'] => h3:fresh",
-          "p[style-name='Heading 3'] => h4:fresh",
+          "p[style-name='Heading 1'] => h2.lesson-heading:fresh",
+          "p[style-name='Heading 2'] => h3.section-heading:fresh",
+          "p[style-name='Heading 3'] => h4.subsection-heading:fresh",
+          "p[style-name='Quote'] => blockquote:fresh",
+          "p[style-name='Intense Quote'] => blockquote.highlight:fresh",
+          "b => strong",
+          "i => em",
         ],
+        // Convert images to data URIs (will be handled/removed in post-processing)
+        convertImage: mammoth.images.imgElement(function(image) {
+          // Return empty string to skip broken images
+          // In production, you'd want to extract and upload these properly
+          return { src: '' };
+        }),
+        // Preserve emphasis and strong tags
+        includeDefaultStyleMap: true,
       }
     );
 
-    const html = result.value;
+    let html = result.value;
     const messages = result.messages;
 
     // Log any conversion warnings
     if (messages.length > 0) {
       console.log(`  ℹ️  Conversion warnings: ${messages.length}`);
     }
+
+    // Post-process HTML to improve structure
+    html = postProcessHtml(html);
 
     // Split HTML into lessons by h2 headings
     const lessons = splitIntoLessons(html);
@@ -51,6 +67,28 @@ async function parseTrainingManual(docxPath) {
 }
 
 /**
+ * Post-process HTML to clean up and enhance structure
+ */
+function postProcessHtml(html) {
+  // Remove empty images
+  html = html.replace(/<img[^>]*src=""[^>]*>/gi, '');
+  html = html.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/gi, '');
+
+  // Remove empty paragraphs
+  html = html.replace(/<p>\s*<\/p>/gi, '');
+  html = html.replace(/<p>&nbsp;<\/p>/gi, '');
+
+  // Clean up multiple consecutive line breaks
+  html = html.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>');
+
+  // Wrap tables if they exist
+  html = html.replace(/<table/gi, '<div class="table-wrapper"><table');
+  html = html.replace(/<\/table>/gi, '</table></div>');
+
+  return html;
+}
+
+/**
  * Split HTML content into individual lessons
  * Assumes h2 tags separate lessons
  */
@@ -58,7 +96,7 @@ function splitIntoLessons(html) {
   const lessons = [];
 
   // Split by <h2> tags
-  const sections = html.split(/<h2>/i);
+  const sections = html.split(/<h2[^>]*>/i);
 
   sections.forEach((section, index) => {
     if (index === 0 && !section.trim()) {
@@ -73,7 +111,7 @@ function splitIntoLessons(html) {
         lessons.push({
           number: 1,
           title: 'Introduction',
-          body: `<div>${section}</div>`,
+          body: cleanLessonBody(section),
           duration: estimateDuration(section),
         });
       }
@@ -94,7 +132,7 @@ function splitIntoLessons(html) {
     lessons.push({
       number,
       title,
-      body: `<div>${body}</div>`,
+      body: cleanLessonBody(body),
       duration: estimateDuration(body),
     });
   });
@@ -104,7 +142,7 @@ function splitIntoLessons(html) {
     lessons.push({
       number: 1,
       title: 'Course Content',
-      body: html,
+      body: cleanLessonBody(html),
       duration: estimateDuration(html),
     });
   }
@@ -113,9 +151,20 @@ function splitIntoLessons(html) {
 }
 
 /**
+ * Clean lesson body HTML
+ */
+function cleanLessonBody(body) {
+  // Wrap in a div with a class for styling
+  return `<div class="lesson-content">${body}</div>`;
+}
+
+/**
  * Parse lesson title to extract number and clean title
  */
 function parseTitle(rawTitle, defaultNumber) {
+  // Remove HTML tags from title
+  rawTitle = rawTitle.replace(/<[^>]*>/g, '');
+
   // Remove common prefixes and clean
   let title = rawTitle
     .replace(/^(Lesson|Module|Chapter|Section)\s*\d*:?\s*/i, '')
@@ -138,7 +187,9 @@ function parseTitle(rawTitle, defaultNumber) {
  * Estimate lesson duration based on content length
  */
 function estimateDuration(content) {
-  const wordCount = content.split(/\s+/).length;
+  // Strip HTML tags for word count
+  const textContent = content.replace(/<[^>]*>/g, ' ');
+  const wordCount = textContent.split(/\s+/).filter(w => w.length > 0).length;
   const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
   return `${Math.max(5, Math.min(20, readingTime))} min`;
 }
