@@ -4,8 +4,8 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Walter - Your AI-Powered Thinking Partner",
-  description: "Transform personal reflection into a guided philosophy for modern life. Walter helps you move from insight to action through intelligent, adaptive reflection.",
+  title: "Camino — Guided reflection for a meaningful life",
+  description: "Understand your patterns, act with purpose, and grow with a calm, intelligent guide. Camino helps you reflect, discover, and grow through daily guided reflection.",
 };
 
 export default function RootLayout({

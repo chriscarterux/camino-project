@@ -2,62 +2,20 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { useState } from "react";
 
-const pricingTiers = [
-  {
-    name: "Reflect",
-    price: "Free",
-    description: "Free guided journaling + basic insights",
-    features: [
-      "Daily reflection prompts",
-      "Basic AI insights",
-      "Weekly summaries",
-      "Exportable reflections",
-    ],
-    cta: "Start Free",
-    href: "/journal",
-    highlighted: false,
-  },
-  {
-    name: "Journey",
-    price: "$19.95",
-    period: "/month",
-    description: "Full reflection curriculum + adaptive plan + exports",
-    features: [
-      "Everything in Reflect",
-      "AI pattern detection",
-      "Structured learning paths",
-      "4 core modules (Awareness, Belonging, Resilience, Purpose)",
-      "Adaptive lesson recommendations",
-      "Advanced exports (.txt/.json)",
-      "Priority support",
-    ],
-    cta: "Start Journey",
-    href: "/api/checkout?tier=journey",
-    highlighted: true,
-  },
-  {
-    name: "Coach",
-    price: "$1,000",
-    period: "/month",
-    description: "1:1 coaching (3-month minimum)",
-    note: "3-month minimum commitment",
-    features: [
-      "Everything in Journey",
-      "Biweekly 60-minute sessions",
-      "Personalized reflection prompts",
-      "AI-generated session summaries",
-      "Custom growth plan with milestones",
-      "Access to full Journey curriculum",
-    ],
-    cta: "Apply for Coaching",
-    href: "/coaching",
-    highlighted: false,
-  },
-];
+export default function JournalPage() {
+  const [reflection, setReflection] = useState("");
+  const [showInsight, setShowInsight] = useState(false);
+  const [showSignupGate, setShowSignupGate] = useState(false);
 
-export default function PricingPage() {
+  const handleSubmit = () => {
+    // In production, this would call AI API
+    setShowInsight(true);
+    setTimeout(() => setShowSignupGate(true), 2000);
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Navigation */}
@@ -85,139 +43,169 @@ export default function PricingPage() {
               <Link href="/login">Login</Link>
             </Button>
             <Button asChild size="sm" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
-              <Link href="/journal">Start your Camino</Link>
+              <Link href="/signup">Sign up</Link>
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* Pricing Header */}
-      <section className="container mx-auto px-4 py-16 md:py-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
-            Simple plans for every path
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Start reflecting for free, or unlock deeper guidance through structured journeys and personalized coaching.
-          </p>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="container mx-auto px-4 pb-24">
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {pricingTiers.map((tier) => (
-            <div
-              key={tier.name}
-              className={`border rounded-2xl p-8 flex flex-col bg-card relative ${
-                tier.highlighted
-                  ? "border-2 border-[#E2C379] shadow-lg"
-                  : "hover:shadow-md transition-shadow"
-              }`}
-            >
-              {tier.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E2C379] text-[#2D2F33] px-3 py-1 rounded-full text-xs font-medium">
-                  Most Popular
-                </div>
-              )}
-              <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
-              <div className="flex items-baseline mb-2">
-                <span className="text-4xl font-bold">{tier.price}</span>
-                {tier.period && (
-                  <span className="text-muted-foreground ml-1 text-sm">
-                    {tier.period}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground mb-1">
-                {tier.description}
-              </p>
-              {tier.note && (
-                <p className="text-xs text-muted-foreground mb-6">
-                  {tier.note}
-                </p>
-              )}
-              <Button
-                asChild
-                className={`mb-8 ${tier.highlighted ? "bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]" : ""}`}
-                variant={tier.highlighted ? "default" : "outline"}
-              >
-                <Link href={tier.href}>{tier.cta}</Link>
-              </Button>
-              <ul className="space-y-3 flex-grow">
-                {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 shrink-0 mt-0.5 text-[#E2C379]" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-16 border-t bg-muted/30">
+      {/* Hero Section */}
+      <section className="py-16 md:py-20 border-b">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl font-serif font-bold mb-8">
-              Secure & Trusted
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
+              Try your first guided reflection
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+              Take three minutes to notice something real. Experience how Camino helps you turn reflection into insight.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Reflection Interface */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            {!showInsight ? (
+              <>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-serif font-bold mb-4">
+                    A simple space to pause and think
+                  </h2>
+                  <p className="text-muted-foreground mb-8">
+                    Begin your Camino with a single question. The prompt below invites you to write freely for a few minutes—no judgment, no pressure. Camino will help you see patterns and insights afterward.
+                  </p>
+                </div>
+
+                {/* Prompt */}
+                <div className="bg-[#F4E9D8] border-l-4 border-[#E2C379] rounded-lg p-6 mb-8">
+                  <p className="text-lg italic text-[#2D2F33]">
+                    When was the last time you felt truly present? What was happening around you?
+                  </p>
+                </div>
+
+                {/* Editor */}
+                <div className="mb-8">
+                  <textarea
+                    className="w-full min-h-[300px] p-6 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#E2C379] focus:border-transparent"
+                    placeholder="Start writing your reflection here..."
+                    value={reflection}
+                    onChange={(e) => setReflection(e.target.value)}
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {reflection.length} characters
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleSubmit}
+                  disabled={reflection.length < 50}
+                  size="lg"
+                  className="w-full bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]"
+                >
+                  Generate Insight
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <>
+                {/* AI Summary */}
+                <div className="mb-8 bg-card border rounded-2xl p-8">
+                  <h3 className="text-xl font-bold mb-4">Your reflection summary</h3>
+                  <div className="bg-muted/30 p-6 rounded-lg mb-6">
+                    <p className="text-muted-foreground italic">
+                      You often feel most grounded when you're in nature or in quiet moments without screens. Consider setting aside a few minutes daily to recreate that presence.
+                    </p>
+                  </div>
+
+                  {showSignupGate ? (
+                    <>
+                      <div className="border-t pt-6 mt-6">
+                        <h3 className="text-xl font-bold mb-4">Your insight is ready</h3>
+                        <p className="text-muted-foreground mb-6">
+                          To save and revisit your reflection, create your free Camino account. Your data is private, encrypted, and always yours.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <Button asChild size="lg" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33] flex-1">
+                            <Link href="/signup">Create my free account</Link>
+                          </Button>
+                          <Button asChild variant="outline" size="lg" className="flex-1">
+                            <Link href="/">Continue without saving</Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center text-muted-foreground">
+                      Processing your reflection...
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Reflection Works */}
+      <section className="py-16 bg-muted/30 border-t">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-serif font-bold mb-6">
+              The science of slowing down
             </h2>
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Stripe secure payments</span>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Journaling for just five minutes a day improves focus, reduces stress, and builds emotional resilience. Camino turns that practice into a guided experience that learns and grows with you.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 border-t">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="border rounded-2xl p-6 bg-card">
+                <p className="text-lg italic mb-4">
+                  "This simple question hit me harder than therapy sessions."
+                </p>
+                <p className="text-sm text-muted-foreground">— Early Beta User</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Cancel anytime</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Encrypted data</span>
+              <div className="border rounded-2xl p-6 bg-card">
+                <p className="text-lg italic mb-4">
+                  "Camino made reflection easy—I finally understood my thought patterns."
+                </p>
+                <p className="text-sm text-muted-foreground">— Reflect User</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-16 border-t">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-serif font-bold text-center mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="max-w-3xl mx-auto space-y-8">
-            {[
-              {
-                q: "Can I switch plans later?",
-                a: "Yes! Upgrade or downgrade anytime. Changes take effect at your next billing cycle.",
-              },
-              {
-                q: "What's included in the Journey program?",
-                a: "Four core modules: Awareness, Belonging, Resilience, and Purpose. Each includes video lessons, reflection exercises, and adaptive AI guidance. Most users complete modules in 2-3 weeks each.",
-              },
-              {
-                q: "How does the AI work?",
-                a: "AI analyzes your reflections to detect themes and patterns, then mirrors them back with personalized insights. All processing is private and encrypted.",
-              },
-              {
-                q: "Can I cancel anytime?",
-                a: "Reflect and Journey tiers can be cancelled anytime. Coach tier requires a 3-month minimum commitment, then becomes month-to-month.",
-              },
-            ].map((faq) => (
-              <div key={faq.q}>
-                <h3 className="text-lg font-bold mb-2">{faq.q}</h3>
-                <p className="text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
+      {/* Closing CTA */}
+      <section className="py-20 bg-muted/30 border-t">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+              Start your Camino today
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Clarity begins with a single question. Take your first step.
+            </p>
+            <Button asChild size="lg" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
+              <Link href="/signup">
+                Start free
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-12 md:py-16 bg-card mt-auto">
+      <footer className="border-t py-12 md:py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
             {/* Brand */}

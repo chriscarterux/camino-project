@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "title": "Presence and Awareness",
+    "body": "When was the last time you felt truly present? What was happening around you?",
+    "category": "awareness",
+    "difficulty": "beginner"
+  },
+  {
+    "id": 2,
+    "title": "Emotional Patterns",
+    "body": "What emotion has been most present for you this week? What might it be teaching you?",
+    "category": "awareness",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 3,
+    "title": "Values Alignment",
+    "body": "What's one thing you learned about yourself this week?",
+    "category": "awareness",
+    "difficulty": "beginner"
+  },
+  {
+    "id": 4,
+    "title": "Connection and Belonging",
+    "body": "When do you feel most connected to others? What creates that sense of belonging?",
+    "category": "belonging",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 5,
+    "title": "Inner Narrative",
+    "body": "What story are you telling yourself about who you are right now? Is it serving you?",
+    "category": "awareness",
+    "difficulty": "advanced"
+  },
+  {
+    "id": 6,
+    "title": "Growth Through Challenge",
+    "body": "What challenge are you facing that might actually be shaping you for the better?",
+    "category": "resilience",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 7,
+    "title": "Purpose Exploration",
+    "body": "If you could design your ideal day around what truly matters, what would it include?",
+    "category": "purpose",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 8,
+    "title": "Emotional Triggers",
+    "body": "What triggers tension or stress in your life? What pattern lies beneath it?",
+    "category": "resilience",
+    "difficulty": "advanced"
+  },
+  {
+    "id": 9,
+    "title": "Self-Compassion",
+    "body": "How would you speak to a friend who felt the way you do right now?",
+    "category": "belonging",
+    "difficulty": "beginner"
+  },
+  {
+    "id": 10,
+    "title": "Clarity and Direction",
+    "body": "What decision or direction have you been avoiding? What's really holding you back?",
+    "category": "purpose",
+    "difficulty": "advanced"
+  },
+  {
+    "id": 11,
+    "title": "Gratitude Practice",
+    "body": "What are three small moments from this week that brought you peace or joy?",
+    "category": "awareness",
+    "difficulty": "beginner"
+  },
+  {
+    "id": 12,
+    "title": "Life Alignment",
+    "body": "Looking at your week, where did your actions align with your values? Where didn't they?",
+    "category": "purpose",
+    "difficulty": "intermediate"
+  }
+]

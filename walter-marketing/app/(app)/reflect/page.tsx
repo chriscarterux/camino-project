@@ -1,0 +1,114 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Save, TrendingUp } from "lucide-react";
+
+export default function ReflectPage() {
+  const [reflection, setReflection] = useState("");
+  const [mood, setMood] = useState<string | null>(null);
+
+  const handleSave = () => {
+    // Save reflection
+    console.log("Saving reflection:", { reflection, mood });
+  };
+
+  const handleGenerateInsight = () => {
+    // Navigate to insights or show modal
+    console.log("Generating insight");
+  };
+
+  return (
+    <div className="p-6 md:p-10 max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">
+          Take a moment to reflect
+        </h1>
+        <p className="text-muted-foreground">
+          Your guided prompt for today is waiting
+        </p>
+      </div>
+
+      {/* Prompt */}
+      <div className="bg-[#F4E9D8] border-l-4 border-[#E2C379] rounded-lg p-6 mb-8">
+        <p className="text-lg italic text-[#2D2F33]">
+          What emotion has been most present for you this week? What might it be teaching you?
+        </p>
+      </div>
+
+      {/* Mood Selector */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-3">
+          How are you feeling today?
+        </label>
+        <div className="flex gap-4 justify-center">
+          {[
+            { emoji: "😊", label: "Good", value: "good" },
+            { emoji: "😐", label: "Neutral", value: "neutral" },
+            { emoji: "☹️", label: "Low", value: "low" },
+          ].map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setMood(option.value)}
+              className={`flex flex-col items-center gap-2 p-4 border rounded-lg transition-all ${
+                mood === option.value
+                  ? "border-[#E2C379] bg-[#E2C379]/10"
+                  : "hover:border-muted-foreground"
+              }`}
+            >
+              <span className="text-3xl">{option.emoji}</span>
+              <span className="text-xs text-muted-foreground">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Editor */}
+      <div className="mb-6">
+        <textarea
+          className="w-full min-h-[400px] p-6 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#E2C379] focus:border-transparent"
+          placeholder="Start writing your reflection here..."
+          value={reflection}
+          onChange={(e) => setReflection(e.target.value)}
+        />
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-sm text-muted-foreground">
+            {reflection.length} characters
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Streak: 7 days
+          </p>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button
+          onClick={handleSave}
+          size="lg"
+          variant="outline"
+          className="flex-1"
+          disabled={reflection.length < 10}
+        >
+          <Save className="mr-2 h-4 w-4" />
+          Save & Close
+        </Button>
+        <Button
+          onClick={handleGenerateInsight}
+          size="lg"
+          className="flex-1 bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]"
+          disabled={reflection.length < 50}
+        >
+          <TrendingUp className="mr-2 h-4 w-4" />
+          Generate Insight
+        </Button>
+      </div>
+
+      {/* Microcopy */}
+      <p className="text-center text-sm text-muted-foreground mt-8 italic">
+        Every reflection is a step forward. Keep walking your Camino.
+      </p>
+    </div>
+  );
+}

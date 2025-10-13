@@ -2,62 +2,61 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { useState } from "react";
 
-const pricingTiers = [
-  {
-    name: "Reflect",
-    price: "Free",
-    description: "Free guided journaling + basic insights",
-    features: [
-      "Daily reflection prompts",
-      "Basic AI insights",
-      "Weekly summaries",
-      "Exportable reflections",
-    ],
-    cta: "Start Free",
-    href: "/journal",
-    highlighted: false,
-  },
-  {
-    name: "Journey",
-    price: "$19.95",
-    period: "/month",
-    description: "Full reflection curriculum + adaptive plan + exports",
-    features: [
-      "Everything in Reflect",
-      "AI pattern detection",
-      "Structured learning paths",
-      "4 core modules (Awareness, Belonging, Resilience, Purpose)",
-      "Adaptive lesson recommendations",
-      "Advanced exports (.txt/.json)",
-      "Priority support",
-    ],
-    cta: "Start Journey",
-    href: "/api/checkout?tier=journey",
-    highlighted: true,
-  },
-  {
-    name: "Coach",
-    price: "$1,000",
-    period: "/month",
-    description: "1:1 coaching (3-month minimum)",
-    note: "3-month minimum commitment",
-    features: [
-      "Everything in Journey",
-      "Biweekly 60-minute sessions",
-      "Personalized reflection prompts",
-      "AI-generated session summaries",
-      "Custom growth plan with milestones",
-      "Access to full Journey curriculum",
-    ],
-    cta: "Apply for Coaching",
-    href: "/coaching",
-    highlighted: false,
-  },
-];
+export default function EssaysPage() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
-export default function PricingPage() {
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/emails/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to subscribe');
+      }
+
+      setSubscribed(true);
+      setEmail('');
+    } catch (error) {
+      console.error('Subscribe error:', error);
+      alert('There was an error subscribing. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const featuredEssays = [
+    {
+      title: "The Art of the Pause",
+      excerpt: "Why reflection is the missing link in performance",
+      author: "Walter Calvo",
+      readTime: "5 min read",
+      slug: "the-art-of-the-pause",
+    },
+    {
+      title: "Belonging in a Disconnected World",
+      excerpt: "How self-awareness rebuilds human connection",
+      author: "Walter Calvo",
+      readTime: "6 min read",
+      slug: "belonging-in-a-disconnected-world",
+    },
+    {
+      title: "Resilience Isn't Toughness",
+      excerpt: "The science of staying open under pressure",
+      author: "Chris Carter",
+      readTime: "4 min read",
+      slug: "resilience-isnt-toughness",
+    },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Navigation */}
@@ -91,136 +90,144 @@ export default function PricingPage() {
         </div>
       </nav>
 
-      {/* Pricing Header */}
-      <section className="container mx-auto px-4 py-16 md:py-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
-            Simple plans for every path
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Start reflecting for free, or unlock deeper guidance through structured journeys and personalized coaching.
-          </p>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="container mx-auto px-4 pb-24">
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {pricingTiers.map((tier) => (
-            <div
-              key={tier.name}
-              className={`border rounded-2xl p-8 flex flex-col bg-card relative ${
-                tier.highlighted
-                  ? "border-2 border-[#E2C379] shadow-lg"
-                  : "hover:shadow-md transition-shadow"
-              }`}
-            >
-              {tier.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E2C379] text-[#2D2F33] px-3 py-1 rounded-full text-xs font-medium">
-                  Most Popular
-                </div>
-              )}
-              <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
-              <div className="flex items-baseline mb-2">
-                <span className="text-4xl font-bold">{tier.price}</span>
-                {tier.period && (
-                  <span className="text-muted-foreground ml-1 text-sm">
-                    {tier.period}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground mb-1">
-                {tier.description}
-              </p>
-              {tier.note && (
-                <p className="text-xs text-muted-foreground mb-6">
-                  {tier.note}
-                </p>
-              )}
-              <Button
-                asChild
-                className={`mb-8 ${tier.highlighted ? "bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]" : ""}`}
-                variant={tier.highlighted ? "default" : "outline"}
-              >
-                <Link href={tier.href}>{tier.cta}</Link>
-              </Button>
-              <ul className="space-y-3 flex-grow">
-                {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 shrink-0 mt-0.5 text-[#E2C379]" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-16 border-t bg-muted/30">
+      {/* Hero */}
+      <section className="py-20 md:py-32 border-b">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl font-serif font-bold mb-8">
-              Secure & Trusted
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
+              Reflections for the modern mind
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Essays on awareness, belonging, and resilience — written to help you live and lead with clarity.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Essays */}
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold mb-12">
+              Featured reflections
             </h2>
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Stripe secure payments</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Cancel anytime</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Encrypted data</span>
-              </div>
+
+            <div className="space-y-8">
+              {featuredEssays.map((essay) => (
+                <Link
+                  key={essay.slug}
+                  href={`/essays/${essay.slug}`}
+                  className="block border rounded-2xl p-8 bg-card hover:shadow-lg transition-all duration-300 group"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold mb-2 group-hover:text-[#E2C379] transition-colors">
+                        {essay.title}
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        {essay.excerpt}
+                      </p>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span>{essay.author}</span>
+                        <span>•</span>
+                        <span>{essay.readTime}</span>
+                      </div>
+                    </div>
+                    <div className="text-[#E2C379] group-hover:translate-x-2 transition-transform">
+                      →
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-16 border-t">
+      {/* Subscribe CTA */}
+      <section className="py-20 bg-muted/30 border-t">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-serif font-bold text-center mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="max-w-3xl mx-auto space-y-8">
-            {[
-              {
-                q: "Can I switch plans later?",
-                a: "Yes! Upgrade or downgrade anytime. Changes take effect at your next billing cycle.",
-              },
-              {
-                q: "What's included in the Journey program?",
-                a: "Four core modules: Awareness, Belonging, Resilience, and Purpose. Each includes video lessons, reflection exercises, and adaptive AI guidance. Most users complete modules in 2-3 weeks each.",
-              },
-              {
-                q: "How does the AI work?",
-                a: "AI analyzes your reflections to detect themes and patterns, then mirrors them back with personalized insights. All processing is private and encrypted.",
-              },
-              {
-                q: "Can I cancel anytime?",
-                a: "Reflect and Journey tiers can be cancelled anytime. Coach tier requires a 3-month minimum commitment, then becomes month-to-month.",
-              },
-            ].map((faq) => (
-              <div key={faq.q}>
-                <h3 className="text-lg font-bold mb-2">{faq.q}</h3>
-                <p className="text-muted-foreground">{faq.a}</p>
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-serif font-bold mb-6">
+              Never stop reflecting
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Join the Camino community and receive new essays and reflection prompts directly to your inbox.
+            </p>
+
+            {subscribed ? (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg max-w-md mx-auto">
+                <p className="text-sm text-green-800 font-medium">
+                  ✓ Subscribed! Check your email for confirmation.
+                </p>
               </div>
-            ))}
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E2C379] focus:border-transparent"
+                />
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]"
+                >
+                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                </Button>
+              </form>
+            )}
+
+            <p className="text-xs text-muted-foreground mt-4">
+              No noise, just clarity — delivered weekly
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Author Block */}
+      <section className="py-20 border-t">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold mb-12 text-center">
+              About the authors
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full bg-[#E2C379]/20 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-[#2D2F33]">W</span>
+                </div>
+                <h3 className="font-bold mb-2">Walter Calvo</h3>
+                <p className="text-sm text-muted-foreground">
+                  Founder, coach, and creator of Camino. Walter writes about self-awareness, leadership, and the intersection of psychology and human design.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full bg-[#E2C379]/20 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-[#2D2F33]">C</span>
+                </div>
+                <h3 className="font-bold mb-2">Chris Carter</h3>
+                <p className="text-sm text-muted-foreground">
+                  Designer and creative strategist shaping Camino's product and brand experience.
+                </p>
+              </div>
+            </div>
+            <div className="text-center mt-8">
+              <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors underline">
+                Learn more →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-12 md:py-16 bg-card mt-auto">
+      <footer className="border-t py-12 md:py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
-            {/* Brand */}
             <div className="md:col-span-1">
               <Link href="/" className="text-2xl font-serif font-bold tracking-tight inline-block mb-4">
                 Camino
@@ -230,7 +237,6 @@ export default function PricingPage() {
               </p>
             </div>
 
-            {/* Product */}
             <div>
               <h3 className="font-semibold mb-4 text-sm">Product</h3>
               <ul className="space-y-3 text-sm">
@@ -257,7 +263,6 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            {/* Company */}
             <div>
               <h3 className="font-semibold mb-4 text-sm">Company</h3>
               <ul className="space-y-3 text-sm">
@@ -284,7 +289,6 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            {/* Legal */}
             <div>
               <h3 className="font-semibold mb-4 text-sm">Legal</h3>
               <ul className="space-y-3 text-sm">
@@ -307,7 +311,6 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Bottom Bar */}
           <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
               © 2025 Camino

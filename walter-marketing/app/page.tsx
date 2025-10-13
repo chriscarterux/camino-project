@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Brain, BarChart3, Lightbulb, TrendingUp, Calendar } from "lucide-react";
+import { ArrowRight, Check, Circle } from "lucide-react";
 
 export default function Home() {
   return (
@@ -9,69 +9,57 @@ export default function Home() {
       <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="text-2xl font-serif font-bold tracking-tight">
-            Walter
+            Camino
           </Link>
           <div className="hidden md:flex gap-8 items-center">
-            <Link href="/#features" className="text-sm font-medium hover:text-foreground/80 transition-colors">
-              Features
-            </Link>
-            <Link href="/#testimonials" className="text-sm font-medium hover:text-foreground/80 transition-colors">
-              Testimonials
+            <Link href="/how-it-works" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+              How it works
             </Link>
             <Link href="/pricing" className="text-sm font-medium hover:text-foreground/80 transition-colors">
               Pricing
             </Link>
+            <Link href="/coaching" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+              Coaching
+            </Link>
+            <Link href="/essays" className="text-sm font-medium hover:text-foreground/80 transition-colors">
+              Essays
+            </Link>
           </div>
           <div className="flex gap-3 items-center">
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link href="http://lms.localhost:8000/lms">Sign In</Link>
+              <Link href="/login">Login</Link>
             </Button>
             <Button asChild size="sm">
-              <Link href="/pricing">Start Free</Link>
+              <Link href="/journal">Start your Camino</Link>
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section - Modern, bold design */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden border-b">
         <div className="container mx-auto px-4 py-20 md:py-32 lg:py-40">
           <div className="mx-auto max-w-5xl">
-            {/* Badge */}
-            <div className="mb-8 flex justify-center">
-              <div className="group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium hover:bg-accent/50 transition-colors">
-                <Sparkles className="h-3.5 w-3.5 text-foreground/60" />
-                <span className="text-foreground/80">
-                  Introducing Walter
-                </span>
-                <span className="text-muted-foreground">•</span>
-                <span className="text-muted-foreground">
-                  AI-Powered Thinking Partner
-                </span>
-              </div>
-            </div>
-
             {/* Main Heading */}
             <h1 className="text-center text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-              Transform Reflection
+              Guided reflection for
               <br />
               <span className="relative inline-block mt-2">
-                <span className="relative z-10">Into Action</span>
-                <span className="absolute bottom-2 left-0 h-3 md:h-4 w-full bg-foreground/10 rounded"></span>
+                <span className="relative z-10">a meaningful life</span>
+                <span className="absolute bottom-2 left-0 h-3 md:h-4 w-full bg-[#E2C379]/30 rounded"></span>
               </span>
             </h1>
 
             {/* Subheading */}
             <p className="mx-auto mt-6 max-w-2xl text-center text-base text-muted-foreground sm:text-lg md:text-xl lg:text-2xl leading-relaxed">
-              Your AI-powered thinking partner that turns personal insights into a guided philosophy for modern life.
-              Stop consuming, start integrating.
+              Understand your patterns, act with purpose, and grow with a calm, intelligent guide.
             </p>
 
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
-              <Button asChild size="lg" className="w-full sm:w-auto text-base h-12 px-8 group">
-                <Link href="/pricing">
-                  Start Your Transformation
+              <Button asChild size="lg" className="w-full sm:w-auto text-base h-12 px-8 group bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
+                <Link href="/journal">
+                  Start your Camino
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
@@ -81,7 +69,7 @@ export default function Home() {
                 size="lg"
                 className="w-full sm:w-auto text-base h-12 px-8"
               >
-                <Link href="/#features">Learn More</Link>
+                <Link href="/how-it-works">See how it works</Link>
               </Button>
             </div>
 
@@ -92,15 +80,15 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Check className="h-4 w-4 text-foreground/60" />
-                  <span>8-week programs</span>
+                  <Check className="h-4 w-4 text-[#E2C379]" />
+                  <span>Daily prompts</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Check className="h-4 w-4 text-foreground/60" />
+                  <Check className="h-4 w-4 text-[#E2C379]" />
                   <span>AI-powered insights</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Check className="h-4 w-4 text-foreground/60" />
+                  <Check className="h-4 w-4 text-[#E2C379]" />
                   <span>1:1 coaching available</span>
                 </div>
               </div>
@@ -108,237 +96,189 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Background decoration */}
+        {/* Background decoration - path motif */}
         <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute left-1/2 top-0 h-[500px] w-[500px] md:h-[800px] md:w-[800px] -translate-x-1/2 rounded-full bg-foreground/5 blur-3xl"></div>
-          <div className="absolute right-0 top-1/2 h-[300px] w-[300px] md:h-[500px] md:w-[500px] rounded-full bg-foreground/3 blur-3xl"></div>
+          <div className="absolute left-1/2 top-0 h-[500px] w-[500px] md:h-[800px] md:w-[800px] -translate-x-1/2 rounded-full bg-[#E2C379]/5 blur-3xl"></div>
+          <div className="absolute right-0 top-1/2 h-[300px] w-[300px] md:h-[500px] md:w-[500px] rounded-full bg-[#F4E9D8]/30 blur-3xl"></div>
         </div>
       </section>
 
-      {/* Problem/Solution Statement */}
+      {/* Problem → Outcome */}
       <section className="py-20 md:py-28 lg:py-32 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            {/* Problem */}
-            <div className="text-center mb-16">
+            {/* Pain */}
+            <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
-                Drowning in Self-Improvement Noise?
+                The world rewards noise and speed
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                You consume books, podcasts, and courses promising meaning or focus.
-                Yet few systems help you <strong className="text-foreground font-semibold">integrate what you learn into everyday life</strong>.
+                Most people have never been taught to pause, reflect, and understand their inner patterns.
               </p>
             </div>
 
-            {/* Solution */}
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className="order-2 md:order-1">
-                <div className="space-y-6">
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-foreground/10 flex items-center justify-center">
-                      <span className="text-lg font-bold">1</span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">Capture Insights</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Save lessons from books, therapy, and life experiences
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-foreground/10 flex items-center justify-center">
-                      <span className="text-lg font-bold">2</span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">AI-Guided Reflection</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Adaptive prompts that help you think more clearly
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-foreground/10 flex items-center justify-center">
-                      <span className="text-lg font-bold">3</span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">Take Action</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Convert insights into personalized action plans
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="order-1 md:order-2 bg-card border rounded-2xl p-8 md:p-10">
-                <p className="text-xl md:text-2xl font-serif leading-relaxed">
-                  Walter bridges the gap between <em className="font-semibold not-italic text-foreground">insight</em> and <em className="font-semibold not-italic text-foreground">implementation</em>.
-                </p>
-                <p className="mt-6 text-muted-foreground">
-                  A thoughtful system designed for self-aware professionals who value growth but need structure.
-                </p>
-              </div>
+            {/* Outcome */}
+            <div className="bg-card border rounded-2xl p-8 md:p-10 text-center">
+              <p className="text-xl md:text-2xl font-serif leading-relaxed mb-6">
+                Camino gives you a daily structure for thoughtful reflection and personal clarity—so you can move through life with <em className="font-semibold not-italic text-foreground">awareness</em>, <em className="font-semibold not-italic text-foreground">purpose</em>, and <em className="font-semibold not-italic text-foreground">peace</em>.
+              </p>
+              <Button asChild size="lg" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
+                <Link href="/journal">Try your first reflection free</Link>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Core Features Grid */}
-      <section id="features" className="py-20 md:py-28 lg:py-32 border-t">
+      {/* The Three Pillars */}
+      <section id="pillars" className="py-20 md:py-28 lg:py-32 border-t">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4">
-              Six Core Features
+              The Three Pillars
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to transform reflection into meaningful action
-            </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
-            {/* Feature 1 */}
-            <div className="group relative border rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 bg-card hover:border-foreground/20">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                <Brain className="h-6 w-6" />
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12 max-w-6xl mx-auto">
+            {/* Pillar 1 - Reflect */}
+            <div className="text-center group">
+              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <Circle className="h-8 w-8 text-[#E2C379]" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Guided Reflection</h3>
+              <h3 className="text-2xl font-bold mb-3">Reflect</h3>
               <p className="text-muted-foreground leading-relaxed">
-                AI-powered prompts that adapt to your progress, helping you think more clearly about what matters most.
+                Gentle prompts that meet you where you are.
               </p>
             </div>
 
-            {/* Feature 2 */}
-            <div className="group relative border rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 bg-card hover:border-foreground/20">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                <BarChart3 className="h-6 w-6" />
+            {/* Pillar 2 - Discover */}
+            <div className="text-center group">
+              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <Circle className="h-8 w-8 text-[#E2C379]" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Life Dashboard</h3>
+              <h3 className="text-2xl font-bold mb-3">Discover</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Visual map showing alignment between your values, goals, and daily actions. See the big picture at a glance.
+                AI that mirrors your themes back to you.
               </p>
             </div>
 
-            {/* Feature 3 */}
-            <div className="group relative border rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 bg-card hover:border-foreground/20">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                <Lightbulb className="h-6 w-6" />
+            {/* Pillar 3 - Grow */}
+            <div className="text-center group">
+              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <Circle className="h-8 w-8 text-[#E2C379]" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Insight Capture</h3>
+              <h3 className="text-2xl font-bold mb-3">Grow</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Save lessons from books, therapy, and life. AI converts them into actionable steps tailored to you.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="group relative border rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 bg-card hover:border-foreground/20">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                <TrendingUp className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Pattern Detection</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                AI mirrors back themes you didn't see: "You often mention 'control' when discussing work stress."
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="group relative border rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 bg-card hover:border-foreground/20">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                <Calendar className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Learning Paths</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Personalized 8-week transformation programs curated from your reflections and goals.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="group relative border rounded-2xl p-6 md:p-8 hover:shadow-lg transition-all duration-300 bg-card hover:border-foreground/20">
-              <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                <Sparkles className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Weekly Summaries</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Spotify Wrapped for personal growth. See your evolution, breakthroughs, and patterns over time.
+                Short practices that become lasting change.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials - Three Personas */}
-      <section id="testimonials" className="py-20 md:py-28 lg:py-32 bg-muted/30 border-t">
+      {/* Product Snapshots */}
+      <section className="py-20 md:py-28 lg:py-32 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4">
-              Built for Self-Aware Professionals
+              Experience Camino
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              People who value growth but need more than just another productivity app
-            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Snapshot 1 - Reflect */}
+            <div className="border rounded-2xl p-8 bg-card">
+              <h3 className="text-xl font-bold mb-3">Reflect</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Daily prompt + calm editor interface. Take 2-4 minutes to connect with yourself.
+              </p>
+            </div>
+
+            {/* Snapshot 2 - Insights */}
+            <div className="border rounded-2xl p-8 bg-card">
+              <h3 className="text-xl font-bold mb-3">Insights</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                AI-generated themes such as <em>connection</em>, <em>balance</em>, or <em>self-trust</em>.
+              </p>
+            </div>
+
+            {/* Snapshot 3 - Journey */}
+            <div className="border rounded-2xl p-8 bg-card">
+              <h3 className="text-xl font-bold mb-3">Journey</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Structured learning paths to deepen emotional intelligence and purpose.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof */}
+      <section id="testimonials" className="py-20 md:py-28 lg:py-32 border-t">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4">
+              What People Say
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-            {/* Testimonial 1 - Sarah */}
+            {/* Testimonial 1 */}
             <div className="relative border rounded-2xl p-8 bg-card group hover:shadow-lg transition-all duration-300">
               <div className="mb-6">
                 <svg className="h-8 w-8 text-muted-foreground/30" fill="currentColor" viewBox="0 0 32 32">
                   <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14h-6c0-2.2 1.8-4 4-4V8zm16 0c-3.3 0-6 2.7-6 6v10h10V14h-6c0-2.2 1.8-4 4-4V8z"/>
                 </svg>
               </div>
-              <p className="text-base md:text-lg leading-relaxed mb-6">
-                I know what matters to me, but I struggle to stay aligned with it day-to-day.
-                Walter helps me check in with myself and course-correct before I drift too far.
+              <p className="text-base md:text-lg leading-relaxed mb-6 italic">
+                Camino helped me see my life differently—not as something to fix, but as something to understand.
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center font-semibold">
-                  S
+                <div className="w-12 h-12 rounded-full bg-[#E2C379]/20 flex items-center justify-center font-semibold text-[#2D2F33]">
+                  E
                 </div>
                 <div>
-                  <p className="font-semibold">Sarah Chen</p>
-                  <p className="text-sm text-muted-foreground">Senior Product Designer, 32</p>
+                  <p className="font-semibold">Early beta user</p>
                 </div>
               </div>
             </div>
 
-            {/* Testimonial 2 - Marcus */}
+            {/* Testimonial 2 */}
             <div className="relative border rounded-2xl p-8 bg-card group hover:shadow-lg transition-all duration-300">
               <div className="mb-6">
                 <svg className="h-8 w-8 text-muted-foreground/30" fill="currentColor" viewBox="0 0 32 32">
                   <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14h-6c0-2.2 1.8-4 4-4V8zm16 0c-3.3 0-6 2.7-6 6v10h10V14h-6c0-2.2 1.8-4 4-4V8z"/>
                 </svg>
               </div>
-              <p className="text-base md:text-lg leading-relaxed mb-6">
-                I consume so much wisdom, but where does it go? Walter helps me actually internalize what I learn
-                and turn it into habits that stick.
+              <p className="text-base md:text-lg leading-relaxed mb-6 italic">
+                I use Camino every morning before work. It's like therapy, journaling, and strategy—all in one.
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center font-semibold">
-                  M
+                <div className="w-12 h-12 rounded-full bg-[#E2C379]/20 flex items-center justify-center font-semibold text-[#2D2F33]">
+                  C
                 </div>
                 <div>
-                  <p className="font-semibold">Marcus Rivera</p>
-                  <p className="text-sm text-muted-foreground">Startup Founder, 38</p>
+                  <p className="font-semibold">Coaching client</p>
                 </div>
               </div>
             </div>
 
-            {/* Testimonial 3 - Leah */}
+            {/* Testimonial 3 */}
             <div className="relative border rounded-2xl p-8 bg-card group hover:shadow-lg transition-all duration-300">
               <div className="mb-6">
                 <svg className="h-8 w-8 text-muted-foreground/30" fill="currentColor" viewBox="0 0 32 32">
                   <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14h-6c0-2.2 1.8-4 4-4V8zm16 0c-3.3 0-6 2.7-6 6v10h10V14h-6c0-2.2 1.8-4 4-4V8z"/>
                 </svg>
               </div>
-              <p className="text-base md:text-lg leading-relaxed mb-6">
-                I help others find clarity all day. I needed a tool that holds space for my own growth
-                without judgment, just structure.
+              <p className="text-base md:text-lg leading-relaxed mb-6 italic">
+                The insights are surprisingly accurate. Camino sees patterns I don't even realize I'm creating.
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center font-semibold">
-                  L
+                <div className="w-12 h-12 rounded-full bg-[#E2C379]/20 flex items-center justify-center font-semibold text-[#2D2F33]">
+                  J
                 </div>
                 <div>
-                  <p className="font-semibold">Leah Thompson</p>
-                  <p className="text-sm text-muted-foreground">Career Coach, 29</p>
+                  <p className="font-semibold">Journey member</p>
                 </div>
               </div>
             </div>
@@ -346,38 +286,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Tease */}
-      <section className="py-20 md:py-28 border-t">
+      {/* Pricing Teaser */}
+      <section className="py-20 md:py-28 border-t bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4">
-                Choose Your Path
+                Simple plans for every path
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Start free, upgrade when you're ready for deeper transformation
+                Start reflecting for free, or unlock deeper guidance
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {/* Foundation Tier */}
+              {/* Reflect - Free */}
               <div className="border rounded-2xl p-6 bg-card hover:shadow-md transition-shadow">
-                <h3 className="text-lg font-bold mb-2">Foundation</h3>
+                <h3 className="text-lg font-bold mb-2">Reflect</h3>
                 <p className="text-3xl font-bold mb-4">Free</p>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Start your reflection practice
+                  Free guided journaling + AI insights
                 </p>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 text-foreground/60 flex-shrink-0" />
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
                     <span>Daily reflection prompts</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 text-foreground/60 flex-shrink-0" />
-                    <span>Basic insight capture</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>Basic AI insights</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 text-foreground/60 flex-shrink-0" />
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
                     <span>Weekly summaries</span>
                   </li>
                 </ul>
@@ -386,60 +326,60 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Transformation Tier */}
-              <div className="border-2 border-foreground rounded-2xl p-6 bg-card relative hover:shadow-lg transition-shadow">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium">
+              {/* Journey */}
+              <div className="border-2 border-[#E2C379] rounded-2xl p-6 bg-card relative hover:shadow-lg transition-shadow">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E2C379] text-[#2D2F33] px-3 py-1 rounded-full text-xs font-medium">
                   Most Popular
                 </div>
-                <h3 className="text-lg font-bold mb-2">Transformation</h3>
+                <h3 className="text-lg font-bold mb-2">Journey</h3>
                 <p className="text-3xl font-bold mb-4">
                   $19.95<span className="text-sm font-normal text-muted-foreground">/mo</span>
                 </p>
                 <p className="text-sm text-muted-foreground mb-6">
-                  AI-powered insights & learning paths
+                  Full reflection curriculum + adaptive lessons
                 </p>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    <span>Everything in Foundation</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>Everything in Reflect</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
                     <span>AI pattern detection</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    <span>8-week learning paths</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>Structured learning path</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    <span>Life dashboard</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>Adaptive plan + exports</span>
                   </li>
                 </ul>
-                <Button asChild className="w-full">
-                  <Link href="/pricing">Start Transforming</Link>
+                <Button asChild className="w-full bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
+                  <Link href="/pricing">Start Journey</Link>
                 </Button>
               </div>
 
-              {/* Mastery Tier */}
+              {/* Coach */}
               <div className="border rounded-2xl p-6 bg-card hover:shadow-md transition-shadow">
-                <h3 className="text-lg font-bold mb-2">Mastery</h3>
-                <p className="text-3xl font-bold mb-4">$1,000</p>
+                <h3 className="text-lg font-bold mb-2">Coach</h3>
+                <p className="text-3xl font-bold mb-4">$1,000<span className="text-sm font-normal text-muted-foreground">/mo</span></p>
                 <p className="text-sm text-muted-foreground mb-6">
-                  1:1 coaching + full platform
+                  1:1 coaching (3-month minimum)
                 </p>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 text-foreground/60 flex-shrink-0" />
-                    <span>Everything in Transformation</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>Everything in Journey</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 text-foreground/60 flex-shrink-0" />
-                    <span>8 weeks of 1:1 coaching</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>1:1 coaching</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 mt-0.5 text-foreground/60 flex-shrink-0" />
-                    <span>Custom transformation plan</span>
+                    <Check className="h-4 w-4 mt-0.5 text-[#E2C379] flex-shrink-0" />
+                    <span>Custom guidance</span>
                   </li>
                 </ul>
                 <Button asChild variant="outline" className="w-full">
@@ -447,50 +387,46 @@ export default function Home() {
                 </Button>
               </div>
             </div>
+            <div className="text-center mt-8">
+              <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                See all plans →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20 md:py-28 lg:py-32 bg-muted/30 border-t">
+      {/* Lead Magnet */}
+      <section className="py-20 md:py-28 lg:py-32 border-t">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
-              Ready to Live More Deliberately?
+              Try your first guided reflection
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
-              Join hundreds of self-aware professionals who've chosen clarity over chaos.
-              Start with our free tier. Upgrade when you're ready for transformation.
+              Take three minutes to notice something real.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="text-base h-12 px-8 group">
-                <Link href="/pricing">
-                  Choose Your Path
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="text-base h-12 px-8">
-                <Link href="mailto:hello@walter.app">Talk to Us</Link>
-              </Button>
-            </div>
-            <p className="mt-6 text-sm text-muted-foreground">
-              Questions? Email us at <a href="mailto:hello@walter.app" className="underline hover:text-foreground transition-colors">hello@walter.app</a>
-            </p>
+            <Button asChild size="lg" className="text-base h-12 px-8 group bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
+              <Link href="/journal">
+                Start now
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Professional Footer */}
+      {/* Footer */}
       <footer className="border-t py-12 md:py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
             {/* Brand */}
             <div className="md:col-span-1">
               <Link href="/" className="text-2xl font-serif font-bold tracking-tight inline-block mb-4">
-                Walter
+                Camino
               </Link>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Your AI-powered thinking partner. Transform reflection into action.
+                Guided reflection for a meaningful life.
               </p>
             </div>
 
@@ -499,8 +435,8 @@ export default function Home() {
               <h3 className="font-semibold mb-4 text-sm">Product</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="/#features" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Features
+                  <Link href="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">
+                    How it works
                   </Link>
                 </li>
                 <li>
@@ -509,13 +445,13 @@ export default function Home() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Testimonials
+                  <Link href="/coaching" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Coaching
                   </Link>
                 </li>
                 <li>
-                  <Link href="/faq" className="text-muted-foreground hover:text-foreground transition-colors">
-                    FAQ
+                  <Link href="/journey" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Journey
                   </Link>
                 </li>
               </ul>
@@ -531,18 +467,18 @@ export default function Home() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Blog
+                  <Link href="/manifesto" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Manifesto
                   </Link>
                 </li>
                 <li>
-                  <Link href="/careers" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Careers
+                  <Link href="/essays" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Essays
                   </Link>
                 </li>
                 <li>
-                  <Link href="mailto:hello@walter.app" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Contact
+                  <Link href="/support" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Support
                   </Link>
                 </li>
               </ul>
@@ -553,18 +489,18 @@ export default function Home() {
               <h3 className="font-semibold mb-4 text-sm">Legal</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Privacy Policy
+                  <Link href="/legal/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Privacy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Terms of Service
+                  <Link href="/legal/terms" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Terms
                   </Link>
                 </li>
                 <li>
-                  <Link href="/security" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Security
+                  <Link href="/legal/cookies" className="text-muted-foreground hover:text-foreground transition-colors">
+                    Cookies
                   </Link>
                 </li>
               </ul>
@@ -574,11 +510,11 @@ export default function Home() {
           {/* Bottom Bar */}
           <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2025 Walter. Built with intention for those who seek clarity.
+              © 2025 Camino
             </p>
             <div className="flex gap-6">
               <a
-                href="https://twitter.com/walter"
+                href="https://twitter.com/camino"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -589,7 +525,7 @@ export default function Home() {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com/company/walter"
+                href="https://linkedin.com/company/camino"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"

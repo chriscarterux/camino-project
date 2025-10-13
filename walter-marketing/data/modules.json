@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "title": "Awareness",
+    "description": "Understand your patterns and how they shape your world",
+    "duration_weeks": 2,
+    "lessons": 8,
+    "outcomes": [
+      "Recognize emotional triggers and patterns",
+      "Understand your default responses to stress",
+      "Identify stories shaping your behavior",
+      "Build foundation for conscious choice"
+    ],
+    "order": 1
+  },
+  {
+    "id": 2,
+    "title": "Belonging",
+    "description": "Cultivate connection and grounded relationships",
+    "duration_weeks": 2,
+    "lessons": 8,
+    "outcomes": [
+      "Strengthen authentic connections",
+      "Build trust in relationships",
+      "Understand your attachment patterns",
+      "Create belonging from within"
+    ],
+    "order": 2
+  },
+  {
+    "id": 3,
+    "title": "Resilience",
+    "description": "Build emotional strength and composure under pressure",
+    "duration_weeks": 2,
+    "lessons": 8,
+    "outcomes": [
+      "Develop calm composure under stress",
+      "Build emotional flexibility",
+      "Transform challenge into growth",
+      "Maintain balance in uncertainty"
+    ],
+    "order": 3
+  },
+  {
+    "id": 4,
+    "title": "Purpose & Performance",
+    "description": "Align your daily actions with what truly matters",
+    "duration_weeks": 2,
+    "lessons": 8,
+    "outcomes": [
+      "Clarify what matters most to you",
+      "Align actions with values",
+      "Design sustainable performance habits",
+      "Create meaningful impact"
+    ],
+    "order": 4
+  }
+]

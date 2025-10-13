@@ -1,63 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-const pricingTiers = [
-  {
-    name: "Reflect",
-    price: "Free",
-    description: "Free guided journaling + basic insights",
-    features: [
-      "Daily reflection prompts",
-      "Basic AI insights",
-      "Weekly summaries",
-      "Exportable reflections",
-    ],
-    cta: "Start Free",
-    href: "/journal",
-    highlighted: false,
-  },
-  {
-    name: "Journey",
-    price: "$19.95",
-    period: "/month",
-    description: "Full reflection curriculum + adaptive plan + exports",
-    features: [
-      "Everything in Reflect",
-      "AI pattern detection",
-      "Structured learning paths",
-      "4 core modules (Awareness, Belonging, Resilience, Purpose)",
-      "Adaptive lesson recommendations",
-      "Advanced exports (.txt/.json)",
-      "Priority support",
-    ],
-    cta: "Start Journey",
-    href: "/api/checkout?tier=journey",
-    highlighted: true,
-  },
-  {
-    name: "Coach",
-    price: "$1,000",
-    period: "/month",
-    description: "1:1 coaching (3-month minimum)",
-    note: "3-month minimum commitment",
-    features: [
-      "Everything in Journey",
-      "Biweekly 60-minute sessions",
-      "Personalized reflection prompts",
-      "AI-generated session summaries",
-      "Custom growth plan with milestones",
-      "Access to full Journey curriculum",
-    ],
-    cta: "Apply for Coaching",
-    href: "/coaching",
-    highlighted: false,
-  },
-];
-
-export default function PricingPage() {
+export default function ManifestoPage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Navigation */}
@@ -91,136 +36,134 @@ export default function PricingPage() {
         </div>
       </nav>
 
-      {/* Pricing Header */}
-      <section className="container mx-auto px-4 py-16 md:py-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
-            Simple plans for every path
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Start reflecting for free, or unlock deeper guidance through structured journeys and personalized coaching.
-          </p>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="container mx-auto px-4 pb-24">
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {pricingTiers.map((tier) => (
-            <div
-              key={tier.name}
-              className={`border rounded-2xl p-8 flex flex-col bg-card relative ${
-                tier.highlighted
-                  ? "border-2 border-[#E2C379] shadow-lg"
-                  : "hover:shadow-md transition-shadow"
-              }`}
-            >
-              {tier.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E2C379] text-[#2D2F33] px-3 py-1 rounded-full text-xs font-medium">
-                  Most Popular
-                </div>
-              )}
-              <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
-              <div className="flex items-baseline mb-2">
-                <span className="text-4xl font-bold">{tier.price}</span>
-                {tier.period && (
-                  <span className="text-muted-foreground ml-1 text-sm">
-                    {tier.period}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground mb-1">
-                {tier.description}
-              </p>
-              {tier.note && (
-                <p className="text-xs text-muted-foreground mb-6">
-                  {tier.note}
-                </p>
-              )}
-              <Button
-                asChild
-                className={`mb-8 ${tier.highlighted ? "bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]" : ""}`}
-                variant={tier.highlighted ? "default" : "outline"}
-              >
-                <Link href={tier.href}>{tier.cta}</Link>
-              </Button>
-              <ul className="space-y-3 flex-grow">
-                {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 shrink-0 mt-0.5 text-[#E2C379]" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-16 border-t bg-muted/30">
+      {/* Hero */}
+      <section className="py-20 md:py-32 border-b">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl font-serif font-bold mb-8">
-              Secure & Trusted
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
+              The Camino Manifesto
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground">
+              A declaration of what we stand for — and what we walk toward.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* The Path */}
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+              Life is not a race. It's a walk.
             </h2>
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Stripe secure payments</span>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              We move fast, but we rarely arrive. Camino exists to remind us that growth is not in the sprint — it's in the steady rhythm of reflection. Each step, each question, each pause brings us closer to ourselves.
+            </p>
+            <div className="bg-[#F4E9D8] border-l-4 border-[#E2C379] rounded-lg p-6 my-12">
+              <p className="text-xl font-serif italic text-[#2D2F33]">
+                "The path is made by walking."
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">— Antonio Machado</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Beliefs */}
+      <section className="py-20 bg-muted/30 border-t">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold mb-12 text-center">
+              What guides our walk
+            </h2>
+
+            <div className="space-y-12">
+              <div>
+                <h3 className="text-2xl font-bold mb-3">1. Awareness is strength</h3>
+                <p className="text-lg text-muted-foreground">
+                  True power begins with seeing things clearly — within and without.
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Cancel anytime</span>
+
+              <div>
+                <h3 className="text-2xl font-bold mb-3">2. Reflection is action</h3>
+                <p className="text-lg text-muted-foreground">
+                  Slowing down is not stopping. It's how direction is chosen.
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-[#E2C379]" />
-                <span>Encrypted data</span>
+
+              <div>
+                <h3 className="text-2xl font-bold mb-3">3. Belonging is built</h3>
+                <p className="text-lg text-muted-foreground">
+                  Connection is created through understanding — of self, of others, of purpose.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold mb-3">4. Resilience is openness</h3>
+                <p className="text-lg text-muted-foreground">
+                  The strongest people are those who stay flexible, curious, and kind.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold mb-3">5. Technology should serve the soul</h3>
+                <p className="text-lg text-muted-foreground">
+                  AI is a tool for awareness, not replacement — a mirror for meaning.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-16 border-t">
+      {/* The Promise */}
+      <section className="py-20 md:py-28 border-t">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-serif font-bold text-center mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="max-w-3xl mx-auto space-y-8">
-            {[
-              {
-                q: "Can I switch plans later?",
-                a: "Yes! Upgrade or downgrade anytime. Changes take effect at your next billing cycle.",
-              },
-              {
-                q: "What's included in the Journey program?",
-                a: "Four core modules: Awareness, Belonging, Resilience, and Purpose. Each includes video lessons, reflection exercises, and adaptive AI guidance. Most users complete modules in 2-3 weeks each.",
-              },
-              {
-                q: "How does the AI work?",
-                a: "AI analyzes your reflections to detect themes and patterns, then mirrors them back with personalized insights. All processing is private and encrypted.",
-              },
-              {
-                q: "Can I cancel anytime?",
-                a: "Reflect and Journey tiers can be cancelled anytime. Coach tier requires a 3-month minimum commitment, then becomes month-to-month.",
-              },
-            ].map((faq) => (
-              <div key={faq.q}>
-                <h3 className="text-lg font-bold mb-2">{faq.q}</h3>
-                <p className="text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+              We build for humans, not habits
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              Camino will never chase addiction loops or endless notifications. We build technology that supports reflection — not distraction. Our aim is clarity, not capture.
+            </p>
+            <p className="text-xl font-serif italic text-foreground">
+              We measure success by quiet moments, not clicks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* The Invitation */}
+      <section className="py-20 bg-muted/30 border-t">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+              Walk your own Camino
+            </h2>
+            <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
+              Your path will not look like anyone else's. That's the point. This is your space to pause, notice, and grow. We're simply here to walk beside you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
+                <Link href="/journal">
+                  Start reflecting
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/essays">Read more essays</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-12 md:py-16 bg-card mt-auto">
+      <footer className="border-t py-12 md:py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
-            {/* Brand */}
             <div className="md:col-span-1">
               <Link href="/" className="text-2xl font-serif font-bold tracking-tight inline-block mb-4">
                 Camino
@@ -230,7 +173,6 @@ export default function PricingPage() {
               </p>
             </div>
 
-            {/* Product */}
             <div>
               <h3 className="font-semibold mb-4 text-sm">Product</h3>
               <ul className="space-y-3 text-sm">
@@ -257,7 +199,6 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            {/* Company */}
             <div>
               <h3 className="font-semibold mb-4 text-sm">Company</h3>
               <ul className="space-y-3 text-sm">
@@ -284,7 +225,6 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            {/* Legal */}
             <div>
               <h3 className="font-semibold mb-4 text-sm">Legal</h3>
               <ul className="space-y-3 text-sm">
@@ -307,7 +247,6 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Bottom Bar */}
           <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
               © 2025 Camino

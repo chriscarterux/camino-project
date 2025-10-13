@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Early beta user",
+    "role": null,
+    "avatar_url": null,
+    "quote": "Camino helped me see my life differently—not as something to fix, but as something to understand.",
+    "visible": true,
+    "tier": "reflect"
+  },
+  {
+    "id": 2,
+    "name": "Coaching client",
+    "role": null,
+    "avatar_url": null,
+    "quote": "I use Camino every morning before work. It's like therapy, journaling, and strategy—all in one.",
+    "visible": true,
+    "tier": "coach"
+  },
+  {
+    "id": 3,
+    "name": "Journey member",
+    "role": null,
+    "avatar_url": null,
+    "quote": "The insights are surprisingly accurate. Camino sees patterns I don't even realize I'm creating.",
+    "visible": true,
+    "tier": "journey"
+  },
+  {
+    "id": 4,
+    "name": "Early Beta Tester",
+    "role": null,
+    "avatar_url": null,
+    "quote": "I've done therapy, coaching, and journaling. Camino ties them all together.",
+    "visible": true,
+    "tier": "journey"
+  },
+  {
+    "id": 5,
+    "name": "Executive Client",
+    "role": null,
+    "avatar_url": null,
+    "quote": "Walter helped me reconnect with my purpose. Camino turned insight into action.",
+    "visible": true,
+    "tier": "coach"
+  },
+  {
+    "id": 6,
+    "name": "Creative Professional",
+    "role": null,
+    "avatar_url": null,
+    "quote": "This process gave me the courage to slow down and make the right decisions.",
+    "visible": true,
+    "tier": "coach"
+  }
+]

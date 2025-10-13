@@ -11,6 +11,16 @@
     color: var(--foreground);
     font-family: var(--font-sans);
   }
+
+  /* Camino Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+  }
+
+  /* Smooth transitions */
+  a, button {
+    transition: all var(--transition-base);
+  }
 }
 
 :root {
@@ -119,5 +129,16 @@
   --shadow-lg: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 4px 6px -1px hsl(0 0% 0% / 0.18);
   --shadow-xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 8px 10px -1px hsl(0 0% 0% / 0.18);
   --shadow-2xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.45);
+
+  /* Camino Design System */
+  --camino-gold: #E2C379;
+  --camino-sandstone: #F4E9D8;
+  --camino-slate: #2D2F33;
+  --camino-ivory: #FFFBF5;
+  --camino-midnight: #1A1B1C;
+
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --transition-base: 200ms ease-in-out;
 }
 
