@@ -1,0 +1,62 @@
+{
+  "totalCourses": 11,
+  "matched": 9,
+  "courses": [
+    {
+      "fileName": "Accountability_in_the_Workplace4343.zip",
+      "displayName": "Accountability in the Workpl",
+      "slug": "accountability-in-the-workpl"
+    },
+    {
+      "fileName": "Adult_Learning_-_Mental_Skills4581e.zip",
+      "displayName": "Adult Learning - Mental Skills",
+      "slug": "adult-learning-mental-skills"
+    },
+    {
+      "fileName": "Building_Confidence_and_Assertiveness1924.zip",
+      "displayName": "Building Confidence and Assertiveness",
+      "slug": "building-confidence-and-assertiveness"
+    },
+    {
+      "fileName": "Communication_Strategies9523e.zip",
+      "displayName": "Communication Strategies",
+      "slug": "communication-strategies"
+    },
+    {
+      "fileName": "Creative_Problem_Solving5831e.zip",
+      "displayName": "Creative Problem Solving",
+      "slug": "creative-problem-solving"
+    },
+    {
+      "fileName": "Critical_Thinking4863e.zip",
+      "displayName": "Critical Thinking",
+      "slug": "critical-thinking"
+    },
+    {
+      "fileName": "High_Performance_Teams_Inside_the_Company4221e.zip",
+      "displayName": "High Performance Teams Inside the Company",
+      "slug": "high-performance-teams-inside-the-company"
+    },
+    {
+      "fileName": "Interpersonal_Skills2866e.zip",
+      "displayName": "Interpersonal Skills",
+      "slug": "interpersonal-skills"
+    },
+    {
+      "fileName": "Team_Building_For_Managers3232e.zip",
+      "displayName": "Team Building For Managers",
+      "slug": "team-building-for-managers"
+    },
+    {
+      "fileName": "Teamwork_and_Team_Building8819e.zip",
+      "displayName": "Teamwork and Team Building",
+      "slug": "teamwork-and-team-building"
+    },
+    {
+      "fileName": "Time_Management6584e (1).zip",
+      "displayName": "Time Management",
+      "slug": "time-management"
+    }
+  ],
+  "extractionCommand": "bash scripts/extract-and-import.sh"
+}
