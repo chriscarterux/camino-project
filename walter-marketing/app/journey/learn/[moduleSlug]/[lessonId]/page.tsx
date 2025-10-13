@@ -158,11 +158,6 @@ Take a moment to consider: What patterns have you noticed in your own life this 
                   height="100%"
                   controls
                   onProgress={(state: any) => setVideoProgress(state.played * 100)}
-                  config={{
-                    youtube: {
-                      playerVars: { modestbranding: 1 }
-                    }
-                  }}
                 />
               </div>
             </div>
