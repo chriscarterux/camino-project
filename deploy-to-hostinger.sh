@@ -1,10 +1,10 @@
 #!/bin/bash
-# Deploy Walter Marketing to Hostinger VPS
+# Deploy Camino Marketing to Hostinger VPS
 # Run this script on your VPS: ssh root@46.202.93.22
 
 set -e
 
-echo "🚀 Deploying Walter Marketing to Hostinger VPS"
+echo "🚀 Deploying Camino Marketing to Hostinger VPS"
 echo "================================================"
 
 # Install Docker if not present
@@ -25,11 +25,12 @@ if ! command -v docker-compose &> /dev/null; then
 fi
 
 # Clone repository
-echo "📥 Cloning Walter project..."
+echo "📥 Updating Camino project..."
 cd /root
 if [ -d "walter-project" ]; then
     cd walter-project
-    git pull origin main
+    git fetch origin
+    git reset --hard origin/main
 else
     git clone https://github.com/chriscarterux/walter-project.git
     cd walter-project
@@ -42,8 +43,21 @@ cd walter-marketing
 echo "⚙️ Setting up environment variables..."
 cat > .env.production << EOF
 NODE_ENV=production
+
+# Stripe
 STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_placeholder}
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-pk_test_placeholder}
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:-}
+NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
+SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY:-}
+
+# Resend
+RESEND_API_KEY=${RESEND_API_KEY:-}
+RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-noreply@camino.app}
+
+# LMS API
 LMS_API_URL=${LMS_API_URL:-http://lms.localhost:8000}
 EOF
 
@@ -68,7 +82,7 @@ sleep 10
 
 # Check status
 if docker ps | grep -q walter-marketing; then
-    echo "✅ Walter Marketing deployed successfully!"
+    echo "✅ Camino Marketing deployed successfully!"
     echo ""
     echo "Access your site at:"
     echo "  - http://46.202.93.22:3000"
