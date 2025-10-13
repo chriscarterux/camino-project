@@ -19,27 +19,57 @@ export default function LibraryCourseDetailPage() {
   const [certificateEarned, setCertificateEarned] = useState(false);
 
   useEffect(() => {
-    // Find course in catalog
-    for (const category of courseLibrary.categories) {
-      const foundCourse = category.courses.find((c: any) => c.slug === courseSlug);
-      if (foundCourse) {
+    async function loadCourseFromFrappe() {
+      try {
+        // Fetch real course data from Frappe API
+        const response = await fetch(`/api/lms/course/${courseSlug}`);
+
+        if (!response.ok) {
+          throw new Error('Course not found');
+        }
+
+        const { chapters } = await response.json();
+
+        // Find in catalog for theme info
+        let catalogCourse = null;
+        let category = null;
+
+        for (const cat of courseLibrary.categories) {
+          const found = cat.courses.find((c: any) => c.slug === courseSlug);
+          if (found) {
+            catalogCourse = found;
+            category = cat;
+            break;
+          }
+        }
+
         setCourse({
-          ...foundCourse,
-          category: category.name,
-          categoryId: category.id,
+          ...catalogCourse,
+          category: category?.name || 'Unknown',
+          categoryId: category?.id || '',
         });
 
-        // Mock lessons (in production, fetch from Frappe API)
-        const mockLessons = generateMockLessons(foundCourse.title);
-        setLessons(mockLessons);
+        // Extract lessons from chapters
+        const allLessons = chapters.flatMap((chapter: any) =>
+          (chapter.lessons || []).map((lesson: any) => ({
+            id: lesson.name,
+            number: lesson.idx,
+            title: lesson.title,
+            duration: '5-10 min',
+            type: 'content',
+          }))
+        );
 
-        // Mock progress
-        setProgress(35);
-        setCompletedLessons(['lesson-1', 'lesson-2']);
-        setCertificateEarned(false); // Only true when progress === 100
-        break;
+        setLessons(allLessons);
+        setProgress(0); // TODO: Fetch real progress
+        setCompletedLessons([]);
+        setCertificateEarned(false);
+      } catch (error) {
+        console.error('Error loading course:', error);
       }
     }
+
+    loadCourseFromFrappe();
   }, [courseSlug]);
 
   // Generate mock lessons based on typical course structure
