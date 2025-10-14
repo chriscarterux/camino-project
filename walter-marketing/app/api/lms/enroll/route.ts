@@ -41,14 +41,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Enroll in all Journey modules
+    // Enroll in all Journey modules in Frappe
     await enrollUserInJourneyModules(
       user.email!,
       profile.plan,
       profile.lms_api_token
     );
 
-    return NextResponse.json({ success: true, message: 'Enrolled in Journey modules' });
+    // Cache enrollments in Supabase for fast queries
+    const journeyModules = [
+      { slug: 'camino-module-1-awareness', name: 'Module 1: Awareness' },
+      { slug: 'camino-module-2-belonging', name: 'Module 2: Belonging' },
+      { slug: 'camino-module-3-resilience', name: 'Module 3: Resilience' },
+      { slug: 'camino-module-4-purpose', name: 'Module 4: Purpose & Performance' },
+    ];
+
+    const enrollmentRecords = await Promise.all(
+      journeyModules.map(async (module) => {
+        const { data, error } = await supabase
+          .from('course_enrollments')
+          .upsert({
+            user_id: user.id,
+            course_slug: module.slug,
+            course_name: module.name,
+          }, {
+            onConflict: 'user_id,course_slug'
+          })
+          .select()
+          .single();
+
+        if (error) {
+          console.error(`Failed to cache enrollment for ${module.slug}:`, error);
+        }
+
+        return data;
+      })
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: 'Enrolled in Journey modules',
+      enrollments: enrollmentRecords.filter(Boolean)
+    });
   } catch (error) {
     console.error('Enroll error:', error);
     return NextResponse.json(

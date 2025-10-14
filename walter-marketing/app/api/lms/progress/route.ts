@@ -21,14 +21,16 @@ export async function GET(request: NextRequest) {
       .eq('id', user.id)
       .single();
 
-    if (!profile?.lms_api_token) {
-      return NextResponse.json(
-        { error: 'LMS not synced' },
-        { status: 400 }
-      );
+    // Check if user has Journey access
+    if (profile?.plan === 'reflect') {
+      return NextResponse.json({
+        overallProgress: 0,
+        modules: [],
+        message: 'Upgrade to Journey to access learning modules'
+      });
     }
 
-    // Fetch progress for each module
+    // Define modules
     const modules = [
       { slug: 'camino-module-1-awareness', name: 'Awareness' },
       { slug: 'camino-module-2-belonging', name: 'Belonging' },
@@ -36,49 +38,48 @@ export async function GET(request: NextRequest) {
       { slug: 'camino-module-4-purpose', name: 'Purpose & Performance' },
     ];
 
+    // Try to get cached progress from Supabase first (FAST)
+    const { data: cachedLessons } = await supabase
+      .from('lesson_progress')
+      .select('*')
+      .eq('user_id', user.id);
+
     const progressData = await Promise.all(
       modules.map(async (module) => {
-        try {
-          const progress = await getCourseProgress(
-            module.slug,
-            user.email!,
-            profile.lms_api_token
-          );
+        // Get cached progress for this module
+        const moduleLessons = cachedLessons?.filter(l => l.course_slug === module.slug) || [];
+        const completedCount = moduleLessons.filter(l => l.is_completed).length;
+        const totalLessons = 8; // TODO: Get from LMS or hardcode per module
 
-          const completedLessons = await getCompletedLessons(
-            module.slug,
-            user.email!,
-            profile.lms_api_token
-          );
+        // Calculate progress percentage
+        const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
-          return {
-            moduleSlug: module.slug,
-            moduleName: module.name,
-            progress: progress.percentage || 0,
-            completedLessons: progress.completedLessons || 0,
-            totalLessons: progress.totalLessons || 8,
-            completedLessonIds: completedLessons,
-          };
-        } catch (error) {
-          console.error(`Error fetching progress for ${module.slug}:`, error);
-          return {
-            moduleSlug: module.slug,
-            moduleName: module.name,
-            progress: 0,
-            completedLessons: 0,
-            totalLessons: 8,
-            completedLessonIds: [],
-          };
-        }
+        return {
+          moduleSlug: module.slug,
+          moduleName: module.name,
+          progress,
+          completedLessons: completedCount,
+          totalLessons,
+          completedLessonIds: moduleLessons
+            .filter(l => l.is_completed)
+            .map(l => l.lesson_id),
+        };
       })
     );
 
     // Calculate overall progress
     const totalProgress = progressData.reduce((sum, m) => sum + m.progress, 0) / modules.length;
 
+    // Get certificates
+    const { data: certificates } = await supabase
+      .from('certificates')
+      .select('*')
+      .eq('user_id', user.id);
+
     return NextResponse.json({
       overallProgress: Math.round(totalProgress),
       modules: progressData,
+      certificates: certificates || [],
     });
   } catch (error) {
     console.error('Get progress error:', error);

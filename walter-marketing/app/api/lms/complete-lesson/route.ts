@@ -40,9 +40,52 @@ export async function POST(request: NextRequest) {
     // Mark lesson complete in Frappe
     await completelesson(lessonId, user.email!, profile.lms_api_token);
 
-    // TODO: Update progress cache in Supabase for fast dashboard queries
+    // Cache lesson completion in Supabase for fast dashboard queries
+    const { data: lessonProgress, error: progressError } = await supabase
+      .from('lesson_progress')
+      .upsert({
+        user_id: user.id,
+        course_slug: moduleSlug || 'unknown',
+        lesson_id: lessonId,
+        lesson_name: lessonId, // TODO: Pass actual lesson name from frontend
+        is_completed: true,
+        completed_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id,course_slug,lesson_id'
+      })
+      .select()
+      .single();
 
-    return NextResponse.json({ success: true });
+    if (progressError) {
+      console.error('Failed to cache lesson progress:', progressError);
+    }
+
+    // Check if course is complete and generate certificate
+    if (moduleSlug) {
+      const { data: courseProgress } = await supabase
+        .from('lesson_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('course_slug', moduleSlug);
+
+      // If all lessons are complete, generate certificate
+      // TODO: Get actual lesson count from LMS
+      const totalLessons = 8; // Placeholder
+      if (courseProgress && courseProgress.filter(l => l.is_completed).length >= totalLessons) {
+        await supabase
+          .from('certificates')
+          .upsert({
+            user_id: user.id,
+            course_slug: moduleSlug,
+            course_name: moduleSlug.replace(/-/g, ' '),
+            certificate_url: null, // Will be generated later
+          }, {
+            onConflict: 'user_id,course_slug'
+          });
+      }
+    }
+
+    return NextResponse.json({ success: true, lessonProgress });
   } catch (error) {
     console.error('Complete lesson error:', error);
     return NextResponse.json(

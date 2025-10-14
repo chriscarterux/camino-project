@@ -193,6 +193,93 @@ create trigger handle_updated_at before update on public.subscriptions
 create trigger handle_updated_at before update on public.notification_preferences
   for each row execute procedure public.handle_updated_at();
 
+-- Course enrollments table (tracks LMS access)
+create table public.course_enrollments (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  course_slug text not null,
+  course_name text not null,
+  enrolled_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, course_slug)
+);
+
+alter table public.course_enrollments enable row level security;
+
+create policy "Users can view own enrollments"
+  on public.course_enrollments for select
+  using (auth.uid() = user_id);
+
+-- Lesson progress table (cache of LMS progress for fast queries)
+create table public.lesson_progress (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  course_slug text not null,
+  lesson_id text not null,
+  lesson_name text not null,
+  completed_at timestamp with time zone,
+  is_completed boolean not null default false,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, course_slug, lesson_id)
+);
+
+alter table public.lesson_progress enable row level security;
+
+create policy "Users can view own lesson progress"
+  on public.lesson_progress for select
+  using (auth.uid() = user_id);
+
+create policy "Users can update own lesson progress"
+  on public.lesson_progress for update
+  using (auth.uid() = user_id);
+
+create policy "Users can insert own lesson progress"
+  on public.lesson_progress for insert
+  with check (auth.uid() = user_id);
+
+-- Certificates table (course completion certificates)
+create table public.certificates (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  course_slug text not null,
+  course_name text not null,
+  certificate_url text, -- Link to generated certificate PDF/image
+  completed_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, course_slug)
+);
+
+alter table public.certificates enable row level security;
+
+create policy "Users can view own certificates"
+  on public.certificates for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert own certificates"
+  on public.certificates for insert
+  with check (auth.uid() = user_id);
+
+-- Achievements table (badges and milestones)
+create table public.achievements (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  achievement_type text not null check (achievement_type in (
+    'first_reflection',
+    'week_streak',
+    'month_streak',
+    'first_module',
+    'all_modules',
+    'fifty_reflections',
+    'hundred_reflections'
+  )),
+  earned_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, achievement_type)
+);
+
+alter table public.achievements enable row level security;
+
+create policy "Users can view own achievements"
+  on public.achievements for select
+  using (auth.uid() = user_id);
+
 -- Indexes for performance
 create index reflections_user_id_idx on public.reflections(user_id);
 create index reflections_created_at_idx on public.reflections(created_at desc);
@@ -200,3 +287,8 @@ create index insights_user_id_idx on public.insights(user_id);
 create index journey_progress_user_id_idx on public.journey_progress(user_id);
 create index subscriptions_user_id_idx on public.subscriptions(user_id);
 create index subscriptions_stripe_customer_id_idx on public.subscriptions(stripe_customer_id);
+create index course_enrollments_user_id_idx on public.course_enrollments(user_id);
+create index lesson_progress_user_id_idx on public.lesson_progress(user_id);
+create index lesson_progress_course_slug_idx on public.lesson_progress(course_slug);
+create index certificates_user_id_idx on public.certificates(user_id);
+create index achievements_user_id_idx on public.achievements(user_id);
