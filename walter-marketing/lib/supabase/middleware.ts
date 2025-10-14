@@ -19,9 +19,14 @@ export async function updateSession(request: NextRequest) {
           supabaseResponse = NextResponse.next({
             request,
           });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => {
+            // Set cookie domain to work across subdomains (camino.to and app.camino.to)
+            const cookieOptions = {
+              ...options,
+              domain: process.env.NODE_ENV === 'production' ? '.camino.to' : undefined,
+            };
+            supabaseResponse.cookies.set(name, value, cookieOptions);
+          });
         },
       },
     }
