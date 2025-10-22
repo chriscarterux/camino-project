@@ -429,8 +429,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
             {/* Brand */}
             <div className="md:col-span-1">
-              <Link href="/" className="text-2xl font-serif font-bold tracking-tight inline-block mb-4">
-                Camino
+              <Link href="/" className="inline-block mb-4">
+                <Image
+                  src="/camino-logo.svg"
+                  alt="Camino"
+                  width={100}
+                  height={32}
+                />
               </Link>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Guided reflection for a meaningful life.
