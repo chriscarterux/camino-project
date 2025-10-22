@@ -9,8 +9,14 @@ export default function AboutPage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-serif font-bold tracking-tight">
-            Camino
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/camino-logo.svg"
+              alt="Camino"
+              width={120}
+              height={40}
+              priority
+            />
           </Link>
           <div className="hidden md:flex gap-8 items-center">
             <Link href="/how-it-works" className="text-sm font-medium hover:text-foreground/80 transition-colors">
@@ -158,8 +164,13 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
             <div className="md:col-span-1">
-              <Link href="/" className="text-2xl font-serif font-bold tracking-tight inline-block mb-4">
-                Camino
+              <Link href="/" className="inline-block mb-4">
+                <Image
+                  src="/camino-logo.svg"
+                  alt="Camino"
+                  width={100}
+                  height={32}
+                />
               </Link>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Guided reflection for a meaningful life.
