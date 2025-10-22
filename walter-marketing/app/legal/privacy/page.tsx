@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function PrivacyPage() {
@@ -7,8 +8,14 @@ export default function PrivacyPage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-serif font-bold tracking-tight">
-            Camino
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/camino-logo.svg"
+              alt="Camino"
+              width={120}
+              height={40}
+              priority
+            />
           </Link>
           <Button asChild variant="ghost" size="sm">
             <Link href="/">Back to Home</Link>

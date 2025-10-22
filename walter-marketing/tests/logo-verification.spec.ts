@@ -10,11 +10,18 @@ const LOGO_ALT = 'Camino';
 
 // Marketing pages with navigation + footer
 const marketingPages = [
-  { path: '/', name: 'Homepage' },
-  { path: '/how-it-works', name: 'How It Works' },
-  { path: '/pricing', name: 'Pricing' },
-  { path: '/coaching', name: 'Coaching' },
-  { path: '/about', name: 'About' },
+  { path: '/', name: 'Homepage', hasFullFooter: true },
+  { path: '/how-it-works', name: 'How It Works', hasFullFooter: true },
+  { path: '/pricing', name: 'Pricing', hasFullFooter: true },
+  { path: '/coaching', name: 'Coaching', hasFullFooter: true },
+  { path: '/about', name: 'About', hasFullFooter: true },
+  { path: '/essays', name: 'Essays', hasFullFooter: true },
+  { path: '/support', name: 'Support', hasFullFooter: true },
+  { path: '/manifesto', name: 'Manifesto', hasFullFooter: true },
+  { path: '/journey', name: 'Journey', hasFullFooter: true },
+  { path: '/legal/privacy', name: 'Privacy Policy', hasFullFooter: false },
+  { path: '/legal/terms', name: 'Terms of Service', hasFullFooter: false },
+  { path: '/legal/cookies', name: 'Cookie Policy', hasFullFooter: false },
 ];
 
 test.describe('Logo Verification - Marketing Pages', () => {
@@ -42,6 +49,12 @@ test.describe('Logo Verification - Marketing Pages', () => {
     });
 
     test(`${page.name}: Logo appears in footer`, async ({ page: browserPage }) => {
+      // Skip footer test for pages without full footer
+      if (!page.hasFullFooter) {
+        test.skip();
+        return;
+      }
+
       // Navigate to page
       await browserPage.goto(page.path);
       await browserPage.waitForLoadState('networkidle');
