@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Circle, TrendingUp, User, LogOut } from "lucide-react";
@@ -61,8 +62,14 @@ export default function AppLayout({
         <div className="sticky top-0 h-screen flex flex-col">
           {/* Brand */}
           <div className="p-6 border-b">
-            <Link href="/" className="text-2xl font-serif font-bold tracking-tight">
-              Camino
+            <Link href="/" className="block mb-1">
+              <Image
+                src="/camino-logo.svg"
+                alt="Camino"
+                width={100}
+                height={32}
+                priority
+              />
             </Link>
             <p className="text-xs text-muted-foreground mt-1">
               Your reflection space

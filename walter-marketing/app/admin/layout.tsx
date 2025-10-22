@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Users, BookOpen, Settings, BarChart3, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -78,8 +79,14 @@ export default function AdminLayout({
         <div className="sticky top-0 h-screen flex flex-col">
           {/* Brand */}
           <div className="p-6 border-b">
-            <Link href="/admin" className="text-2xl font-serif font-bold tracking-tight">
-              Camino
+            <Link href="/admin" className="block mb-1">
+              <Image
+                src="/camino-logo.svg"
+                alt="Camino"
+                width={100}
+                height={32}
+                priority
+              />
             </Link>
             <p className="text-xs text-muted-foreground mt-1">
               Admin Dashboard
