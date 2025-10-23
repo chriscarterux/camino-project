@@ -60,29 +60,44 @@ export default function CoursesPage() {
             Structured programs to guide your transformation journey
           </p>
         </div>
-        <Button asChild variant="outline">
-          <Link href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"}>
-            Browse All Courses
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link href="/app/lms">
+              <GraduationCap className="mr-2 h-4 w-4" />
+              View Full Catalog
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <a href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </Button>
+        </div>
       </div>
 
       {/* Quick Access to LMS */}
       <div className="rounded-lg border-2 border-primary bg-gradient-to-r from-primary/5 to-primary/10 p-6">
         <div className="flex items-start justify-between">
-          <div>
+          <div className="flex-1">
             <h2 className="text-xl font-bold mb-2">Full Course Library</h2>
             <p className="text-muted-foreground mb-4">
               Access all available courses, live sessions, and community discussions in the Learning Management System
             </p>
-            <Button asChild>
-              <Link href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"}>
-                <GraduationCap className="mr-2 h-4 w-4" />
-                Open Course Library
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="flex gap-3">
+              <Button asChild>
+                <Link href="/app/lms">
+                  <GraduationCap className="mr-2 h-4 w-4" />
+                  Browse All Courses
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <a href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"} target="_blank" rel="noopener noreferrer">
+                  Open in New Window
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -178,12 +193,20 @@ export default function CoursesPage() {
         <p className="text-muted-foreground mb-4">
           Visit the full Learning Management System to browse all available courses, join live sessions, and connect with the community
         </p>
-        <Button asChild>
-          <Link href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"}>
-            View All Courses in LMS
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex gap-3 justify-center">
+          <Button asChild>
+            <Link href="/app/lms">
+              View All Courses in LMS
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <a href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Open Externally
+            </a>
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ const pricingTiers = [
       "Community access",
     ],
     cta: "Start Free",
-    href: process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms",
+    href: "/app/dashboard",
     highlighted: false,
   },
   {
@@ -76,7 +76,7 @@ export default function PricingPage() {
               Pricing
             </Link>
             <Button asChild variant="outline" size="sm">
-              <Link href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"}>Sign In</Link>
+              <Link href="/app/dashboard">Sign In</Link>
             </Button>
           </div>
         </div>
