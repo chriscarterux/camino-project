@@ -38,3 +38,6 @@ coverage/
 # Misc
 *.log
 .cache/
+CORPORATE TRNG ZIPS/
+walter-marketing/playwright-report/
+walter-marketing/test-results/
