@@ -89,7 +89,7 @@ export default function PricingPage() {
           </div>
           <div className="flex gap-3 items-center">
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link href="/login">Login</Link>
+              <Link href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"}>Sign In</Link>
             </Button>
             <Button asChild size="sm" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
               <Link href="/journal">Start your Camino</Link>

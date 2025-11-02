@@ -34,7 +34,7 @@ export default function Home() {
           </div>
           <div className="flex gap-3 items-center">
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link href="/login">Login</Link>
+              <Link href={process.env.NEXT_PUBLIC_LMS_URL || "http://lms.localhost:8000/lms"}>Sign In</Link>
             </Button>
             <Button asChild size="sm">
               <Link href="/journal">Start your Camino</Link>
