@@ -23,6 +23,34 @@ Complete platform for dimensional transformation through AI-assisted reflection 
 
 ---
 
+## 🔧 **LOCAL SETUP**
+
+**Configure Your Environment:**
+
+1. **Copy environment template:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **Update paths in `.env.local`:**
+   ```bash
+   # Update these two lines with your actual paths:
+   PROJECT_ROOT=/path/to/camino-project
+   OBSIDIAN_VAULT=/path/to/obsidian/vaults/yourname
+   ```
+
+3. **Path placeholders in documentation:**
+   All workflow documentation uses placeholders like `{PROJECT_ROOT}` and `{OBSIDIAN_VAULT}`. These reference the paths you configured in `.env.local`.
+
+**Why this matters:**
+- Makes workflows portable across team members
+- Prevents committing personal file paths to git
+- Enables consistent documentation references
+
+See `.env.example` for detailed setup instructions.
+
+---
+
 ## 🗂️ Project Structure
 
 ```

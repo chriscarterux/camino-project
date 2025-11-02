@@ -112,9 +112,11 @@ Reviewed-by: [Name]
 
 - **Linear Workspace:** https://linear.app/howdycarter
 - **Team ID:** c3997b49-d6a3-45a3-93ab-605db58b7434
-- **Obsidian Docs:** /Users/howdycarter/Documents/obsidian-vaults/howdycarter/01_PROJECTS/Camino/
-- **OpenSpec Directory:** /Users/howdycarter/Documents/projects/camino-project/openspec/
-- **Workflow Documentation:** /Users/howdycarter/Documents/projects/camino-project/.claude/WORKFLOW.md
+- **Obsidian Docs:** `{OBSIDIAN_VAULT}/01_PROJECTS/Camino/` (configure locally - see Setup section)
+- **OpenSpec Directory:** `{PROJECT_ROOT}/openspec/`
+- **Workflow Documentation:** `{PROJECT_ROOT}/.claude/WORKFLOW.md`
+
+> **Note:** Paths use placeholders for portability. See the "Local Setup" section in README.md for configuration instructions.
 
 ---
 

@@ -18,7 +18,7 @@ For **every** Linear issue (HOW-XXX), follow these steps:
 ### Step 1: Create Feature Branch
 
 ```bash
-cd /Users/howdycarter/Documents/projects/camino-project/walter-marketing
+cd {MARKETING_DIR}  # See README for local path configuration
 git checkout main
 git pull origin main
 git checkout -b feature/HOW-XXX-short-description
@@ -555,10 +555,12 @@ GTM content, launch activities
 ## 🔗 Links & Resources
 
 - **Linear Workspace:** https://linear.app/howdycarter
-- **Obsidian Project Docs:** /Users/howdycarter/Documents/obsidian-vaults/howdycarter/01_PROJECTS/Camino/
-- **OpenSpec Directory:** /Users/howdycarter/Documents/projects/camino-project/openspec/
-- **Project Repository:** /Users/howdycarter/Documents/projects/camino-project/
-- **Marketing Site:** /Users/howdycarter/Documents/projects/camino-project/walter-marketing/
+- **Obsidian Project Docs:** `{OBSIDIAN_VAULT}/01_PROJECTS/Camino/`
+- **OpenSpec Directory:** `{PROJECT_ROOT}/openspec/`
+- **Project Repository:** `{PROJECT_ROOT}/`
+- **Marketing Site:** `{MARKETING_DIR}/`
+
+> **Note:** Configure local paths in `.env.local` - see README.md for setup instructions.
 
 ---
 

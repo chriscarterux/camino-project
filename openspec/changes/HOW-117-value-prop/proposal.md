@@ -153,7 +153,7 @@ This is a **decision task**, not a code task.
 ### Files to Update (After Decision Made)
 
 **Obsidian Documentation:**
-- `/Users/howdycarter/Documents/obsidian-vaults/howdycarter/01_PROJECTS/Camino/Themes.md`
+- `{OBSIDIAN_VAULT}/01_PROJECTS/Camino/Themes.md`
   - Add decided value prop to "Core Narrative" section
   - Update "Primary Themes" to reference it
   - Add usage guidelines
@@ -185,7 +185,7 @@ This is a **decision task**, not a code task.
    - Update this OpenSpec proposal
 
 3. **Cascade to blocked issues**
-   - Update 9 blocked Linear issues with reference to decision
+   - Update 9 blocked Linear issues with the decision
    - Unblock for implementation
 
 ## Task Breakdown

@@ -84,8 +84,8 @@ OpenSpec: archived
 ## Links
 
 - **Linear Workspace:** https://linear.app/howdycarter
-- **Obsidian Project Docs:** /Users/howdycarter/Documents/obsidian-vaults/howdycarter/01_PROJECTS/Camino/
-- **Project Workflow:** .claude/WORKFLOW.md
+- **Obsidian Project Docs:** `{OBSIDIAN_VAULT}/01_PROJECTS/Camino/` (configure locally)
+- **Project Workflow:** `{PROJECT_ROOT}/.claude/WORKFLOW.md`
 
 ---
 
