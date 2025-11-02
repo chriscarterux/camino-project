@@ -1,0 +1,17 @@
+{
+  "project": "Camino Marketing Website",
+  "version": "1.0.0",
+  "changes_dir": "openspec/changes",
+  "specs_dir": "openspec/specs",
+  "branch_prefix": "feature/",
+  "linear_team_id": "c3997b49-d6a3-45a3-93ab-605db58b7434",
+  "testing_required": [
+    "unit",
+    "integration",
+    "e2e",
+    "accessibility",
+    "performance",
+    "security"
+  ],
+  "commit_format": "conventional"
+}

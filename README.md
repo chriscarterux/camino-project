@@ -1,7 +1,25 @@
-# Walter Project 🚀
-## AI-Powered Thinking Partner Platform
+# Camino Project (formerly Walter) 🚀
+## 12-Week Integrated Transformation Journey
 
-Complete platform for personal transformation through intelligent, adaptive reflection.
+Complete platform for dimensional transformation through AI-assisted reflection and coaching.
+
+---
+
+## 📖 **DEVELOPER WORKFLOW**
+
+**🚨 IMPORTANT:** Before making any code changes, read:
+
+1. **`.claude/INSTRUCTIONS.md`** - Critical rules and workflow overview (READ FIRST)
+2. **`.claude/WORKFLOW.md`** - Complete development workflow documentation
+3. **`openspec/README.md`** - OpenSpec-driven development guide
+
+**Key Principles:**
+- One Linear issue = One OpenSpec proposal = One feature branch
+- Create OpenSpec proposal BEFORE coding
+- Run all 6 test dimensions BEFORE requesting approval
+- Never commit without explicit human approval
+
+**Current Focus:** 42 Linear issues (HOW-111 to HOW-152) prioritized by urgency.
 
 ---
 
