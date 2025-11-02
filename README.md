@@ -1,7 +1,53 @@
-# Walter Project 🚀
-## AI-Powered Thinking Partner Platform
+# Camino Project (formerly Walter) 🚀
+## 12-Week Integrated Transformation Journey
 
-Complete platform for personal transformation through intelligent, adaptive reflection.
+Complete platform for dimensional transformation through AI-assisted reflection and coaching.
+
+---
+
+## 📖 **DEVELOPER WORKFLOW**
+
+**🚨 IMPORTANT:** Before making any code changes, read:
+
+1. **`.claude/INSTRUCTIONS.md`** - Critical rules and workflow overview (READ FIRST)
+2. **`.claude/WORKFLOW.md`** - Complete development workflow documentation
+3. **`openspec/README.md`** - OpenSpec-driven development guide
+
+**Key Principles:**
+- One Linear issue = One OpenSpec proposal = One feature branch
+- Create OpenSpec proposal BEFORE coding
+- Run all 6 test dimensions BEFORE requesting approval
+- Never commit without explicit human approval
+
+**Current Focus:** 42 Linear issues (HOW-111 to HOW-152) prioritized by urgency.
+
+---
+
+## 🔧 **LOCAL SETUP**
+
+**Configure Your Environment:**
+
+1. **Copy environment template:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **Update paths in `.env.local`:**
+   ```bash
+   # Update these two lines with your actual paths:
+   PROJECT_ROOT=/path/to/camino-project
+   OBSIDIAN_VAULT=/path/to/obsidian/vaults/yourname
+   ```
+
+3. **Path placeholders in documentation:**
+   All workflow documentation uses placeholders like `{PROJECT_ROOT}` and `{OBSIDIAN_VAULT}`. These reference the paths you configured in `.env.local`.
+
+**Why this matters:**
+- Makes workflows portable across team members
+- Prevents committing personal file paths to git
+- Enables consistent documentation references
+
+See `.env.example` for detailed setup instructions.
 
 ---
 
