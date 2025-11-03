@@ -31,7 +31,7 @@ This comprehensive launch checklist ensures the Camino marketing website launche
   - Owner: Howdy Carter
   - Dependency: HOW-159 (Value Prop - DONE ✅)
 
-- [ ] **SEO complete**
+- [ ] **SEO optimization complete**
   - [ ] Meta tags configured (HOW-171)
   - [ ] Structured data added (HOW-172)
   - [ ] Sitemap generated (HOW-173)
@@ -425,24 +425,24 @@ Execute rollback if any of these occur:
 
 ### Rollback Procedure
 
-#### Step 1: Immediate Action (0-5 minutes)
+**Step 1: Immediate Action (0-5 minutes)**
 - [ ] Switch DNS to maintenance page
 - [ ] Alert team (if applicable)
 - [ ] Stop all marketing campaigns
 - [ ] Disable Stripe webhooks (if payment-related)
 
-#### Step 2: Investigation (5-30 minutes)
+**Step 2: Investigation (5-30 minutes)**
 - [ ] Identify root cause
 - [ ] Check error logs (Sentry)
 - [ ] Review recent deployments
 - [ ] Assess data integrity
 
-#### Step 3: Decision (30-60 minutes)
+**Step 3: Decision (30-60 minutes)**
 - [ ] Can we hotfix quickly? (< 2 hours)
   - YES → Implement hotfix, test, redeploy
   - NO → Proceed with full rollback
 
-#### Step 4: Rollback Execution (if needed)
+**Step 4: Rollback Execution (if needed)**
 - [ ] Revert to previous stable deployment
   ```bash
   # Vercel rollback example
@@ -452,13 +452,13 @@ Execute rollback if any of these occur:
 - [ ] Test critical paths
 - [ ] Re-enable monitoring
 
-#### Step 5: Communication
+**Step 5: Communication**
 - [ ] Email users (if affected)
 - [ ] Post status update (social media)
 - [ ] Update status page
 - [ ] Apologize and explain
 
-#### Step 6: Post-Mortem (within 48 hours)
+**Step 6: Post-Mortem (within 48 hours)**
 - [ ] Document what happened
 - [ ] Identify root cause
 - [ ] Create prevention plan
