@@ -6,6 +6,7 @@
  */
 
 import { AnalyticsEvent, EVENT_NAMES } from './types';
+import { createClient } from '@/lib/supabase/server';
 
 // PostHog Node client
 let posthogNode: any = null;
@@ -159,8 +160,12 @@ export function trackServerInsightViewed(
  * Flush pending events (for serverless environments)
  */
 export async function flushServerAnalytics(): Promise<void> {
-  if (posthogNode?.shutdown) {
-    await posthogNode.shutdown();
+  try {
+    if (posthogNode?.shutdown) {
+      await posthogNode.shutdown();
+    }
+  } catch (error) {
+    console.error('[Analytics Server] Failed to flush events:', error);
   }
 }
 
@@ -176,9 +181,31 @@ export function calculateDaysSinceSignup(signupDate: Date | string): number {
 
 /**
  * Helper to get session count from database or user metadata
+ * Counts the number of distinct days the user has created reflections
  */
 export async function getSessionCount(userId: string): Promise<number> {
-  // This would query your database to get session count
-  // Placeholder implementation
-  return 1;
+  try {
+    const supabase = await createClient();
+
+    // Query reflections to count unique session days
+    const { data, error } = await supabase
+      .from('reflections')
+      .select('created_at')
+      .eq('user_id', userId);
+
+    if (error || !data) {
+      console.error('[Analytics] Error fetching session count:', error);
+      return 1; // Default fallback
+    }
+
+    // Count unique days (sessions)
+    const uniqueDays = new Set(
+      data.map(r => new Date(r.created_at).toDateString())
+    );
+
+    return Math.max(uniqueDays.size, 1);
+  } catch (error) {
+    console.error('[Analytics] Error calculating session count:', error);
+    return 1; // Default fallback
+  }
 }
