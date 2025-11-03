@@ -26,6 +26,17 @@ create trigger handle_updated_at before update on public.leads
 -- Enable Row Level Security
 alter table public.leads enable row level security;
 
+-- Allow public/anonymous users to submit leads via forms
+create policy "Allow public lead creation"
+  on public.leads for insert
+  to anon, authenticated
+  with check (true);
+
+-- Allow public users to read their own leads (after signup)
+create policy "Users can view their own leads"
+  on public.leads for select
+  using (auth.uid() = converted_user_id or converted_user_id is null);
+
 -- Admin-only policies (service role)
 -- In production, add specific admin role policies
 create policy "Service role can view all leads"
