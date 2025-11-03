@@ -49,24 +49,49 @@ export default function Home() {
           <div className="mx-auto max-w-5xl">
             {/* Main Heading */}
             <h1 className="text-center text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-              Guided reflection for
+              You're Not Broken.
               <br />
               <span className="relative inline-block mt-2">
-                <span className="relative z-10">a meaningful life</span>
+                <span className="relative z-10">You're Just Seeing Through the Wrong Lens</span>
                 <span className="absolute bottom-2 left-0 h-3 md:h-4 w-full bg-[#E2C379]/30 rounded"></span>
               </span>
             </h1>
 
             {/* Subheading */}
-            <p className="mx-auto mt-6 max-w-2xl text-center text-base text-muted-foreground sm:text-lg md:text-xl lg:text-2xl leading-relaxed">
-              Understand your patterns, act with purpose, and grow with a calm, intelligent guide.
+            <p className="mx-auto mt-6 max-w-3xl text-center text-base text-muted-foreground sm:text-lg md:text-xl lg:text-2xl leading-relaxed">
+              A 12-week integrated transformation journey that shifts how you see yourself (Identity), how you see the world (Worldview), and how you see your relationship to everything (Your Place in the World).
             </p>
+
+            {/* Three Dimensions Visual */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-[#E2C379]/10 to-transparent border border-[#E2C379]/20">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#E2C379]/20 mb-4">
+                  <span className="text-2xl font-bold text-[#E2C379]">1</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Identity</h3>
+                <p className="text-sm text-muted-foreground">From self-criticism to inherent worth</p>
+              </div>
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-[#E2C379]/10 to-transparent border border-[#E2C379]/20">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#E2C379]/20 mb-4">
+                  <span className="text-2xl font-bold text-[#E2C379]">2</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Worldview</h3>
+                <p className="text-sm text-muted-foreground">From scarcity to abundance</p>
+              </div>
+              <div className="text-center p-6 rounded-xl bg-gradient-to-br from-[#E2C379]/10 to-transparent border border-[#E2C379]/20">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#E2C379]/20 mb-4">
+                  <span className="text-2xl font-bold text-[#E2C379]">3</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Relationships</h3>
+                <p className="text-sm text-muted-foreground">From isolation to interconnection</p>
+              </div>
+            </div>
 
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
               <Button asChild size="lg" className="w-full sm:w-auto text-base h-12 px-8 group bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
                 <Link href="/journal">
-                  Start your Camino
+                  Start Your Transformation
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
@@ -82,21 +107,21 @@ export default function Home() {
 
             {/* Social Proof */}
             <div className="mt-12 flex flex-col items-center gap-6">
-              <p className="text-sm text-muted-foreground">
-                Free tier available • No credit card required
+              <p className="text-sm text-muted-foreground font-medium">
+                12 weeks to complete coherence
               </p>
               <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Check className="h-4 w-4 text-[#E2C379]" />
-                  <span>Daily prompts</span>
+                  <span>84 days of AI-guided reflection</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Check className="h-4 w-4 text-[#E2C379]" />
-                  <span>AI-powered insights</span>
+                  <span>6 private coaching sessions</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Check className="h-4 w-4 text-[#E2C379]" />
-                  <span>1:1 coaching available</span>
+                  <span>24/7 AI pattern recognition</span>
                 </div>
               </div>
             </div>
@@ -438,7 +463,7 @@ export default function Home() {
                 />
               </Link>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Guided reflection for a meaningful life.
+                12-week integrated transformation journey
               </p>
             </div>
 
