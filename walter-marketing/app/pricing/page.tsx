@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import LeadCaptureForm from "@/components/LeadCaptureForm";
 
 const pricingTiers = [
   {
@@ -219,6 +220,26 @@ export default function PricingPage() {
                 <p className="text-muted-foreground">{faq.a}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Lead Capture CTA */}
+      <section className="py-20 border-t bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-center">
+              Try the free tier first
+            </h2>
+            <p className="text-lg text-muted-foreground mb-10 text-center">
+              Experience Camino with daily reflections and AI insights—completely free.
+            </p>
+
+            <LeadCaptureForm
+              source="pricing"
+              variant="card"
+              showInterest={false}
+            />
           </div>
         </div>
       </section>
