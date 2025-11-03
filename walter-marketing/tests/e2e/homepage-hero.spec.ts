@@ -33,7 +33,7 @@ test.describe('Homepage Hero Section - E2E', () => {
     await expect(cta).toBeVisible()
 
     await cta.click()
-    await page.waitForURL('/journal')
+    await page.waitForURL('**/journal')
     expect(page.url()).toContain('/journal')
   })
 
@@ -42,7 +42,7 @@ test.describe('Homepage Hero Section - E2E', () => {
     await expect(cta).toBeVisible()
 
     await cta.click()
-    await page.waitForURL('/how-it-works')
+    await page.waitForURL('**/how-it-works')
     expect(page.url()).toContain('/how-it-works')
   })
 
@@ -124,7 +124,7 @@ test.describe('Homepage Hero Section - E2E', () => {
     await page.getByRole('link', { name: /start your transformation/i }).click()
 
     // 5. Arrives at journal page
-    await page.waitForURL('/journal')
+    await page.waitForURL('**/journal')
     expect(page.url()).toContain('/journal')
   })
 
@@ -144,7 +144,7 @@ test.describe('Homepage Hero Section - E2E', () => {
 
     // Press Enter to activate
     await page.keyboard.press('Enter')
-    await page.waitForURL('/journal')
+    await page.waitForURL('**/journal')
   })
 })
 

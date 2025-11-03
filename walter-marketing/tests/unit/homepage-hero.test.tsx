@@ -82,8 +82,8 @@ describe('Homepage Hero Section', () => {
       expect(screen.getByText('24/7 AI pattern recognition')).toBeInTheDocument()
     })
 
-    it('renders check icons for each feature', () => {
-      // Check that all three features are displayed with check marks
+    it('displays program features with accompanying text', () => {
+      // Verify that all three features are displayed in the social proof section
       const feature1 = screen.getByText('84 days of AI-guided reflection')
       const feature2 = screen.getByText('6 private coaching sessions')
       const feature3 = screen.getByText('24/7 AI pattern recognition')
@@ -97,7 +97,7 @@ describe('Homepage Hero Section', () => {
   describe('Responsive Design', () => {
     it('uses responsive text sizing classes', () => {
       const heading = screen.getByRole('heading', { level: 1 })
-      expect(heading).toHaveClass('text-4xl', 'sm:text-5xl', 'md:text-6xl', 'lg:text-7xl')
+      expect(heading).toHaveClass('text-4xl', 'sm:text-5xl', 'md:text-6xl', 'lg:text-7xl', 'xl:text-8xl')
     })
 
     it('uses responsive grid for dimension cards', () => {
