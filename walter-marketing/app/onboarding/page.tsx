@@ -9,9 +9,14 @@ import { useOnboarding } from "@/lib/onboarding/context";
  */
 export default function OnboardingPage() {
   const router = useRouter();
-  const { state } = useOnboarding();
+  const { state, isHydrated } = useOnboarding();
 
   useEffect(() => {
+    // Wait for state to be hydrated from localStorage before routing
+    if (!isHydrated) {
+      return;
+    }
+
     // Determine which step to show based on state
     if (!state.intent) {
       // No intent selected, start at welcome
@@ -29,7 +34,18 @@ export default function OnboardingPage() {
       // Everything complete, show next steps
       router.push("/onboarding/complete");
     }
-  }, [state, router]);
+  }, [state, isHydrated, router]);
+
+  // Show loading state while hydrating from localStorage
+  if (!isHydrated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-pulse text-[var(--camino-gold)]">
+          Loading your journey...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen">

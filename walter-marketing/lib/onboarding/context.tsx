@@ -23,6 +23,7 @@ interface OnboardingState {
 
 interface OnboardingContextValue {
   state: OnboardingState;
+  isHydrated: boolean;
   setIntent: (intent: Intent) => void;
   addReflection: (reflection: Omit<Reflection, "id" | "timestamp">) => void;
   setCurrentStep: (step: number) => void;
@@ -42,6 +43,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     insightId: null,
     startTime: Date.now(),
   });
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Load state from localStorage on mount
   useEffect(() => {
@@ -54,12 +56,16 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         console.error("Failed to load onboarding state:", error);
       }
     }
+    // Mark as hydrated after attempting to load from localStorage
+    setIsHydrated(true);
   }, []);
 
-  // Save state to localStorage whenever it changes
+  // Save state to localStorage whenever it changes (only after hydration)
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+  }, [state, isHydrated]);
 
   const setIntent = (intent: Intent) => {
     setState((prev) => ({ ...prev, intent }));
@@ -101,6 +107,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     <OnboardingContext.Provider
       value={{
         state,
+        isHydrated,
         setIntent,
         addReflection,
         setCurrentStep,
