@@ -234,31 +234,31 @@ if (fs.existsSync(layoutPath)) {
 console.log();
 
 // Test 7: PNG dimensions (requires Sharp or ImageMagick)
-console.log('7️⃣  Image Dimensions Test\n');
+async function runDimensionTests() {
+  console.log('7️⃣  Image Dimensions Test\n');
 
-const pngFiles = [
-  { name: 'favicon-16x16.png', expectedSize: 16 },
-  { name: 'favicon-32x32.png', expectedSize: 32 },
-  { name: 'favicon-48x48.png', expectedSize: 48 },
-  { name: 'apple-touch-icon.png', expectedSize: 180 },
-  { name: 'android-chrome-192x192.png', expectedSize: 192 },
-  { name: 'android-chrome-512x512.png', expectedSize: 512 },
-  { name: 'mstile-150x150.png', expectedSize: 150 },
-];
+  const pngFiles = [
+    { name: 'favicon-16x16.png', expectedSize: 16 },
+    { name: 'favicon-32x32.png', expectedSize: 32 },
+    { name: 'favicon-48x48.png', expectedSize: 48 },
+    { name: 'apple-touch-icon.png', expectedSize: 180 },
+    { name: 'android-chrome-192x192.png', expectedSize: 192 },
+    { name: 'android-chrome-512x512.png', expectedSize: 512 },
+    { name: 'mstile-150x150.png', expectedSize: 150 },
+  ];
 
-let canCheckDimensions = false;
-let sharp;
+  let canCheckDimensions = false;
+  let sharp;
 
-try {
-  sharp = require('sharp');
-  canCheckDimensions = true;
-} catch (e) {
-  console.log('  ⚠️  Sharp not available - skipping dimension checks');
-  console.log('     Install Sharp to enable: npm install --save-dev sharp\n');
-}
+  try {
+    sharp = require('sharp');
+    canCheckDimensions = true;
+  } catch (e) {
+    console.log('  ⚠️  Sharp not available - skipping dimension checks');
+    console.log('     Install Sharp to enable: npm install --save-dev sharp\n');
+  }
 
-if (canCheckDimensions) {
-  (async () => {
+  if (canCheckDimensions) {
     for (const file of pngFiles) {
       const filePath = path.join(PUBLIC_DIR, file.name);
 
@@ -281,28 +281,11 @@ if (canCheckDimensions) {
       }
     }
     console.log();
+  }
+}
 
-    // Summary
-    console.log('📊 Test Summary\n');
-    console.log(`  Total Files: ${REQUIRED_FILES.length}`);
-    console.log(`  Package Size: ${totalKB}KB`);
-    console.log(`  Errors: ${errors}`);
-    console.log(`  Warnings: ${warnings}`);
-    console.log();
-
-    if (errors === 0 && warnings === 0) {
-      console.log('✅ All tests passed! Favicon package is ready.\n');
-      process.exit(0);
-    } else if (errors === 0) {
-      console.log('⚠️  Tests passed with warnings. Review warnings above.\n');
-      process.exit(0);
-    } else {
-      console.log('❌ Tests failed. Fix errors above before deploying.\n');
-      process.exit(1);
-    }
-  })();
-} else {
-  // Summary
+// Summary function
+function printSummary() {
   console.log('📊 Test Summary\n');
   console.log(`  Total Files: ${REQUIRED_FILES.length}`);
   console.log(`  Package Size: ${totalKB}KB`);
@@ -321,3 +304,9 @@ if (canCheckDimensions) {
     process.exit(1);
   }
 }
+
+// Main execution
+(async () => {
+  await runDimensionTests();
+  printSummary();
+})();
