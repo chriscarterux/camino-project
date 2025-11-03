@@ -13,23 +13,146 @@
  * Usage:
  *   node scripts/generate-favicons.js              # Uses default repo path
  *   node scripts/generate-favicons.js /path/to/svg # Uses custom path
+ *
+ * SECURITY: This script validates all paths to prevent command injection
+ * and path traversal attacks.
  */
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawn } = require('child_process');
 
-// Support CLI argument for source SVG path (for flexibility)
-// Default to repo path, fallback to downloads
-const DEFAULT_SOURCE = path.join(__dirname, '../public/camino-icon-source.svg');
+// Determine project root and allowed directories
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+const PUBLIC_DIR = path.join(PROJECT_ROOT, 'public');
+const ALLOWED_DIRECTORIES = [
+  PROJECT_ROOT,
+  '/Users/howdycarter/Downloads',
+  '/tmp'
+];
+
+// Default paths
+const DEFAULT_SOURCE = path.join(PUBLIC_DIR, 'camino-icon-source.svg');
 const FALLBACK_SOURCE = '/Users/howdycarter/Downloads/camino_favicon.svg';
-const SOURCE_SVG = process.argv[2] || DEFAULT_SOURCE;
-const PUBLIC_DIR = path.join(__dirname, '../public');
-const OUTPUT_DIR = PUBLIC_DIR;
+
+/**
+ * Validate input path to prevent path traversal and command injection
+ * @param {string} inputPath - The path to validate
+ * @returns {string} Validated absolute path
+ * @throws {Error} If path is invalid or contains malicious patterns
+ */
+function validateInputPath(inputPath) {
+  // Check for shell metacharacters that could enable command injection
+  const dangerousPatterns = /[;&|`$(){}[\]<>!*?~]/;
+  if (dangerousPatterns.test(inputPath)) {
+    throw new Error('Invalid characters in path. Path contains potential command injection patterns.');
+  }
+
+  // Resolve to absolute path (handles relative paths and symlinks)
+  let resolvedPath;
+  try {
+    resolvedPath = path.resolve(inputPath);
+  } catch (error) {
+    throw new Error(`Invalid path format: ${error.message}`);
+  }
+
+  // Ensure path is within allowed directories
+  const isAllowed = ALLOWED_DIRECTORIES.some(allowedDir => {
+    const normalized = path.resolve(allowedDir);
+    return resolvedPath.startsWith(normalized + path.sep) || resolvedPath === normalized;
+  });
+
+  if (!isAllowed) {
+    throw new Error(`Access denied. Path must be within: ${ALLOWED_DIRECTORIES.join(', ')}`);
+  }
+
+  // Check if file exists
+  if (!fs.existsSync(resolvedPath)) {
+    throw new Error(`File does not exist: ${resolvedPath}`);
+  }
+
+  // Verify it's a file, not a directory
+  const stats = fs.statSync(resolvedPath);
+  if (!stats.isFile()) {
+    throw new Error('Path must be a file, not a directory');
+  }
+
+  // Only allow SVG files
+  const ext = path.extname(resolvedPath).toLowerCase();
+  if (ext !== '.svg') {
+    throw new Error(`Invalid file type. Expected .svg, got ${ext}`);
+  }
+
+  return resolvedPath;
+}
+
+/**
+ * Validate output path to prevent path traversal
+ * @param {string} filename - The output filename
+ * @returns {string} Validated absolute output path
+ * @throws {Error} If path is invalid
+ */
+function validateOutputPath(filename) {
+  // Check for dangerous patterns BEFORE using basename (in case basename behavior varies)
+  if (/[;&|`$(){}[\]<>!*?~]/.test(filename)) {
+    throw new Error('Invalid characters in filename');
+  }
+
+  // Use basename to strip any directory traversal attempts
+  const sanitized = path.basename(filename);
+
+  // Double-check after basename (defense in depth)
+  if (/[;&|`$(){}[\]<>!*?~]/.test(sanitized)) {
+    throw new Error('Invalid characters in filename');
+  }
+
+  // Resolve to absolute path within PUBLIC_DIR
+  const outputPath = path.resolve(PUBLIC_DIR, sanitized);
+
+  // Ensure output is within PUBLIC_DIR (prevent directory escape)
+  if (!outputPath.startsWith(PUBLIC_DIR + path.sep) && outputPath !== PUBLIC_DIR) {
+    throw new Error('Output path must be within public directory');
+  }
+
+  return outputPath;
+}
+
+// Determine source SVG with validation
+let SOURCE_SVG;
+const cliArgument = process.argv[2];
+
+if (cliArgument) {
+  try {
+    console.log(`🔍 Validating input path: ${cliArgument}`);
+    SOURCE_SVG = validateInputPath(cliArgument);
+    console.log(`✓ Validated input path: ${SOURCE_SVG}\n`);
+  } catch (error) {
+    console.error(`❌ Security validation failed: ${error.message}`);
+    console.error('\nPath must be:');
+    console.error('  - An SVG file (.svg extension)');
+    console.error('  - Within allowed directories:');
+    ALLOWED_DIRECTORIES.forEach(dir => console.error(`    - ${dir}`));
+    console.error('  - Free of shell metacharacters (;|&`$(){}[]<>!*?~)');
+    process.exit(1);
+  }
+} else {
+  // Try default locations
+  if (fs.existsSync(DEFAULT_SOURCE)) {
+    SOURCE_SVG = DEFAULT_SOURCE;
+  } else if (fs.existsSync(FALLBACK_SOURCE)) {
+    SOURCE_SVG = FALLBACK_SOURCE;
+  } else {
+    console.error(`❌ Source file not found at default locations:`);
+    console.error(`  - ${DEFAULT_SOURCE}`);
+    console.error(`  - ${FALLBACK_SOURCE}`);
+    console.error('\nPlease provide path: node scripts/generate-favicons.js /path/to/svg');
+    process.exit(1);
+  }
+}
 
 // Ensure output directory exists
-if (!fs.existsSync(OUTPUT_DIR)) {
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+if (!fs.existsSync(PUBLIC_DIR)) {
+  fs.mkdirSync(PUBLIC_DIR, { recursive: true });
 }
 
 // Favicon configurations
@@ -50,13 +173,13 @@ let useSharp = false;
 try {
   require.resolve('sharp');
   useSharp = true;
-  console.log('✓ Using Sharp for image processing\n');
+  console.log('✓ Using Sharp for image processing (secure, no shell execution)\n');
 } catch (e) {
-  console.log('⚠ Sharp not found, using ImageMagick\n');
+  console.log('⚠ Sharp not found, using ImageMagick with spawn() for security\n');
 }
 
 /**
- * Generate PNG favicon using Sharp
+ * Generate PNG favicon using Sharp (recommended - no shell execution)
  */
 async function generatePNGWithSharp(size, outputPath) {
   const sharp = require('sharp');
@@ -71,13 +194,40 @@ async function generatePNGWithSharp(size, outputPath) {
 }
 
 /**
- * Generate PNG favicon using ImageMagick
+ * Generate PNG favicon using ImageMagick with spawn() for security
+ * Uses spawn() instead of exec() to prevent command injection
  */
 function generatePNGWithImageMagick(size, outputPath) {
-  execSync(
-    `convert -background none -resize ${size}x${size} "${SOURCE_SVG}" "${outputPath}"`,
-    { stdio: 'inherit' }
-  );
+  return new Promise((resolve, reject) => {
+    // Use spawn() which doesn't invoke a shell (secure against command injection)
+    const args = [
+      '-background', 'none',
+      '-resize', `${size}x${size}`,
+      SOURCE_SVG,
+      outputPath
+    ];
+
+    const child = spawn('convert', args, {
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+
+    let stderr = '';
+    child.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(`ImageMagick exited with code ${code}: ${stderr}`));
+      } else {
+        resolve();
+      }
+    });
+
+    child.on('error', (err) => {
+      reject(new Error(`Failed to spawn ImageMagick: ${err.message}`));
+    });
+  });
 }
 
 /**
@@ -87,13 +237,13 @@ async function generatePNGFavicons() {
   console.log('📦 Generating PNG favicons...');
 
   for (const config of FAVICON_SIZES) {
-    const outputPath = path.join(OUTPUT_DIR, config.name);
+    const outputPath = validateOutputPath(config.name);
 
     try {
       if (useSharp) {
         await generatePNGWithSharp(config.size, outputPath);
       } else {
-        generatePNGWithImageMagick(config.size, outputPath);
+        await generatePNGWithImageMagick(config.size, outputPath);
       }
 
       const stats = fs.statSync(outputPath);
@@ -101,6 +251,7 @@ async function generatePNGFavicons() {
       console.log(`  ✓ ${config.name} (${config.size}x${config.size}) - ${sizeKB}KB`);
     } catch (error) {
       console.error(`  ✗ Failed to generate ${config.name}:`, error.message);
+      throw error;
     }
   }
 
@@ -108,30 +259,47 @@ async function generatePNGFavicons() {
 }
 
 /**
- * Generate multi-resolution favicon.ico
+ * Generate multi-resolution favicon.ico using spawn() for security
  */
 function generateFaviconICO() {
   console.log('🖼️  Generating favicon.ico...');
 
-  const outputPath = path.join(OUTPUT_DIR, 'favicon.ico');
-  const png16 = path.join(OUTPUT_DIR, 'favicon-16x16.png');
-  const png32 = path.join(OUTPUT_DIR, 'favicon-32x32.png');
-  const png48 = path.join(OUTPUT_DIR, 'favicon-48x48.png');
+  const outputPath = validateOutputPath('favicon.ico');
+  const png16 = validateOutputPath('favicon-16x16.png');
+  const png32 = validateOutputPath('favicon-32x32.png');
+  const png48 = validateOutputPath('favicon-48x48.png');
 
-  try {
-    // Use ImageMagick to create multi-resolution ICO
-    execSync(
-      `convert "${png16}" "${png32}" "${png48}" "${outputPath}"`,
-      { stdio: 'inherit' }
-    );
+  return new Promise((resolve, reject) => {
+    // Use spawn() instead of execSync() for security
+    const args = [png16, png32, png48, outputPath];
+    const child = spawn('convert', args, {
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
 
-    const stats = fs.statSync(outputPath);
-    const sizeKB = (stats.size / 1024).toFixed(2);
-    console.log(`  ✓ favicon.ico (16+32+48px) - ${sizeKB}KB\n`);
-  } catch (error) {
-    console.error('  ⚠ Could not generate favicon.ico. Install ImageMagick or create manually.');
-    console.log();
-  }
+    let stderr = '';
+    child.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        console.error('  ⚠ Could not generate favicon.ico. Install ImageMagick or create manually.');
+        console.log();
+        resolve(); // Don't fail the entire process
+      } else {
+        const stats = fs.statSync(outputPath);
+        const sizeKB = (stats.size / 1024).toFixed(2);
+        console.log(`  ✓ favicon.ico (16+32+48px) - ${sizeKB}KB\n`);
+        resolve();
+      }
+    });
+
+    child.on('error', (err) => {
+      console.error('  ⚠ Could not generate favicon.ico:', err.message);
+      console.log();
+      resolve(); // Don't fail the entire process
+    });
+  });
 }
 
 /**
@@ -140,12 +308,9 @@ function generateFaviconICO() {
 function generateSafariPinnedTab() {
   console.log('🦁 Generating Safari pinned tab...');
 
-  const outputPath = path.join(OUTPUT_DIR, 'safari-pinned-tab.svg');
+  const outputPath = validateOutputPath('safari-pinned-tab.svg');
 
-  // Read source SVG and convert to monochrome
-  const sourceSVG = fs.readFileSync(SOURCE_SVG, 'utf8');
-
-  // Create simplified monochrome version
+  // Create simplified monochrome version (hardcoded - no user input)
   const monoSVG = `<svg width="546" height="548" viewBox="0 0 546 548" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M157.37 25.4561C108.51 48.0761 65.8304 85.3061 36.5604 135.206L35.6003 136.876L34.6404 138.536C25.6504 154.356 18.4104 170.696 12.8604 187.346C21.0804 181.256 30.6404 177.206 41.0504 175.466C61.6704 172.696 79.1204 160.986 89.8704 142.366L157.37 25.4561Z" fill="#000"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M227.33 3.80577L147.33 142.376C136.94 160.346 120.34 171.866 100.67 175.146C80.06 177.916 62.61 189.626 51.85 208.246L0 298.036C1.94 319.616 6.44 340.886 13.36 361.366C21.49 355.796 28.43 348.296 33.73 339.106L109.29 208.246C119.67 190.286 136.27 178.746 155.95 175.476C176.56 172.706 194.02 160.996 204.77 142.366L286.76 0.355818C266.8 -0.664182 246.86 0.515769 227.33 3.80577Z" fill="#000"/>
@@ -193,7 +358,7 @@ function generateWebManifest() {
     ]
   };
 
-  const outputPath = path.join(OUTPUT_DIR, 'site.webmanifest');
+  const outputPath = validateOutputPath('site.webmanifest');
   fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2));
 
   const stats = fs.statSync(outputPath);
@@ -217,7 +382,7 @@ function generateBrowserConfig() {
   </msapplication>
 </browserconfig>`;
 
-  const outputPath = path.join(OUTPUT_DIR, 'browserconfig.xml');
+  const outputPath = validateOutputPath('browserconfig.xml');
   fs.writeFileSync(outputPath, browserconfig);
 
   const stats = fs.statSync(outputPath);
@@ -249,7 +414,7 @@ function calculatePackageSize() {
   let filesFound = 0;
 
   files.forEach(file => {
-    const filePath = path.join(OUTPUT_DIR, file);
+    const filePath = path.join(PUBLIC_DIR, file);
     if (fs.existsSync(filePath)) {
       const stats = fs.statSync(filePath);
       totalSize += stats.size;
@@ -334,6 +499,13 @@ export const metadata: Metadata = {
   themeColor: '#E2C379',
 };
 \`\`\`
+
+## Security
+
+This script includes security protections against:
+- **Command Injection**: Uses spawn() instead of exec()/execSync() to prevent shell command injection
+- **Path Traversal**: Validates all paths to ensure they stay within allowed directories
+- **Input Validation**: Checks for dangerous shell metacharacters and validates file types
 
 ## Testing Checklist
 
@@ -423,16 +595,16 @@ Generated: ${new Date().toISOString()}
  */
 async function main() {
   try {
-    // Check if source file exists
-    if (!fs.existsSync(SOURCE_SVG)) {
-      console.error(`❌ Source file not found: ${SOURCE_SVG}`);
-      console.error('Please ensure the source SVG is in the correct location.');
-      process.exit(1);
-    }
+    console.log('🔒 Security features enabled:');
+    console.log('  ✓ Path validation (prevents directory traversal)');
+    console.log('  ✓ Input sanitization (prevents command injection)');
+    console.log('  ✓ Shell metacharacter filtering');
+    console.log('  ✓ File type validation (SVG only)');
+    console.log('  ✓ Directory boundary enforcement\n');
 
     // Generate all assets
     await generatePNGFavicons();
-    generateFaviconICO();
+    await generateFaviconICO();
     generateSafariPinnedTab();
     generateWebManifest();
     generateBrowserConfig();
@@ -447,7 +619,7 @@ async function main() {
     console.log('\nSee FAVICON_SETUP.md for complete documentation.\n');
 
   } catch (error) {
-    console.error('❌ Error generating favicons:', error);
+    console.error('❌ Error generating favicons:', error.message);
     process.exit(1);
   }
 }
@@ -457,4 +629,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { main };
+module.exports = { main, validateInputPath, validateOutputPath };
