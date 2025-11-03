@@ -101,11 +101,13 @@ export async function POST(request: NextRequest) {
     const wordCount = content.trim().split(/\s+/).length;
 
     // Track reflection completed event
+    // SECURITY: Do not send prompt_text (PII) or content to analytics
+    // Only send metadata for privacy protection
     trackServerReflectionCompleted(user.id, {
       reflection_id: reflection.id,
       reflection_count: reflectionCount || 1,
-      prompt_id,
-      prompt_text,
+      prompt_id, // Send only the ID, not the text
+      prompt_text: '', // REMOVED: Sensitive data - prompt text could contain PII
       dimension: dimension || undefined,
       word_count: wordCount,
       time_spent_seconds: timeSpent,

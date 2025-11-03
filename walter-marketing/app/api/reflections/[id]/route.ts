@@ -74,7 +74,10 @@ export async function PATCH(
   }
 }
 
-// DELETE - Delete reflection
+/**
+ * DELETE - Delete reflection with proper ownership verification
+ * SECURITY: Verifies ownership before deletion to prevent unauthorized access
+ */
 export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -88,11 +91,30 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // SECURITY FIX: First verify the reflection exists and user owns it
+    // This prevents information disclosure about reflection existence
+    const { data: reflection, error: fetchError } = await supabase
+      .from('reflections')
+      .select('user_id')
+      .eq('id', params.id)
+      .single();
+
+    if (fetchError || !reflection) {
+      // Don't reveal whether reflection exists - always return 404
+      return NextResponse.json({ error: 'Reflection not found' }, { status: 404 });
+    }
+
+    // Verify ownership - return 403 Forbidden if not owned by user
+    if (reflection.user_id !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Now safe to delete - user owns the reflection
     const { error } = await supabase
       .from('reflections')
       .delete()
       .eq('id', params.id)
-      .eq('user_id', user.id);
+      .eq('user_id', user.id); // Belt-and-suspenders: double-check ownership
 
     if (error) {
       throw error;

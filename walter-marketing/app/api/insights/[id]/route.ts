@@ -146,7 +146,8 @@ export async function GET(
 }
 
 /**
- * DELETE - Delete insight
+ * DELETE - Delete insight with proper ownership verification
+ * SECURITY: Verifies ownership before deletion to prevent unauthorized access
  */
 export async function DELETE(
   request: NextRequest,
@@ -161,11 +162,30 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // SECURITY FIX: First verify the insight exists and user owns it
+    // This prevents information disclosure about insight existence
+    const { data: insight, error: fetchError } = await supabase
+      .from('insights')
+      .select('user_id')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !insight) {
+      // Don't reveal whether insight exists - always return 404
+      return NextResponse.json({ error: 'Insight not found' }, { status: 404 });
+    }
+
+    // Verify ownership - return 403 Forbidden if not owned by user
+    if (insight.user_id !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Now safe to delete - user owns the insight
     const { error } = await supabase
       .from('insights')
       .delete()
       .eq('id', id)
-      .eq('user_id', user.id);
+      .eq('user_id', user.id); // Belt-and-suspenders: double-check ownership
 
     if (error) {
       throw error;
