@@ -43,6 +43,7 @@
     "posthog-node": "^5.11.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-fast-marquee": "^1.6.5",
     "react-player": "^3.3.3",
     "resend": "^6.1.2",
     "stripe": "^19.1.0",
