@@ -176,50 +176,6 @@ export function trackActivation(
 }
 
 /**
- * Track onboarding step viewed
- */
-export function trackOnboardingStepViewed(
-  userId: string,
-  stepNumber: number,
-  stepName: string
-): void {
-  const event: AnalyticsEvent = {
-    event: EVENT_NAMES.ONBOARDING_STEP_VIEWED,
-    user_id: userId,
-    timestamp: new Date().toISOString(),
-    properties: {
-      step_number: stepNumber,
-      step_name: stepName,
-    } as any,
-  };
-
-  track(event);
-}
-
-/**
- * Track onboarding step completed
- */
-export function trackOnboardingStepCompleted(
-  userId: string,
-  stepNumber: number,
-  stepName: string,
-  timeSpentSeconds: number
-): void {
-  const event: AnalyticsEvent = {
-    event: EVENT_NAMES.ONBOARDING_STEP_COMPLETED,
-    user_id: userId,
-    timestamp: new Date().toISOString(),
-    properties: {
-      step_number: stepNumber,
-      step_name: stepName,
-      time_spent_seconds: timeSpentSeconds,
-    } as any,
-  };
-
-  track(event);
-}
-
-/**
  * Track reflection completed
  */
 export function trackReflectionCompleted(

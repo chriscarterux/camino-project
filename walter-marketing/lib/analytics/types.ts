@@ -34,25 +34,6 @@ export interface UserActivationEvent extends BaseEvent {
   };
 }
 
-// Onboarding events
-export interface OnboardingStepViewedEvent extends BaseEvent {
-  event: 'onboarding_step_viewed';
-  properties: {
-    step_number: number;
-    step_name: string;
-    time_spent_seconds?: number;
-  };
-}
-
-export interface OnboardingStepCompletedEvent extends BaseEvent {
-  event: 'onboarding_step_completed';
-  properties: {
-    step_number: number;
-    step_name: string;
-    time_spent_seconds: number;
-  };
-}
-
 // Secondary events supporting activation journey
 export interface ReflectionCompletedEvent extends BaseEvent {
   event: 'reflection_completed';
@@ -110,8 +91,6 @@ export interface InsightSharedEvent extends BaseEvent {
 // Union type for all analytics events
 export type AnalyticsEvent =
   | UserActivationEvent
-  | OnboardingStepViewedEvent
-  | OnboardingStepCompletedEvent
   | ReflectionCompletedEvent
   | InsightGeneratedEvent
   | InsightViewedEvent
@@ -120,8 +99,6 @@ export type AnalyticsEvent =
 // Event names for type-safe event tracking
 export const EVENT_NAMES = {
   USER_ACTIVATION_ACHIEVED: 'user_activation_achieved',
-  ONBOARDING_STEP_VIEWED: 'onboarding_step_viewed',
-  ONBOARDING_STEP_COMPLETED: 'onboarding_step_completed',
   REFLECTION_COMPLETED: 'reflection_completed',
   INSIGHT_GENERATED: 'insight_generated',
   INSIGHT_VIEWED: 'insight_viewed',

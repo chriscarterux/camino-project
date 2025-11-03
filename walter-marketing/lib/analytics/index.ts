@@ -10,8 +10,6 @@ export {
   identifyUser,
   track,
   trackActivation,
-  trackOnboardingStepViewed,
-  trackOnboardingStepCompleted,
   trackReflectionCompleted,
   trackInsightGenerated,
   trackInsightViewed,
@@ -21,12 +19,23 @@ export {
   isEnabled,
 } from './client';
 
+// Server-side exports
+export {
+  initServerAnalytics,
+  trackServerEvent,
+  trackServerActivation,
+  trackServerReflectionCompleted,
+  trackServerInsightGenerated,
+  trackServerInsightViewed,
+  flushServerAnalytics,
+  calculateDaysSinceSignup,
+  getSessionCount,
+} from './server';
+
 // Type exports
 export type {
   AnalyticsEvent,
   UserActivationEvent,
-  OnboardingStepViewedEvent,
-  OnboardingStepCompletedEvent,
   ReflectionCompletedEvent,
   InsightGeneratedEvent,
   InsightViewedEvent,

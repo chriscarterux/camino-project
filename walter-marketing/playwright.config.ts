@@ -29,7 +29,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev',
+    command: 'npm run dev -- -p 3003',
     url: 'http://localhost:3003',
     reuseExistingServer: true,
   },
