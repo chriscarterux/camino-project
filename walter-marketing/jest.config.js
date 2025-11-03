@@ -35,6 +35,7 @@ const customJestConfig = {
   testMatch: [
     '**/tests/unit/**/*.[jt]s?(x)',
     '**/tests/integration/**/*.[jt]s?(x)',
+    '**/tests/security/**/*.[jt]s?(x)',
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
@@ -42,7 +43,6 @@ const customJestConfig = {
     '/tests/e2e/',
     '/tests/accessibility/',
     '/tests/performance/',
-    '/tests/security/',
   ],
   // Transform Upstash packages which use ESM
   transformIgnorePatterns: [

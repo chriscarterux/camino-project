@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import {
+  initServerAnalytics,
+  trackServerReflectionCompleted,
+  calculateDaysSinceSignup,
+} from '@/lib/analytics';
+import { generateInsightForUser } from '@/lib/insights/service';
+
+// Initialize server analytics
+initServerAnalytics();
 
 // GET - Fetch user's reflections
 export async function GET(request: NextRequest) {
@@ -33,6 +42,8 @@ export async function GET(request: NextRequest) {
 
 // POST - Create new reflection
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -41,7 +52,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { prompt_id, prompt_text, content, mood } = await request.json();
+    const { prompt_id, prompt_text, content, mood, dimension, session_number } = await request.json();
 
     if (!prompt_id || !prompt_text || !content) {
       return NextResponse.json(
@@ -58,6 +69,7 @@ export async function POST(request: NextRequest) {
         prompt_text,
         content,
         mood,
+        dimension,
       })
       .select()
       .single();
@@ -69,7 +81,84 @@ export async function POST(request: NextRequest) {
     // Update streak
     await updateStreak(supabase, user.id);
 
-    return NextResponse.json({ reflection });
+    // Get total reflection count
+    const { count: reflectionCount } = await supabase
+      .from('reflections')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+
+    // Get user profile for signup date
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('created_at')
+      .eq('id', user.id)
+      .single();
+
+    // Calculate time spent (from start of request)
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+    // Calculate word count
+    const wordCount = content.trim().split(/\s+/).length;
+
+    // Track reflection completed event
+    // SECURITY: Do not send prompt_text (PII) or content to analytics
+    // Only send metadata for privacy protection
+    trackServerReflectionCompleted(user.id, {
+      reflection_id: reflection.id,
+      reflection_count: reflectionCount || 1,
+      prompt_id, // Send only the ID, not the text
+      prompt_text: '', // REMOVED: Sensitive data - prompt text could contain PII
+      dimension: dimension || undefined,
+      word_count: wordCount,
+      time_spent_seconds: timeSpent,
+      mood: mood || undefined,
+      session_number: session_number || 1,
+      days_since_signup: calculateDaysSinceSignup(profile?.created_at || user.created_at),
+    });
+
+    // If this is the 3rd reflection, trigger insight generation
+    let shouldGenerateInsight = false;
+    let insight = null;
+
+    if (reflectionCount === 3) {
+      shouldGenerateInsight = true;
+
+      // Get the last 3 reflections
+      const { data: recentReflections } = await supabase
+        .from('reflections')
+        .select('id')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      if (recentReflections && recentReflections.length === 3) {
+        // Generate insight directly with authenticated context
+        // This replaces the unauthenticated fetch call that was causing failures
+        try {
+          const result = await generateInsightForUser(
+            supabase,
+            user.id,
+            recentReflections.map(r => r.id),
+            dimension || 'identity'
+          );
+
+          if (result.success) {
+            insight = result.insight;
+          } else {
+            console.error('Failed to generate insight:', result.error);
+          }
+        } catch (error) {
+          console.error('Failed to generate insight:', error);
+        }
+      }
+    }
+
+    return NextResponse.json({
+      reflection,
+      reflection_count: reflectionCount,
+      should_generate_insight: shouldGenerateInsight,
+      insight,
+    });
   } catch (error) {
     console.error('Create reflection error:', error);
     return NextResponse.json(
