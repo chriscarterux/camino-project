@@ -2,42 +2,52 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
 import WelcomeEmail from "@/lib/emails/welcome-lead";
+import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Rate limiting map (in production, use Redis)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const limit = rateLimitMap.get(ip);
-
-  if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + 60000 }); // 1 minute
-    return true;
-  }
-
-  if (limit.count >= 3) {
-    return false;
-  }
-
-  limit.count++;
-  return true;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip = request.headers.get("x-forwarded-for") || "unknown";
-    if (!checkRateLimit(ip)) {
+    // Extract IP address for rate limiting
+    const ip = getClientIP(request);
+
+    // Check distributed rate limit (serverless-compatible)
+    const { success, limit, reset, remaining } = await checkRateLimit(ip);
+
+    if (!success) {
+      console.log(`🚫 Rate limit exceeded for IP: ${ip}`);
       return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
-        { status: 429 }
+        {
+          error: "Too many requests. Please try again later.",
+          limit,
+          remaining,
+          reset: new Date(reset).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
+            "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
+          },
+        }
       );
     }
 
     const body = await request.json();
-    const { email, name, primary_interest, source } = body;
+    const { email, name, primary_interest, source, website } = body;
+
+    // Server-side honeypot validation
+    // The 'website' field is hidden from humans but visible to bots
+    if (website) {
+      console.log(`🚫 Bot detected via honeypot - IP: ${ip}`);
+      // Return success to avoid revealing the honeypot mechanism
+      return NextResponse.json({
+        success: true,
+        message: "Thank you for your interest!",
+      });
+    }
 
     // Validation
     if (!email || typeof email !== "string") {
