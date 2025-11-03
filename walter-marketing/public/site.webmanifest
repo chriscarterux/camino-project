@@ -1,0 +1,23 @@
+{
+  "name": "Camino",
+  "short_name": "Camino",
+  "description": "12-week integrated transformation journey",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#E2C379",
+  "background_color": "#2D2F33",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -11,7 +11,11 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const SOURCE_SVG = '/Users/howdycarter/Downloads/camino_favicon.svg';
+// Support CLI argument for source SVG path (for flexibility)
+// Default to repo path, fallback to downloads
+const DEFAULT_SOURCE = path.join(__dirname, '../public/camino-icon-source.svg');
+const FALLBACK_SOURCE = '/Users/howdycarter/Downloads/camino_favicon.svg';
+const SOURCE_SVG = process.argv[2] || DEFAULT_SOURCE;
 const PUBLIC_DIR = path.join(__dirname, '../public');
 
 console.log('🎨 Generating Camino favicon package...\n');

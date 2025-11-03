@@ -258,45 +258,66 @@ try {
 }
 
 if (canCheckDimensions) {
-  for (const file of pngFiles) {
-    const filePath = path.join(PUBLIC_DIR, file.name);
+  (async () => {
+    for (const file of pngFiles) {
+      const filePath = path.join(PUBLIC_DIR, file.name);
 
-    if (!fs.existsSync(filePath)) {
-      continue; // Already reported as missing
-    }
+      if (!fs.existsSync(filePath)) {
+        continue; // Already reported as missing
+      }
 
-    try {
-      const metadata = await sharp(filePath).metadata();
+      try {
+        const metadata = await sharp(filePath).metadata();
 
-      if (metadata.width === file.expectedSize && metadata.height === file.expectedSize) {
-        console.log(`  ✓ ${file.name} - ${metadata.width}x${metadata.height}`);
-      } else {
-        console.log(`  ❌ ${file.name} - ${metadata.width}x${metadata.height} (expected ${file.expectedSize}x${file.expectedSize})`);
+        if (metadata.width === file.expectedSize && metadata.height === file.expectedSize) {
+          console.log(`  ✓ ${file.name} - ${metadata.width}x${metadata.height}`);
+        } else {
+          console.log(`  ❌ ${file.name} - ${metadata.width}x${metadata.height} (expected ${file.expectedSize}x${file.expectedSize})`);
+          errors++;
+        }
+      } catch (error) {
+        console.log(`  ❌ ${file.name} - Could not read dimensions`);
         errors++;
       }
-    } catch (error) {
-      console.log(`  ❌ ${file.name} - Could not read dimensions`);
-      errors++;
     }
-  }
-  console.log();
-}
+    console.log();
 
-// Summary
-console.log('📊 Test Summary\n');
-console.log(`  Total Files: ${REQUIRED_FILES.length}`);
-console.log(`  Package Size: ${totalKB}KB`);
-console.log(`  Errors: ${errors}`);
-console.log(`  Warnings: ${warnings}`);
-console.log();
+    // Summary
+    console.log('📊 Test Summary\n');
+    console.log(`  Total Files: ${REQUIRED_FILES.length}`);
+    console.log(`  Package Size: ${totalKB}KB`);
+    console.log(`  Errors: ${errors}`);
+    console.log(`  Warnings: ${warnings}`);
+    console.log();
 
-if (errors === 0 && warnings === 0) {
-  console.log('✅ All tests passed! Favicon package is ready.\n');
-  process.exit(0);
-} else if (errors === 0) {
-  console.log('⚠️  Tests passed with warnings. Review warnings above.\n');
-  process.exit(0);
+    if (errors === 0 && warnings === 0) {
+      console.log('✅ All tests passed! Favicon package is ready.\n');
+      process.exit(0);
+    } else if (errors === 0) {
+      console.log('⚠️  Tests passed with warnings. Review warnings above.\n');
+      process.exit(0);
+    } else {
+      console.log('❌ Tests failed. Fix errors above before deploying.\n');
+      process.exit(1);
+    }
+  })();
 } else {
-  console.log('❌ Tests failed. Fix errors above before deploying.\n');
-  process.exit(1);
+  // Summary
+  console.log('📊 Test Summary\n');
+  console.log(`  Total Files: ${REQUIRED_FILES.length}`);
+  console.log(`  Package Size: ${totalKB}KB`);
+  console.log(`  Errors: ${errors}`);
+  console.log(`  Warnings: ${warnings}`);
+  console.log();
+
+  if (errors === 0 && warnings === 0) {
+    console.log('✅ All tests passed! Favicon package is ready.\n');
+    process.exit(0);
+  } else if (errors === 0) {
+    console.log('⚠️  Tests passed with warnings. Review warnings above.\n');
+    process.exit(0);
+  } else {
+    console.log('❌ Tests failed. Fix errors above before deploying.\n');
+    process.exit(1);
+  }
 }
