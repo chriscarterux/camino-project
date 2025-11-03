@@ -294,134 +294,12 @@ CREATE INDEX idx_activations_date ON user_activations(activated_at);
 
 ### Blockers Resolved
 ✅ Activation moment defined (this document)
-✅ Analytics instrumentation (HOW-177 - Completed)
 
 ### Required for Implementation
-- ✅ Analytics instrumentation (HOW-177 - **COMPLETED**)
+- Analytics instrumentation (HOW-177 - Urgent)
 - Onboarding flow (HOW-180 - Urgent)
 - Insight generation AI (existing or new)
 - Email nudges for reflection 2 & 3 (optional but recommended)
-
----
-
-## Implementation Notes (HOW-177)
-
-**Date Completed:** 2025-11-03
-**Status:** ✅ Analytics Instrumentation Complete
-
-### What Was Implemented
-
-1. **Analytics Service** (`/lib/analytics/`)
-   - Type-safe event tracking with TypeScript
-   - PostHog integration (client and server)
-   - Offline event queuing
-   - Privacy-respecting (honors Do Not Track)
-   - Error handling and retry logic
-
-2. **Event Tracking**
-   - `user_activation_achieved` - Primary activation event
-   - `reflection_completed` - Tracks each reflection
-   - `insight_generated` - AI creates insight
-   - `insight_viewed` - User views insight
-   - `insight_shared` - Viral sharing moment
-
-3. **API Integration**
-   - `/api/reflections` - Tracks completions, triggers insights at 3
-   - `/api/insights` - Generates insights from reflections
-   - `/api/insights/[id]` - Views insight, fires activation
-
-4. **Database Updates**
-   - `user_activations` table for activation records
-   - `profiles.is_activated` flag
-   - `insights.viewed_at` and `view_count` fields
-
-5. **Testing**
-   - Unit tests: Event validation, privacy, performance
-   - Integration tests: Full activation flow, funnel metrics
-   - E2E tests: User journey, accessibility, security
-
-6. **Documentation**
-   - `ANALYTICS_SETUP.md` - Complete setup guide
-   - API documentation
-   - Privacy compliance notes
-   - Troubleshooting guide
-
-### Technology Decisions
-
-**PostHog Selected** for:
-- Privacy-first architecture (self-hostable)
-- Cost-effective (generous free tier)
-- Real-time tracking and dashboards
-- Session replay for debugging
-- Feature flags for A/B testing
-- Excellent TypeScript support
-
-### Next Steps
-
-1. **Configure PostHog**
-   - Sign up at posthog.com
-   - Create project
-   - Add API key to environment variables
-   - Create activation dashboard
-
-2. **Database Migration**
-   - Run SQL to create `user_activations` table
-   - Add columns to `profiles` table
-   - Add columns to `insights` table
-
-3. **Deploy**
-   - Set environment variables in production
-   - Deploy analytics code
-   - Verify events appear in PostHog
-   - Monitor activation rate
-
-4. **Monitor**
-   - Track 7-day activation rate
-   - Monitor funnel drop-off
-   - Optimize based on data
-   - A/B test improvements
-
-### Files Created
-
-```
-lib/analytics/
-├── types.ts              # TypeScript event definitions
-├── client.ts             # Client-side PostHog integration
-├── server.ts             # Server-side PostHog integration
-└── index.ts              # Module exports
-
-app/api/
-├── insights/
-│   ├── route.ts          # Generate insights
-│   └── [id]/route.ts     # View insights, fire activation
-└── reflections/
-    └── route.ts          # Updated with analytics
-
-tests/
-├── unit/
-│   └── analytics.test.ts
-├── integration/
-│   └── activation-flow.test.ts
-└── e2e/
-    └── activation-journey.spec.ts
-
-ANALYTICS_SETUP.md         # Setup documentation
-```
-
-### Environment Variables Required
-
-```bash
-NEXT_PUBLIC_POSTHOG_KEY=phc_your_key_here
-NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
-```
-
-### Key Metrics to Monitor
-
-1. **Activation Rate:** % of users who complete activation within 7 days (target: >60%)
-2. **Time to Activation:** Days from signup to first insight viewed
-3. **Funnel Drop-off:** Where users abandon the journey
-4. **Insight Quality:** Generation time, view rate, share rate
-5. **Retention Impact:** Activated vs. non-activated user retention
 
 ---
 
@@ -443,13 +321,6 @@ NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 
 ## Changelog
 
-- **2025-11-03:** ✅ Analytics instrumentation implemented (HOW-177)
-  - PostHog integration complete
-  - All 5 events tracked
-  - Server and client-side tracking
-  - Complete test coverage
-  - Documentation complete
-
 - **2025-11-02:** Initial definition approved
   - Activation moment: First AI insight breakthrough
   - Target: >60% within 7 days
@@ -461,7 +332,6 @@ NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 
 - Linear Issue: [HOW-160](https://linear.app/howdycarter/issue/HOW-160)
 - Related Issues:
-  - ✅ HOW-177: Implement Analytics Instrumentation (COMPLETED)
+  - HOW-177: Implement Analytics Instrumentation
   - HOW-180: Onboarding Flow Implementation
 - Product Vision: `/Users/howdycarter/Documents/obsidian-vaults/howdycarter/01_PROJECTS/Camino/`
-- Analytics Setup: `ANALYTICS_SETUP.md`
