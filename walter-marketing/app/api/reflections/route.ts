@@ -5,6 +5,7 @@ import {
   trackServerReflectionCompleted,
   calculateDaysSinceSignup,
 } from '@/lib/analytics';
+import { generateInsightForUser } from '@/lib/insights/service';
 
 // Initialize server analytics
 initServerAnalytics();
@@ -129,22 +130,20 @@ export async function POST(request: NextRequest) {
         .limit(3);
 
       if (recentReflections && recentReflections.length === 3) {
-        // Trigger insight generation (this could be done async in production)
+        // Generate insight directly with authenticated context
+        // This replaces the unauthenticated fetch call that was causing failures
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/insights`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              reflection_ids: recentReflections.map(r => r.id),
-              dimension: dimension || 'identity',
-            }),
-          });
+          const result = await generateInsightForUser(
+            supabase,
+            user.id,
+            recentReflections.map(r => r.id),
+            dimension || 'identity'
+          );
 
-          if (response.ok) {
-            const data = await response.json();
-            insight = data.insight;
+          if (result.success) {
+            insight = result.insight;
+          } else {
+            console.error('Failed to generate insight:', result.error);
           }
         } catch (error) {
           console.error('Failed to generate insight:', error);
