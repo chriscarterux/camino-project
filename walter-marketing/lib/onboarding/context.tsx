@@ -45,9 +45,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   });
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load state from localStorage on mount
+  // Load state from sessionStorage on mount
+  // Using sessionStorage instead of localStorage for security:
+  // - Sensitive reflection data is cleared when browser closes
+  // - Prevents long-term storage of personal thoughts
+  // - Appropriate for onboarding flow (no need to persist across sessions)
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -56,14 +60,14 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         console.error("Failed to load onboarding state:", error);
       }
     }
-    // Mark as hydrated after attempting to load from localStorage
+    // Mark as hydrated after attempting to load from sessionStorage
     setIsHydrated(true);
   }, []);
 
-  // Save state to localStorage whenever it changes (only after hydration)
+  // Save state to sessionStorage whenever it changes (only after hydration)
   useEffect(() => {
     if (isHydrated) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
   }, [state, isHydrated]);
 
@@ -93,7 +97,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   };
 
   const resetOnboarding = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(STORAGE_KEY);
     setState({
       intent: null,
       reflections: [],

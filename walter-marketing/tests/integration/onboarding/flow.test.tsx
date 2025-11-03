@@ -26,7 +26,7 @@ jest.mock('@/lib/analytics', () => ({
 
 describe('Onboarding Context', () => {
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it('initializes with default state', () => {
@@ -106,7 +106,7 @@ describe('Onboarding Context', () => {
     expect(contextValue.state.reflections[0].wordCount).toBe(50);
   });
 
-  it('persists state to localStorage', async () => {
+  it('persists state to sessionStorage for security', async () => {
     let contextValue: any;
 
     function TestComponent() {
@@ -127,14 +127,14 @@ describe('Onboarding Context', () => {
     fireEvent.click(screen.getByText('Set Intent'));
 
     await waitFor(() => {
-      const saved = localStorage.getItem('camino_onboarding_state');
+      const saved = sessionStorage.getItem('camino_onboarding_state');
       expect(saved).toBeTruthy();
       const parsed = JSON.parse(saved!);
       expect(parsed.intent).toBe('worldview');
     });
   });
 
-  it('loads state from localStorage on mount', () => {
+  it('loads state from sessionStorage on mount', () => {
     const savedState = {
       intent: 'relationships',
       reflections: [
@@ -153,7 +153,7 @@ describe('Onboarding Context', () => {
       startTime: Date.now(),
     };
 
-    localStorage.setItem('camino_onboarding_state', JSON.stringify(savedState));
+    sessionStorage.setItem('camino_onboarding_state', JSON.stringify(savedState));
 
     let contextValue: any;
 
@@ -203,6 +203,47 @@ describe('Onboarding Context', () => {
     expect(contextValue.state.intent).toBeNull();
     expect(contextValue.state.reflections).toEqual([]);
     expect(contextValue.state.currentStep).toBe(1);
+  });
+
+  it('does not persist sensitive data to localStorage', () => {
+    let contextValue: any;
+
+    function TestComponent() {
+      contextValue = useOnboarding();
+      return (
+        <button
+          onClick={() =>
+            contextValue.addReflection({
+              promptId: 'test_prompt',
+              promptText: 'Test prompt',
+              text: 'My deepest fears and personal thoughts',
+              wordCount: 50,
+              timeSpent: 120,
+            })
+          }
+        >
+          Add Reflection
+        </button>
+      );
+    }
+
+    render(
+      <OnboardingProvider>
+        <TestComponent />
+      </OnboardingProvider>
+    );
+
+    fireEvent.click(screen.getByText('Add Reflection'));
+
+    // Verify data is NOT in localStorage (security improvement)
+    const localStorageData = localStorage.getItem('camino_onboarding_state');
+    expect(localStorageData).toBeNull();
+
+    // Verify data IS in sessionStorage (cleared on browser close)
+    const sessionStorageData = sessionStorage.getItem('camino_onboarding_state');
+    expect(sessionStorageData).toBeTruthy();
+    const parsed = JSON.parse(sessionStorageData!);
+    expect(parsed.reflections[0].text).toBe('My deepest fears and personal thoughts');
   });
 });
 
