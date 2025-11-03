@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Circle } from "lucide-react";
+import LeadCaptureForm from "@/components/LeadCaptureForm";
 
 export default function HowItWorksPage() {
   return (
@@ -212,22 +213,23 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Final CTA with Lead Capture */}
       <section className="py-20 md:py-28 bg-muted/30 border-t">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6 text-center">
               Start your Camino today
             </h2>
-            <p className="text-lg text-muted-foreground mb-10">
+            <p className="text-lg text-muted-foreground mb-10 text-center">
               Begin with a free reflection. See how awareness changes everything.
             </p>
-            <Button asChild size="lg" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
-              <Link href="/journal">
-                Start free
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+
+            {/* Lead Capture Form */}
+            <LeadCaptureForm
+              source="how-it-works"
+              variant="card"
+              showInterest={true}
+            />
           </div>
         </div>
       </section>

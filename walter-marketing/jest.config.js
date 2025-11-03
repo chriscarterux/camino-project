@@ -9,7 +9,7 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'jest-environment-jsdom', // jsdom for React component tests
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you soon)
     '^@/(.*)$': '<rootDir>/$1',
@@ -35,6 +35,7 @@ const customJestConfig = {
   testMatch: [
     '**/tests/unit/**/*.[jt]s?(x)',
     '**/tests/integration/**/*.[jt]s?(x)',
+    '**/tests/security/**/*.[jt]s?(x)',
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
@@ -42,7 +43,10 @@ const customJestConfig = {
     '/tests/e2e/',
     '/tests/accessibility/',
     '/tests/performance/',
-    '/tests/security/',
+  ],
+  // Transform Upstash packages which use ESM
+  transformIgnorePatterns: [
+    'node_modules/(?!(@upstash|uncrypto)/)',
   ],
 }
 

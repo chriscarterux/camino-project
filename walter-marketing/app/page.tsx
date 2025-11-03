@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Circle } from "lucide-react";
+import LeadCaptureForm from "@/components/LeadCaptureForm";
+import FooterSignup from "@/components/FooterSignup";
 
 export default function Home() {
   return (
@@ -87,22 +89,13 @@ export default function Home() {
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
-              <Button asChild size="lg" className="w-full sm:w-auto text-base h-12 px-8 group bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
-                <Link href="/journal">
-                  Start Your Transformation
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto text-base h-12 px-8"
-              >
-                <Link href="/how-it-works">See how it works</Link>
-              </Button>
+            {/* Lead Capture Form - Hero */}
+            <div className="mt-12 max-w-md mx-auto">
+              <LeadCaptureForm
+                source="homepage"
+                variant="card"
+                showInterest={true}
+              />
             </div>
 
             {/* Social Proof */}
@@ -462,9 +455,12 @@ export default function Home() {
                   height={32}
                 />
               </Link>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                 12-week integrated transformation journey
               </p>
+
+              {/* Footer Signup Widget */}
+              <FooterSignup />
             </div>
 
             {/* Product */}
