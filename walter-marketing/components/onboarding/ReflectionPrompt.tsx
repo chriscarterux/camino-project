@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +24,7 @@ export function ReflectionPrompt({
   const [text, setText] = useState("");
   const [startTime] = useState(Date.now());
   const [isFocused, setIsFocused] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Calculate word count
   const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
@@ -37,12 +38,11 @@ export function ReflectionPrompt({
     onSubmit(text, wordCount, timeSpent);
   };
 
-  // Auto-resize textarea
+  // Auto-resize textarea using ref instead of getElementById
   useEffect(() => {
-    const textarea = document.getElementById("reflection-textarea");
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
     }
   }, [text]);
 
@@ -68,7 +68,7 @@ export function ReflectionPrompt({
         )}
       >
         <textarea
-          id="reflection-textarea"
+          ref={textareaRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
           onFocus={() => setIsFocused(true)}

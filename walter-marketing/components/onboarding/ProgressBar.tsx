@@ -9,7 +9,10 @@ interface ProgressBarProps {
 }
 
 export function ProgressBar({ currentStep, totalSteps, className }: ProgressBarProps) {
-  const progress = (currentStep / totalSteps) * 100;
+  // Add defensive validation for edge cases
+  const progress = totalSteps > 0
+    ? Math.min((currentStep / totalSteps) * 100, 100)
+    : 0;
 
   return (
     <div className={cn("w-full", className)}>

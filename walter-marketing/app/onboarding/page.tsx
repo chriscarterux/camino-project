@@ -47,11 +47,6 @@ export default function OnboardingPage() {
     );
   }
 
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-pulse text-[var(--camino-gold)]">
-        Loading your journey...
-      </div>
-    </div>
-  );
+  // After hydration, redirect happens in useEffect - return null to avoid visual flicker
+  return null;
 }
