@@ -330,10 +330,12 @@ These **improve quality and confidence** but aren't launch blockers:
 - No backup recovery testing
 
 **Recommendation:**
-Add the 7 high-priority gaps before launch (estimated 20-30 hours total).
+Add the 7 high-priority gaps before launch (estimated ~28 hours).
 This brings Camino from "Good" to "Excellent" testing coverage and aligns with 2025 industry standards.
 
-**Priority Order:**
+For full roadmap including post-launch improvements, see phases above (30-44 hours total across all phases).
+
+**Priority Order (High-Priority Only):**
 1. Cross-browser + Mobile (4 hours) - Easy, high impact
 2. Visual regression (4 hours) - Prevents bugs
 3. GDPR compliance (6 hours) - Legal requirement
@@ -342,4 +344,4 @@ This brings Camino from "Good" to "Excellent" testing coverage and aligns with 2
 6. API contracts (3 hours) - API stability
 7. Load testing (6 hours) - Capacity planning
 
-**Total:** ~28 hours (~3.5 days) to reach excellent coverage
+**High-Priority Total:** ~28 hours (~3.5 days) to reach excellent coverage
