@@ -17,6 +17,7 @@ import {
   QueuedEvent,
   EVENT_NAMES,
 } from './types';
+import { validateNoPII } from './sanitize';
 
 // PostHog client (loaded dynamically to avoid SSR issues)
 let posthog: any = null;
@@ -126,6 +127,20 @@ export function track(event: AnalyticsEvent): void {
   if (!event.user_id || !event.timestamp) {
     console.error('[Analytics] Invalid event (missing user_id or timestamp):', event);
     return;
+  }
+
+  // SECURITY: Validate that properties don't contain PII
+  try {
+    validateNoPII(event.properties as Record<string, any>);
+  } catch (error) {
+    console.error('[Analytics] PII validation failed:', error);
+    if (config.debug) {
+      console.error('[Analytics] Event properties:', event.properties);
+    }
+    // In production, block the event. In development, log and continue.
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
   }
 
   // If PostHog not loaded, queue the event

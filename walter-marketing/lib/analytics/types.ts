@@ -41,7 +41,8 @@ export interface ReflectionCompletedEvent extends BaseEvent {
     reflection_id: string;
     reflection_count: number; // 1, 2, 3...
     prompt_id: string;
-    prompt_text: string;
+    // SECURITY: prompt_text removed - contains PII
+    // Only send prompt_id for tracking, never the actual text
     dimension?: 'identity' | 'worldview' | 'relationships';
     word_count: number;
     time_spent_seconds: number;
