@@ -161,11 +161,38 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint for analytics/admin (optional)
+// GET endpoint for analytics/admin
+// Requires authentication - only accessible to admin users
 export async function GET(request: NextRequest) {
   try {
-    // This would require authentication in production
     const supabase = await createClient();
+
+    // Check if user is authenticated and has admin role
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError || profile?.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized - Admin access required" },
+        { status: 403 }
+      );
+    }
 
     // Get lead stats
     const { count: totalLeads, error: countError } = await supabase
