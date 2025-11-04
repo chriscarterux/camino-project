@@ -25,7 +25,7 @@ export default function HeroEnhanced() {
           <div className="flex justify-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#E2C379]/30 bg-[#E2C379]/10 backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-[#E2C379]" />
-              <span className="text-sm font-medium">12-week transformation journey</span>
+              <span className="text-sm font-medium">Coming Q1 2026 - Join the Waitlist</span>
             </div>
           </div>
 
@@ -41,7 +41,7 @@ export default function HeroEnhanced() {
 
           {/* Subheading */}
           <p className="mx-auto mt-6 max-w-3xl text-center text-base text-muted-foreground sm:text-lg md:text-xl lg:text-2xl leading-relaxed">
-            A 12-week integrated transformation journey that shifts how you see yourself (Identity), how you see the world (Worldview), and how you see your relationship to everything (Your Place in the World).
+            The <strong>Life Model Framework</strong>: A proven 5-phase methodology that transforms generic AI into deeply personalized guidance through context engineering—helping you see yourself (Identity), the world (Worldview), and your relationship to everything (Connection).
           </p>
 
           {/* Marquee - Transformation Benefits */}
@@ -93,10 +93,10 @@ export default function HeroEnhanced() {
           {/* CTA Buttons */}
           <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button asChild size="lg" className="bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33] text-base h-12 px-8 min-w-[200px]">
-              <Link href="/journal">Start Your Transformation</Link>
+              <Link href="#waitlist">Join Waitlist</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base h-12 px-8 min-w-[200px]">
-              <Link href="/how-it-works">How It Works</Link>
+              <Link href="/life-model-framework">Learn the Framework</Link>
             </Button>
           </div>
 
