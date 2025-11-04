@@ -1,0 +1,26 @@
+{
+  "name": "camino-project",
+  "version": "1.0.0",
+  "description": "Complete platform for dimensional transformation through AI-assisted reflection and coaching.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chriscarterux/camino-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chriscarterux/camino-project/issues"
+  },
+  "homepage": "https://github.com/chriscarterux/camino-project#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
