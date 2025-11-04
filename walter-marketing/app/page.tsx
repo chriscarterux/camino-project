@@ -5,6 +5,7 @@ import { ArrowRight, Check, Circle } from "lucide-react";
 import LeadCaptureForm from "@/components/LeadCaptureForm";
 import FooterSignup from "@/components/FooterSignup";
 import HeroEnhanced from "@/components/blocks/hero-enhanced";
+import BeforeAfterSection from "@/components/BeforeAfterSection";
 
 export default function Home() {
   return (
@@ -76,48 +77,84 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Three Pillars */}
-      <section id="pillars" className="py-20 md:py-28 lg:py-32 border-t">
+      {/* The Life Model Framework: 5 Phases */}
+      <section id="framework" className="py-20 md:py-28 lg:py-32 border-t">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4">
-              The Three Pillars
+              The Life Model Framework: Context Engineering for Personalized AI
             </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              A structured 5-phase methodology that transforms generic AI advice into deeply personalized guidance
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 max-w-6xl mx-auto">
-            {/* Pillar 1 - Reflect */}
+          <div className="grid md:grid-cols-5 gap-6 max-w-6xl mx-auto mb-8">
+            {/* Phase 1 - Foundation */}
             <div className="text-center group">
-              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
-                <Circle className="h-8 w-8 text-[#E2C379]" />
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <span className="text-2xl font-bold text-[#E2C379]">1</span>
               </div>
-              <h3 className="text-2xl font-bold mb-3">Reflect</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Gentle prompts that meet you where you are.
+              <h3 className="text-lg font-bold mb-2">Foundation</h3>
+              <p className="text-sm text-muted-foreground mb-2">7 days</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Daily reflection to establish baseline awareness
               </p>
             </div>
 
-            {/* Pillar 2 - Discover */}
+            {/* Phase 2 - Psychometrics */}
             <div className="text-center group">
-              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
-                <Circle className="h-8 w-8 text-[#E2C379]" />
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <span className="text-2xl font-bold text-[#E2C379]">2</span>
               </div>
-              <h3 className="text-2xl font-bold mb-3">Discover</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                AI that mirrors your themes back to you.
+              <h3 className="text-lg font-bold mb-2">Psychometrics</h3>
+              <p className="text-sm text-muted-foreground mb-2">7 days</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Validated assessments (MBTI, Enneagram, attachment)
               </p>
             </div>
 
-            {/* Pillar 3 - Grow */}
+            {/* Phase 3 - History */}
             <div className="text-center group">
-              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
-                <Circle className="h-8 w-8 text-[#E2C379]" />
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <span className="text-2xl font-bold text-[#E2C379]">3</span>
               </div>
-              <h3 className="text-2xl font-bold mb-3">Grow</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Short practices that become lasting change.
+              <h3 className="text-lg font-bold mb-2">History</h3>
+              <p className="text-sm text-muted-foreground mb-2">14 days</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Formative experiences and core narratives
               </p>
             </div>
+
+            {/* Phase 4 - Integration */}
+            <div className="text-center group">
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <span className="text-2xl font-bold text-[#E2C379]">4</span>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Integration</h3>
+              <p className="text-sm text-muted-foreground mb-2">7 days</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Synthesize patterns into your Life Model
+              </p>
+            </div>
+
+            {/* Phase 5 - Application */}
+            <div className="text-center group">
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E2C379]/20 group-hover:bg-[#E2C379]/30 transition-colors">
+                <span className="text-2xl font-bold text-[#E2C379]">5</span>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Application</h3>
+              <p className="text-sm text-muted-foreground mb-2">Ongoing</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Use your Life Model for personalized AI guidance
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Button asChild variant="outline" size="lg">
+              <Link href="/life-model-framework">Learn More About the Framework</Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -158,6 +195,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Before/After Examples */}
+      <BeforeAfterSection />
 
       {/* Social Proof */}
       <section id="testimonials" className="py-20 md:py-28 lg:py-32 border-t">
@@ -342,22 +382,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Lead Magnet */}
-      <section className="py-20 md:py-28 lg:py-32 border-t">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
-              Try your first guided reflection
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
-              Take three minutes to notice something real.
-            </p>
-            <Button asChild size="lg" className="text-base h-12 px-8 group bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]">
-              <Link href="/journal">
-                Start now
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
+      {/* Waitlist CTA */}
+      <section id="waitlist" className="py-20 md:py-28 lg:py-32 border-t bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#E2C379]/30 bg-[#E2C379]/10 backdrop-blur-sm mb-6">
+                <span className="text-sm font-medium">Coming Q1 2026</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6">
+                Ready for AI That Actually Gets You?
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground mb-2 leading-relaxed">
+                Join the waitlist to build your Life Model and transform generic AI into personalized intelligence.
+              </p>
+            </div>
+
+            <LeadCaptureForm
+              source="homepage"
+              variant="card"
+              showInterest={true}
+            />
           </div>
         </div>
       </section>
