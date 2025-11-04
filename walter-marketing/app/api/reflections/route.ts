@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       reflection_id: reflection.id,
       reflection_count: reflectionCount || 1,
       prompt_id, // Send only the ID, not the text
-      prompt_text: '', // REMOVED: Sensitive data - prompt text could contain PII
+      // prompt_text removed entirely from type definition for security
       dimension: dimension || undefined,
       word_count: wordCount,
       time_spent_seconds: timeSpent,
