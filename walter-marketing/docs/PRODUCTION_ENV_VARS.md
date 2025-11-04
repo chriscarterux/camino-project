@@ -99,7 +99,9 @@ curl https://xxxxx.supabase.co/rest/v1/ \
   -H "Authorization: Bearer YOUR_ANON_KEY"
 ```
 
-**Documentation:** See `docs/SUPABASE_SETUP.md` (to be created)
+**Documentation:** [Supabase Docs](https://supabase.com/docs)
+
+**Note:** Detailed Supabase setup guide will be created in a future PR as part of database schema documentation.
 
 ---
 
@@ -302,8 +304,10 @@ OPENAI_API_KEY=sk-proj-xxxxx
 
 **Cost:**
 - No monthly fee (pay-per-use)
-- GPT-4: ~$0.03 per 1K tokens input, $0.06 per 1K tokens output
-- Estimated: $50-200/month depending on user activity
+- GPT-4o-mini: ~$0.15 per 1M input tokens, $0.60 per 1M output tokens
+- GPT-4o: ~$2.50 per 1M input tokens, $10 per 1M output tokens
+- **Estimated:** $20-80/month for 100 active users (primarily using mini model)
+- **Note:** Actual costs vary based on prompt length and user engagement. Monitor usage in OpenAI dashboard.
 
 **Models Used:**
 - `gpt-4o-mini` - Daily prompts (cost-effective)
@@ -523,6 +527,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 
 ### Minimum Monthly Cost (Early Stage)
 
+**Note:** All cost estimates are approximate and will vary based on actual usage patterns.
+
 | Service | Tier | Cost |
 |---------|------|------|
 | Supabase | Free | $0 |
@@ -530,8 +536,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 | Stripe | Pay-per-use | $0 base |
 | Resend | Free | $0 |
 | Upstash Redis | Free | $0 |
-| OpenAI | Pay-per-use | ~$50 |
-| **Total** | | **~$50/month** |
+| OpenAI | Pay-per-use | ~$20-50 |
+| **Total** | | **~$20-50/month** |
 
 ### Scaled Monthly Cost (1,000+ users)
 
@@ -542,15 +548,16 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 | Stripe | 2.9% | Variable |
 | Resend | Paid | $20 |
 | Upstash Redis | Pro | $10 |
-| OpenAI | Pay-per-use | ~$200 |
-| **Total** | | **~$305/month + stripe fees** |
+| OpenAI | Pay-per-use | ~$100-150 |
+| **Total** | | **~$205-255/month + stripe fees** |
 
 ### Revenue Break-Even Analysis
 
 At $19.95/month for Journey tier:
-- Need ~16 subscribers to cover infrastructure
+- Need ~3 subscribers to cover early-stage infrastructure (~$50)
+- Need ~11 subscribers to cover scaled infrastructure (~$220)
 - Need ~50 subscribers for $1,000 MRR
-- Target: 100+ subscribers for sustainable growth
+- Target: 100+ subscribers for sustainable growth ($2,000 MRR)
 
 ---
 
