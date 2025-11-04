@@ -9,26 +9,112 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawn } = require('child_process');
 
-// Support CLI argument for source SVG path (for flexibility)
-// Default to repo path, fallback to downloads
-const DEFAULT_SOURCE = path.join(__dirname, '../public/camino-icon-source.svg');
+// Determine project root and allowed directories
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+const PUBLIC_DIR = path.join(PROJECT_ROOT, 'public');
+const ALLOWED_DIRECTORIES = [
+  PROJECT_ROOT,
+  '/Users/howdycarter/Downloads',
+  '/tmp'
+];
+
+// Default paths
+const DEFAULT_SOURCE = path.join(PUBLIC_DIR, 'camino-icon-source.svg');
 const FALLBACK_SOURCE = '/Users/howdycarter/Downloads/camino_favicon.svg';
-const SOURCE_SVG = process.argv[2] || DEFAULT_SOURCE;
-const PUBLIC_DIR = path.join(__dirname, '../public');
+
+/**
+ * Validate input path to prevent path traversal and command injection
+ * SECURITY FIX: Prevents malicious paths from accessing files outside allowed directories
+ * @param {string} inputPath - The path to validate
+ * @returns {string} Validated absolute path
+ * @throws {Error} If path is invalid or contains malicious patterns
+ */
+function validateInputPath(inputPath) {
+  // Check for shell metacharacters that could enable command injection
+  const dangerousPatterns = /[;&|`$(){}[\]<>!*?~]/;
+  if (dangerousPatterns.test(inputPath)) {
+    throw new Error('Invalid characters in path. Path contains potential command injection patterns.');
+  }
+
+  // Resolve to absolute path (handles relative paths and symlinks)
+  let resolvedPath;
+  try {
+    resolvedPath = path.resolve(inputPath);
+  } catch (error) {
+    throw new Error(`Invalid path format: ${error.message}`);
+  }
+
+  // Ensure path is within allowed directories
+  const isAllowed = ALLOWED_DIRECTORIES.some(allowedDir => {
+    const normalized = path.resolve(allowedDir);
+    return resolvedPath.startsWith(normalized + path.sep) || resolvedPath === normalized;
+  });
+
+  if (!isAllowed) {
+    throw new Error(`Access denied. Path must be within: ${ALLOWED_DIRECTORIES.join(', ')}`);
+  }
+
+  // Check if file exists
+  if (!fs.existsSync(resolvedPath)) {
+    throw new Error(`File does not exist: ${resolvedPath}`);
+  }
+
+  // Verify it's a file, not a directory
+  const stats = fs.statSync(resolvedPath);
+  if (!stats.isFile()) {
+    throw new Error('Path must be a file, not a directory');
+  }
+
+  // Only allow SVG files
+  const ext = path.extname(resolvedPath).toLowerCase();
+  if (ext !== '.svg') {
+    throw new Error(`Invalid file type. Expected .svg, got ${ext}`);
+  }
+
+  return resolvedPath;
+}
+
+// Determine source SVG with validation
+let SOURCE_SVG;
+const cliArgument = process.argv[2];
+
+if (cliArgument) {
+  try {
+    console.log(`🔍 Validating input path: ${cliArgument}`);
+    SOURCE_SVG = validateInputPath(cliArgument);
+    console.log(`✓ Validated input path: ${SOURCE_SVG}\n`);
+  } catch (error) {
+    console.error(`❌ Security validation failed: ${error.message}`);
+    console.error('\nPath must be:');
+    console.error('  - An SVG file (.svg extension)');
+    console.error('  - Within allowed directories:');
+    ALLOWED_DIRECTORIES.forEach(dir => console.error(`    - ${dir}`));
+    console.error('  - Free of shell metacharacters (;|&`$(){}[]<>!*?~)');
+    process.exit(1);
+  }
+} else {
+  // Try default locations
+  if (fs.existsSync(DEFAULT_SOURCE)) {
+    SOURCE_SVG = DEFAULT_SOURCE;
+  } else if (fs.existsSync(FALLBACK_SOURCE)) {
+    SOURCE_SVG = FALLBACK_SOURCE;
+  } else {
+    console.error(`❌ Source file not found at default locations:`);
+    console.error(`  - ${DEFAULT_SOURCE}`);
+    console.error(`  - ${FALLBACK_SOURCE}`);
+    console.error('\nPlease provide path: node scripts/generate-favicons-simple.js /path/to/svg');
+    process.exit(1);
+  }
+}
 
 console.log('🎨 Generating Camino favicon package...\n');
+console.log(`📋 Source: ${SOURCE_SVG}\n`);
 
 // Ensure public directory exists
 if (!fs.existsSync(PUBLIC_DIR)) {
   fs.mkdirSync(PUBLIC_DIR, { recursive: true });
-}
-
-// Check if source exists
-if (!fs.existsSync(SOURCE_SVG)) {
-  console.error(`❌ Source file not found: ${SOURCE_SVG}`);
-  process.exit(1);
 }
 
 /**
@@ -129,11 +215,21 @@ function checkTools() {
   let hasImageMagick = false;
   let hasSharp = false;
 
-  // Check for ImageMagick
+  // Check for ImageMagick using spawn (secure)
   try {
-    execSync('which convert', { stdio: 'pipe' });
-    hasImageMagick = true;
-    console.log('  ✓ ImageMagick found');
+    const result = spawn('which', ['convert'], { stdio: 'pipe' });
+    result.on('exit', (code) => {
+      if (code === 0) {
+        hasImageMagick = true;
+      }
+    });
+    // Synchronously check if convert exists
+    hasImageMagick = fs.existsSync('/usr/bin/convert') || fs.existsSync('/usr/local/bin/convert');
+    if (hasImageMagick) {
+      console.log('  ✓ ImageMagick found');
+    } else {
+      console.log('  ✗ ImageMagick not found');
+    }
   } catch (e) {
     console.log('  ✗ ImageMagick not found');
   }
@@ -153,9 +249,10 @@ function checkTools() {
 }
 
 /**
- * Generate PNG files using ImageMagick
+ * Generate PNG files using ImageMagick with spawn() for security
+ * SECURITY FIX: Uses spawn() instead of execSync() to prevent command injection
  */
-function generatePNGsWithImageMagick() {
+async function generatePNGsWithImageMagick() {
   console.log('📦 Generating PNG files with ImageMagick...\n');
 
   const sizes = [
@@ -172,13 +269,40 @@ function generatePNGsWithImageMagick() {
     const outputPath = path.join(PUBLIC_DIR, config.name);
 
     try {
-      execSync(
-        `convert -background none -resize ${config.size}x${config.size} "${SOURCE_SVG}" "${outputPath}"`,
-        { stdio: 'inherit' }
-      );
+      // Use spawn() with array arguments (prevents command injection)
+      const args = [
+        '-background', 'none',
+        '-resize', `${config.size}x${config.size}`,
+        SOURCE_SVG,
+        outputPath
+      ];
+
+      await new Promise((resolve, reject) => {
+        const child = spawn('convert', args, {
+          stdio: ['ignore', 'pipe', 'pipe']
+        });
+
+        let stderr = '';
+        child.stderr.on('data', (data) => {
+          stderr += data.toString();
+        });
+
+        child.on('close', (code) => {
+          if (code !== 0) {
+            reject(new Error(`ImageMagick exited with code ${code}: ${stderr}`));
+          } else {
+            resolve();
+          }
+        });
+
+        child.on('error', (err) => {
+          reject(new Error(`Failed to spawn ImageMagick: ${err.message}`));
+        });
+      });
+
       console.log(`  ✓ ${config.name}`);
     } catch (error) {
-      console.error(`  ✗ Failed: ${config.name}`);
+      console.error(`  ✗ Failed: ${config.name} - ${error.message}`);
     }
   }
 
@@ -192,13 +316,34 @@ function generatePNGsWithImageMagick() {
     const png48 = path.join(PUBLIC_DIR, 'favicon-48x48.png');
     const icoPath = path.join(PUBLIC_DIR, 'favicon.ico');
 
-    execSync(
-      `convert "${png16}" "${png32}" "${png48}" "${icoPath}"`,
-      { stdio: 'inherit' }
-    );
+    // Use spawn() with array arguments (prevents command injection)
+    await new Promise((resolve, reject) => {
+      const args = [png16, png32, png48, icoPath];
+      const child = spawn('convert', args, {
+        stdio: ['ignore', 'pipe', 'pipe']
+      });
+
+      let stderr = '';
+      child.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      child.on('close', (code) => {
+        if (code !== 0) {
+          reject(new Error(`ImageMagick exited with code ${code}: ${stderr}`));
+        } else {
+          resolve();
+        }
+      });
+
+      child.on('error', (err) => {
+        reject(new Error(`Failed to spawn ImageMagick: ${err.message}`));
+      });
+    });
+
     console.log('  ✓ favicon.ico\n');
   } catch (error) {
-    console.error('  ✗ Failed to create favicon.ico\n');
+    console.error(`  ✗ Failed to create favicon.ico: ${error.message}\n`);
   }
 }
 
@@ -280,7 +425,7 @@ async function main() {
     if (hasSharp) {
       await generatePNGsWithSharp();
     } else if (hasImageMagick) {
-      generatePNGsWithImageMagick();
+      await generatePNGsWithImageMagick(); // Now awaited since it's async
     } else {
       printManualInstructions();
       return;
