@@ -2,17 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { resend, RESEND_FROM } from '@/lib/resend';
 import ContactNotificationEmail from '@/lib/emails/contact-notification';
 import React from 'react';
+import { withValidation } from '@/lib/validation/middleware';
+import { contactFormSchema } from '@/lib/validation/schemas';
 
-export async function POST(request: NextRequest) {
+/**
+ * POST /api/emails/contact
+ *
+ * Send contact form email with comprehensive input validation
+ *
+ * Validation middleware:
+ * - Name: 1-100 characters, XSS protection
+ * - Email: Valid email format, normalized
+ * - Subject: 1-200 characters, XSS protection
+ * - Message: 1-5000 characters, XSS protection
+ */
+export const POST = withValidation(contactFormSchema, async (request, validatedData) => {
   try {
-    const { name, email, subject, message } = await request.json();
-
-    if (!email || !name || !subject || !message) {
-      return NextResponse.json(
-        { error: 'All fields are required' },
-        { status: 400 }
-      );
-    }
+    const { name, email, subject, message } = validatedData;
 
     // Send notification to support team
     const { data, error } = await resend.emails.send({
@@ -64,4 +70,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

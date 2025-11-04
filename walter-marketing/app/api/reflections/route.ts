@@ -6,6 +6,7 @@ import {
   calculateDaysSinceSignup,
 } from '@/lib/analytics';
 import { generateInsightForUser } from '@/lib/insights/service';
+import { validateReflectionInput } from '@/lib/validation/reflection';
 
 // Initialize server analytics
 initServerAnalytics();
@@ -52,14 +53,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { prompt_id, prompt_text, content, mood, dimension, session_number } = await request.json();
+    // Parse and validate input
+    const rawInput = await request.json();
 
-    if (!prompt_id || !prompt_text || !content) {
+    // SECURITY: Comprehensive input validation with SQL injection and XSS prevention
+    const validationResult = validateReflectionInput(rawInput);
+
+    if (!validationResult.success) {
+      console.error('[Security] Reflection validation failed:', validationResult.error);
+      if (validationResult.securityIssues) {
+        console.error('[Security] Security issues detected:', validationResult.securityIssues);
+        // Log security violations for monitoring
+      }
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: validationResult.error || 'Invalid input' },
         { status: 400 }
       );
     }
+
+    const { prompt_id, prompt_text, content, mood, dimension, session_number } = validationResult.data;
 
     const { data: reflection, error } = await supabase
       .from('reflections')
@@ -107,7 +119,7 @@ export async function POST(request: NextRequest) {
       reflection_id: reflection.id,
       reflection_count: reflectionCount || 1,
       prompt_id, // Send only the ID, not the text
-      prompt_text: '', // REMOVED: Sensitive data - prompt text could contain PII
+      // prompt_text removed entirely from type definition for security
       dimension: dimension || undefined,
       word_count: wordCount,
       time_spent_seconds: timeSpent,
