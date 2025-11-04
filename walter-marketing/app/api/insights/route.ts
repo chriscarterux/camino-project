@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { initServerAnalytics } from '@/lib/analytics';
 import { generateInsightForUser } from '@/lib/insights/service';
+import { withValidation } from '@/lib/validation/middleware';
+import { generateInsightSchema } from '@/lib/validation/schemas';
 
 // Initialize server analytics
 initServerAnalytics();
@@ -40,9 +42,14 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST - Generate new insight
+ *
  * Triggered when user completes 3rd reflection
+ *
+ * Validation middleware:
+ * - reflection_ids: Array of 3-10 valid UUIDs
+ * - dimension: 'identity' | 'worldview' | 'relationships' (default: 'identity')
  */
-export async function POST(request: NextRequest) {
+export const POST = withValidation(generateInsightSchema, async (request, validatedData) => {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -51,21 +58,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { reflection_ids, dimension } = await request.json();
-
-    if (!reflection_ids || reflection_ids.length < 3) {
-      return NextResponse.json(
-        { error: 'Need at least 3 reflections to generate insight' },
-        { status: 400 }
-      );
-    }
+    const { reflection_ids, dimension } = validatedData;
 
     // Use shared insight generation function
     const result = await generateInsightForUser(
       supabase,
       user.id,
       reflection_ids,
-      dimension || 'identity'
+      dimension
     );
 
     if (!result.success) {
@@ -83,4 +83,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
