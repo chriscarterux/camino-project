@@ -53,18 +53,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Parse and validate input
-    const rawInput = await request.json();
+    let rawInput: unknown;
+    try {
+      rawInput = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON body' },
+        { status: 400 }
+      );
+    }
 
     // SECURITY: Comprehensive input validation with SQL injection and XSS prevention
     const validationResult = validateReflectionInput(rawInput);
 
     if (!validationResult.success) {
-      console.error('[Security] Reflection validation failed:', validationResult.error);
-      if (validationResult.securityIssues) {
-        console.error('[Security] Security issues detected:', validationResult.securityIssues);
-        // Log security violations for monitoring
-      }
+      console.warn('[Security] Reflection validation failed', {
+        error: validationResult.error,
+        issues: validationResult.issues,
+        userId: user.id,
+      });
+
       return NextResponse.json(
         { error: validationResult.error || 'Invalid input' },
         { status: 400 }
