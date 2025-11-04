@@ -5,56 +5,67 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import LeadCaptureForm from "@/components/LeadCaptureForm";
+import PricingComparisonTable from "@/components/PricingComparisonTable";
 
 const pricingTiers = [
   {
-    name: "Reflect",
+    name: "Free Discovery",
     price: "Free",
-    description: "Free guided journaling + basic insights",
+    description: "Phase 1 only (Foundation)",
+    phases: "Phase 1: Foundation",
+    timeInvestment: "15-20 min/day for 7 days",
     features: [
+      "7-day foundation building",
       "Daily reflection prompts",
-      "Basic AI insights",
-      "Weekly summaries",
+      "Basic pattern recognition",
+      "Life model snapshot",
       "Exportable reflections",
     ],
-    cta: "Start Free",
-    href: "/journal",
+    cta: "Join Waitlist",
+    href: "#waitlist",
+    badge: "Coming Q1 2026",
     highlighted: false,
   },
   {
-    name: "Journey",
-    price: "$19.95",
-    period: "/month",
-    description: "Full reflection curriculum + adaptive plan + exports",
+    name: "Workshop",
+    price: "$97",
+    description: "Phases 1-2 (Foundation + Psychometrics)",
+    phases: "Phases 1-2: Foundation + Psychometrics",
+    timeInvestment: "30 min/day for 14 days",
     features: [
-      "Everything in Reflect",
-      "AI pattern detection",
-      "Structured learning paths",
-      "4 core modules (Awareness, Belonging, Resilience, Purpose)",
-      "Adaptive lesson recommendations",
-      "Advanced exports (.txt/.json)",
-      "Priority support",
+      "Everything in Free Discovery",
+      "10+ validated psychometric assessments",
+      "Personality, attachment style, strengths",
+      "Life Model AI context building",
+      "Pattern analysis dashboard",
+      "Community support forum",
     ],
-    cta: "Start Journey",
-    href: "/api/checkout?tier=journey",
+    cta: "Reserve Your Spot",
+    href: "#waitlist",
+    badge: "Coming Q1 2026",
+    note: "Early bird pricing - $147 after launch",
     highlighted: true,
   },
   {
-    name: "Coach",
-    price: "$1,000",
-    period: "/month",
-    description: "1:1 coaching (3-month minimum)",
-    note: "3-month minimum commitment",
+    name: "Deep Discovery",
+    price: "$497",
+    description: "All 5 Phases + cohort support",
+    phases: "All 5 Phases: Complete Life Model",
+    timeInvestment: "45 min/day for 30 days",
     features: [
-      "Everything in Journey",
-      "Biweekly 60-minute sessions",
-      "Personalized reflection prompts",
-      "AI-generated session summaries",
-      "Custom growth plan with milestones",
-      "Access to full Journey curriculum",
+      "Everything in Workshop",
+      "Phase 3: Personal history deep-dive",
+      "Phase 4: Context engineering workshop",
+      "Phase 5: AI integration & testing",
+      "8-week cohort with coaching",
+      "Downloadable Life Model PDF",
+      "Lifetime access to your model",
+      "Priority AI model updates",
     ],
-    cta: "Apply for Coaching",
-    href: "/coaching",
+    cta: "Reserve Your Spot",
+    href: "#waitlist",
+    badge: "Coming Q1 2026",
+    note: "Early bird pricing - $697 after launch",
     highlighted: false,
   },
 ];
@@ -99,14 +110,27 @@ export default function PricingPage() {
         </div>
       </nav>
 
+      {/* Coming Soon Banner */}
+      <div className="bg-[#E2C379]/10 border-b border-[#E2C379]/30 py-3">
+        <div className="container mx-auto px-4">
+          <p className="text-center text-sm md:text-base">
+            <span className="font-semibold text-[#E2C379]">Coming Q1 2026</span>
+            {" • "}
+            <span className="text-muted-foreground">
+              Join the waitlist to be first to access and lock in early bird pricing
+            </span>
+          </p>
+        </div>
+      </div>
+
       {/* Pricing Header */}
       <section className="container mx-auto px-4 py-16 md:py-20">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
-            Simple plans for every path
+            Build Your Life Model in 5 Phases
           </h1>
           <p className="text-xl text-muted-foreground">
-            Start reflecting for free, or unlock deeper guidance through structured journeys and personalized coaching.
+            Choose the depth that works for you. All tiers launch Q1 2026 with early access priority for waitlist members.
           </p>
         </div>
       </section>
@@ -123,28 +147,33 @@ export default function PricingPage() {
                   : "hover:shadow-md transition-shadow"
               }`}
             >
-              {tier.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E2C379] text-[#2D2F33] px-3 py-1 rounded-full text-xs font-medium">
-                  Most Popular
-                </div>
-              )}
-              <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+              {/* Badge */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E2C379]/20 border border-[#E2C379] text-[#E2C379] px-3 py-1 rounded-full text-xs font-medium">
+                {tier.badge}
+              </div>
+
+              <div className="flex items-start justify-between mb-4 mt-2">
+                <h3 className="text-2xl font-bold">{tier.name}</h3>
+              </div>
+
               <div className="flex items-baseline mb-2">
                 <span className="text-4xl font-bold">{tier.price}</span>
-                {tier.period && (
-                  <span className="text-muted-foreground ml-1 text-sm">
-                    {tier.period}
-                  </span>
-                )}
               </div>
-              <p className="text-sm text-muted-foreground mb-1">
+
+              <p className="text-sm text-muted-foreground mb-1 font-medium">
                 {tier.description}
               </p>
+
+              <p className="text-xs text-muted-foreground mb-4">
+                {tier.timeInvestment}
+              </p>
+
               {tier.note && (
-                <p className="text-xs text-muted-foreground mb-6">
+                <p className="text-xs text-[#E2C379] mb-6 font-medium">
                   {tier.note}
                 </p>
               )}
+
               <Button
                 asChild
                 className={`mb-8 ${tier.highlighted ? "bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]" : ""}`}
@@ -152,6 +181,7 @@ export default function PricingPage() {
               >
                 <Link href={tier.href}>{tier.cta}</Link>
               </Button>
+
               <ul className="space-y-3 flex-grow">
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
@@ -165,8 +195,20 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Trust Indicators */}
+      {/* Comparison Table */}
       <section className="py-16 border-t bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold text-center mb-12">
+              Compare Plans
+            </h2>
+            <PricingComparisonTable />
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Indicators */}
+      <section className="py-16 border-t">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-2xl font-serif font-bold mb-8">
@@ -224,22 +266,44 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Lead Capture CTA */}
-      <section className="py-20 border-t bg-muted/30">
+      {/* Waitlist Section */}
+      <section id="waitlist" className="py-20 border-t bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-center">
-              Try the free tier first
+              Join the Waitlist
             </h2>
             <p className="text-lg text-muted-foreground mb-10 text-center">
-              Experience Camino with daily reflections and AI insights—completely free.
+              Get early access priority when we launch in Q1 2026, plus lock in early bird pricing.
             </p>
 
             <LeadCaptureForm
               source="pricing"
               variant="card"
-              showInterest={false}
+              showInterest={true}
             />
+
+            {/* Additional benefits */}
+            <div className="mt-10 grid md:grid-cols-3 gap-6 text-center">
+              <div>
+                <div className="text-[#E2C379] font-semibold mb-2">Early Access</div>
+                <p className="text-sm text-muted-foreground">
+                  Be first to build your Life Model
+                </p>
+              </div>
+              <div>
+                <div className="text-[#E2C379] font-semibold mb-2">Locked Pricing</div>
+                <p className="text-sm text-muted-foreground">
+                  Save up to $200 with early bird rates
+                </p>
+              </div>
+              <div>
+                <div className="text-[#E2C379] font-semibold mb-2">Exclusive Updates</div>
+                <p className="text-sm text-muted-foreground">
+                  Behind-the-scenes development insights
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
