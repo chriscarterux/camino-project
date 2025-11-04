@@ -110,9 +110,10 @@ After creating the database:
      "error": "Too many requests. Please try again later.",
      "limit": 5,
      "remaining": 0,
-     "reset": "2025-11-03T18:00:00.000Z"
+     "reset": "2024-11-03T18:00:00.000Z"
    }
    ```
+   **Note:** The `reset` timestamp indicates when the rate limit window resets (Unix timestamp in milliseconds).
 
 ## Implementation Details
 
