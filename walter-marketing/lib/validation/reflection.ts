@@ -1,189 +1,119 @@
-/**
- * Input Validation for Reflection API
- *
- * Provides comprehensive input validation to prevent SQL injection,
- * XSS, and other security vulnerabilities.
- */
-
 import { z } from 'zod';
 
 /**
- * Schema for reflection creation
+ * Validation and sanitisation helpers for the reflections API.
+ * Ensures payloads are well-formed and do not contain obvious SQL/XSS payloads.
  */
-export const createReflectionSchema = z.object({
-  prompt_id: z.string().uuid('Invalid prompt ID format'),
-  prompt_text: z.string()
-    .min(1, 'Prompt text is required')
-    .max(1000, 'Prompt text too long (max 1000 characters)')
-    .trim(),
-  content: z.string()
-    .min(1, 'Reflection content is required')
-    .max(10000, 'Reflection content too long (max 10000 characters)')
-    .trim(),
-  mood: z.enum([
-    'excited',
-    'hopeful',
-    'neutral',
-    'anxious',
-    'frustrated',
-    'grateful',
-    'confused',
-    'motivated',
-  ]).optional(),
+export const reflectionSchema = z.object({
+  prompt_id: z.string().uuid({ message: 'prompt_id must be a valid UUID' }),
+  prompt_text: z
+    .string({ required_error: 'prompt_text is required' })
+    .trim()
+    .min(1, 'prompt_text cannot be empty')
+    .max(1000, 'prompt_text is too long'),
+  content: z
+    .string({ required_error: 'content is required' })
+    .trim()
+    .min(1, 'content cannot be empty')
+    .max(10000, 'content is too long'),
+  mood: z
+    .string()
+    .trim()
+    .min(1, 'mood cannot be empty')
+    .max(64, 'mood is too long')
+    .optional(),
   dimension: z.enum(['identity', 'worldview', 'relationships']).optional(),
-  session_number: z.number()
-    .int('Session number must be an integer')
-    .positive('Session number must be positive')
+  session_number: z
+    .number({ invalid_type_error: 'session_number must be a number' })
+    .int('session_number must be an integer')
+    .positive('session_number must be positive')
+    .max(1000, 'session_number is unexpectedly large')
     .optional(),
 });
 
-export type CreateReflectionInput = z.infer<typeof createReflectionSchema>;
+export type ReflectionPayload = z.infer<typeof reflectionSchema>;
 
-/**
- * Validate and sanitize reflection creation input
- *
- * @param input - Raw input from client
- * @returns Validated and sanitized input
- * @throws ZodError if validation fails
- */
-export function validateCreateReflection(input: unknown): CreateReflectionInput {
-  return createReflectionSchema.parse(input);
+const SQL_PATTERNS: RegExp[] = [
+  /(;\s*(DROP|ALTER|TRUNCATE)\b)/i,
+  /(--|\/\*)/, // inline comments often used in injections
+  /\bUNION\b\s+SELECT/i,
+  /\bOR\b\s+1\s*=\s*1\b/i,
+  /\bEXEC(UTE)?\b/i,
+];
+
+const XSS_PATTERNS: RegExp[] = [
+  /<script[\s>]/i,
+  /<iframe[\s>]/i,
+  /javascript:/i,
+  /on(?:load|error|click|mouseover|focus|blur)\s*=\s*/i,
+];
+
+const CONTROL_CHARS = /[\u0000-\u001F\u007F]/g;
+
+function sanitizeText(input: string): string {
+  return input.replace(CONTROL_CHARS, '').replace(/\r\n?/g, '\n').trim();
 }
 
-/**
- * Safe parse with error handling
- *
- * @param input - Raw input from client
- * @returns Result object with success status and data/error
- */
-export function safeValidateCreateReflection(input: unknown) {
-  return createReflectionSchema.safeParse(input);
+function detectPatterns(value: string, patterns: RegExp[]): string[] {
+  return patterns.filter(pattern => pattern.test(value)).map(pattern => pattern.source);
 }
 
-/**
- * Additional security checks beyond schema validation
- */
-export function performSecurityChecks(input: CreateReflectionInput): {
-  safe: boolean;
-  issues: string[];
-} {
+export interface ValidationSuccess {
+  success: true;
+  data: ReflectionPayload;
+}
+
+export interface ValidationFailure {
+  success: false;
+  error: string;
+  issues?: string[];
+}
+
+export type ValidationResult = ValidationSuccess | ValidationFailure;
+
+export function validateReflectionInput(payload: unknown): ValidationResult {
+  const parsed = reflectionSchema.safeParse(payload);
+
+  if (!parsed.success) {
+    const message = parsed.error.errors.map(error => error.message).join(', ');
+    return { success: false, error: message };
+  }
+
+  const dirty = parsed.data;
+
+  const sanitized: ReflectionPayload = {
+    ...dirty,
+    prompt_text: sanitizeText(dirty.prompt_text),
+    content: sanitizeText(dirty.content),
+    mood: dirty.mood ? sanitizeText(dirty.mood) : undefined,
+    session_number: dirty.session_number,
+  };
+
   const issues: string[] = [];
-
-  // Check for SQL injection patterns
-  const sqlPatterns = [
-    /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE)\b)/i,
-    /(--|\/\*|\*\/|;)/,
-    /(\bOR\b.*=.*)/i,
-    /(\bAND\b.*=.*)/i,
-    /(UNION.*SELECT)/i,
+  const fieldsToCheck: Array<[string, string]> = [
+    ['prompt_text', sanitized.prompt_text],
+    ['content', sanitized.content],
   ];
 
-  const fieldsToCheck = [input.prompt_id, input.prompt_text, input.content];
+  for (const [field, value] of fieldsToCheck) {
+    const sqlHits = detectPatterns(value, SQL_PATTERNS);
+    if (sqlHits.length > 0) {
+      issues.push(`${field} contains disallowed SQL patterns`);
+    }
 
-  for (const field of fieldsToCheck) {
-    if (typeof field === 'string') {
-      for (const pattern of sqlPatterns) {
-        if (pattern.test(field)) {
-          issues.push(`Potential SQL injection pattern detected in input`);
-          break;
-        }
-      }
+    const xssHits = detectPatterns(value, XSS_PATTERNS);
+    if (xssHits.length > 0) {
+      issues.push(`${field} contains disallowed HTML/JS patterns`);
     }
   }
 
-  // Check for XSS patterns
-  const xssPatterns = [
-    /<script[^>]*>.*?<\/script>/gi,
-    /<iframe[^>]*>/gi,
-    /javascript:/gi,
-    /on\w+\s*=\s*["'][^"']*["']/gi, // Event handlers
-  ];
-
-  for (const field of fieldsToCheck) {
-    if (typeof field === 'string') {
-      for (const pattern of xssPatterns) {
-        if (pattern.test(field)) {
-          issues.push(`Potential XSS pattern detected in input`);
-          break;
-        }
-      }
-    }
-  }
-
-  // Check content length (prevent DoS)
-  if (input.content.length > 10000) {
-    issues.push('Content exceeds maximum length');
-  }
-
-  return {
-    safe: issues.length === 0,
-    issues,
-  };
-}
-
-/**
- * Sanitize input by removing potentially dangerous characters
- * while preserving legitimate content
- */
-export function sanitizeReflectionContent(content: string): string {
-  // Remove null bytes
-  let sanitized = content.replace(/\0/g, '');
-
-  // Trim whitespace
-  sanitized = sanitized.trim();
-
-  // Normalize line endings
-  sanitized = sanitized.replace(/\r\n/g, '\n');
-
-  return sanitized;
-}
-
-/**
- * Validate UUID format
- */
-export function isValidUUID(uuid: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
-}
-
-/**
- * Complete validation pipeline
- */
-export function validateReflectionInput(input: unknown): {
-  success: boolean;
-  data?: CreateReflectionInput;
-  error?: string;
-  securityIssues?: string[];
-} {
-  // Step 1: Schema validation
-  const schemaResult = safeValidateCreateReflection(input);
-
-  if (!schemaResult.success) {
+  if (issues.length > 0) {
     return {
       success: false,
-      error: `Validation error: ${schemaResult.error.errors.map(e => e.message).join(', ')}`,
+      error: 'Invalid input detected',
+      issues,
     };
   }
 
-  const validatedData = schemaResult.data;
-
-  // Step 2: Security checks
-  const securityResult = performSecurityChecks(validatedData);
-
-  if (!securityResult.safe) {
-    return {
-      success: false,
-      error: 'Security validation failed',
-      securityIssues: securityResult.issues,
-    };
-  }
-
-  // Step 3: Sanitization
-  validatedData.content = sanitizeReflectionContent(validatedData.content);
-  validatedData.prompt_text = sanitizeReflectionContent(validatedData.prompt_text);
-
-  return {
-    success: true,
-    data: validatedData,
-  };
+  return { success: true, data: sanitized };
 }
