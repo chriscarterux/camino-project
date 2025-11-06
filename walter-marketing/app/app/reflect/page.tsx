@@ -1,12 +1,48 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Save, TrendingUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Save, TrendingUp, Loader2 } from "lucide-react";
+
+interface DailyPrompt {
+  id: string;
+  text: string;
+  dimension: 'identity' | 'worldview' | 'relationships';
+  dayNumber: number;
+}
 
 export default function ReflectPage() {
   const [reflection, setReflection] = useState("");
   const [mood, setMood] = useState<string | null>(null);
+  const [prompt, setPrompt] = useState<DailyPrompt | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch daily prompt on mount (per HOW-511)
+  useEffect(() => {
+    async function fetchDailyPrompt() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch('/api/prompts/daily');
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch daily prompt');
+        }
+
+        const data = await response.json();
+        setPrompt(data);
+      } catch (err) {
+        console.error('Error fetching prompt:', err);
+        setError('Could not load today\'s prompt. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDailyPrompt();
+  }, []);
 
   const handleSave = () => {
     // Save reflection
@@ -30,11 +66,37 @@ export default function ReflectPage() {
         </p>
       </div>
 
-      {/* Prompt */}
+      {/* Prompt - Loading, Error, and Success states (per HOW-511) */}
       <div className="bg-[#F4E9D8] border-l-4 border-[#E2C379] rounded-lg p-6 mb-8">
-        <p className="text-lg italic text-[#2D2F33]">
-          What emotion has been most present for you this week? What might it be teaching you?
-        </p>
+        {loading && (
+          <div className="flex items-center gap-3 text-[#2D2F33]">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <p className="text-lg italic">Loading today's prompt...</p>
+          </div>
+        )}
+
+        {error && !loading && (
+          <div className="text-red-600">
+            <p className="text-lg font-medium">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-2 text-sm underline hover:no-underline"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {prompt && !loading && !error && (
+          <>
+            <p className="text-lg italic text-[#2D2F33]">
+              {prompt.text}
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Day {prompt.dayNumber} • {prompt.dimension}
+            </p>
+          </>
+        )}
       </div>
 
       {/* Mood Selector */}
