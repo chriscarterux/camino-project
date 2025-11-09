@@ -53,7 +53,6 @@ export const insightsRateLimit = redis
       prefix: "ratelimit:insights",
     })
   : null;
-
 /**
  * Development fallback rate limiter
  * WARNING: This is NOT secure for production!
