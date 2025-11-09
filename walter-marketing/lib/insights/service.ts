@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import Anthropic from '@anthropic-ai/sdk';
 import {
   trackServerInsightGenerated,
   calculateDaysSinceSignup,
@@ -100,7 +101,8 @@ export async function generateInsightForUser(
       reflection_ids: reflectionIds,
       dimension: dimension,
       generation_time_ms: generationTime,
-      ai_model: 'gpt-4',
+      ai_model: 'claude-3-5-sonnet-20241022',
+      tokens_used: insight.tokens_used,
       days_since_signup: calculateDaysSinceSignup(profile?.created_at),
     });
 
@@ -119,28 +121,91 @@ export async function generateInsightForUser(
 }
 
 /**
- * Helper function to generate insight using AI
+ * Initialize Anthropic client
+ */
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || '',
+});
+
+/**
+ * Helper function to generate insight using Claude AI
  */
 async function generateInsightWithAI(reflections: any[]) {
-  // TODO: Integrate with OpenAI API
-  // For now, return a placeholder insight
+  const reflectionTexts = reflections
+    .map((r, i) => `Reflection ${i + 1}:\n${r.content}`)
+    .join('\n\n');
 
-  const reflectionTexts = reflections.map(r => r.content).join('\n\n');
+  const prompt = `You are Camino AI, an empathetic coach analyzing user reflections to identify meaningful patterns and actionable insights.
 
-  // This would call OpenAI API in production
-  // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  // const completion = await openai.chat.completions.create({
-  //   model: "gpt-4",
-  //   messages: [
-  //     { role: "system", content: "You are Camino AI, analyzing user reflections to identify patterns..." },
-  //     { role: "user", content: reflectionTexts }
-  //   ]
-  // });
+Analyze these ${reflections.length} reflections and generate a weekly insight:
 
-  // Placeholder insight
-  return {
-    type: 'pattern' as const,
-    title: 'Emerging Pattern Detected',
-    content: `Based on your last ${reflections.length} reflections, I've noticed a pattern: You're exploring themes of personal growth and self-discovery. There's a consistent thread of curiosity about your own potential and a desire to understand yourself more deeply.`,
-  };
+${reflectionTexts}
+
+Respond with JSON in this exact format:
+{
+  "type": "pattern" | "growth" | "challenge" | "opportunity",
+  "title": "Short, compelling title (max 60 chars)",
+  "content": "Thoughtful analysis of the pattern or theme you noticed. Be specific, empathetic, and actionable. 2-3 sentences.",
+  "themes": ["theme1", "theme2", "theme3"],
+  "suggestions": ["actionable suggestion 1", "actionable suggestion 2"]
+}
+
+Guidelines:
+- Be warm, encouraging, and insightful
+- Identify specific patterns or themes across reflections
+- Make suggestions practical and achievable
+- Use "you" language to make it personal
+- Keep it concise but meaningful`;
+
+  try {
+    const message = await anthropic.messages.create({
+      model: 'claude-3-5-sonnet-20241022',
+      max_tokens: 1024,
+      temperature: 0.7,
+      messages: [{
+        role: 'user',
+        content: prompt,
+      }],
+    });
+
+    // Extract text content from the response
+    const textContent = message.content.find(c => c.type === 'text');
+    if (!textContent || textContent.type !== 'text') {
+      throw new Error('No text content in Claude response');
+    }
+
+    // Parse JSON response
+    const rawText = textContent.text.trim();
+    // Remove markdown code fences if present
+    const jsonText = rawText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+    const insightData = JSON.parse(jsonText);
+
+    // Log token usage for cost tracking
+    console.log('[AI Insight] Tokens used:', {
+      input: message.usage.input_tokens,
+      output: message.usage.output_tokens,
+      total: message.usage.input_tokens + message.usage.output_tokens,
+    });
+
+    return {
+      type: insightData.type,
+      title: insightData.title,
+      content: insightData.content,
+      themes: insightData.themes,
+      suggestions: insightData.suggestions,
+      tokens_used: message.usage.input_tokens + message.usage.output_tokens,
+    };
+  } catch (error) {
+    console.error('[AI Insight] Claude API error:', error);
+
+    // Fallback to graceful degradation
+    return {
+      type: 'pattern' as const,
+      title: 'Reflection Pattern Detected',
+      content: `Based on your ${reflections.length} reflections, I see you're actively engaging with your personal growth journey. Keep reflecting - patterns become clearer over time.`,
+      themes: ['personal growth', 'self-reflection'],
+      suggestions: ['Continue your daily reflection practice', 'Revisit previous insights to track your progress'],
+      tokens_used: 0,
+    };
+  }
 }

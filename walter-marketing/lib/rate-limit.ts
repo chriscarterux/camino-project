@@ -43,6 +43,16 @@ export const reflectionsRateLimit = redis
     })
   : null;
 
+// Insights rate limiter
+// 1 insight per day per user
+export const insightsRateLimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(1, "24 h"),
+      analytics: true,
+      prefix: "ratelimit:insights",
+    })
+  : null;
 /**
  * Development fallback rate limiter
  * WARNING: This is NOT secure for production!
@@ -176,6 +186,70 @@ export async function checkReflectionRateLimit(
 
   if (!limit || now > limit.resetTime) {
     devRateLimitMap.set(`reflection:${userId}`, {
+      count: 1,
+      resetTime: now + windowMs,
+    });
+    return {
+      success: true,
+      limit: maxRequests,
+      remaining: maxRequests - 1,
+      reset: now + windowMs,
+    };
+  }
+
+  if (limit.count >= maxRequests) {
+    return {
+      success: false,
+      limit: maxRequests,
+      remaining: 0,
+      reset: limit.resetTime,
+    };
+  }
+
+  limit.count++;
+  return {
+    success: true,
+    limit: maxRequests,
+    remaining: maxRequests - limit.count,
+    reset: limit.resetTime,
+  };
+}
+
+/**
+ * Check rate limit for insights API
+ * Uses user ID as identifier (1 insight per day per user)
+ */
+export async function checkInsightRateLimit(
+  userId: string
+): Promise<{
+  success: boolean;
+  limit: number;
+  remaining: number;
+  reset: number;
+}> {
+  // Use Upstash rate limiter if configured
+  if (insightsRateLimit) {
+    const result = await insightsRateLimit.limit(userId);
+    return {
+      success: result.success,
+      limit: result.limit,
+      remaining: result.remaining,
+      reset: result.reset,
+    };
+  }
+
+  // Fallback to development rate limiter
+  console.warn(
+    "⚠️ Using in-memory rate limiting for insights - NOT suitable for production!"
+  );
+
+  const now = Date.now();
+  const limit = devRateLimitMap.get(`insight:${userId}`);
+  const windowMs = 24 * 60 * 60 * 1000; // 24 hours
+  const maxRequests = 1;
+
+  if (!limit || now > limit.resetTime) {
+    devRateLimitMap.set(`insight:${userId}`, {
       count: 1,
       resetTime: now + windowMs,
     });
