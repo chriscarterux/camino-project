@@ -1,7 +1,10 @@
 /**
  * Frappe LMS API Client
  * Connects Next.js frontend to Frappe LMS backend
+ * Now with robust error handling, retry logic, and circuit breaker
  */
+
+import { RobustHTTPClient } from './client'
 
 const FRAPPE_BASE_URL = process.env.LMS_API_URL || 'http://lms.localhost:8000';
 const FRAPPE_API_KEY = process.env.LMS_API_KEY;
@@ -11,11 +14,13 @@ export class FrappeClient {
   private baseUrl: string;
   private apiKey?: string;
   private apiSecret?: string;
+  private httpClient: RobustHTTPClient;
 
-  constructor(apiKey?: string, apiSecret?: string) {
+  constructor(apiKey?: string, apiSecret?: string, httpClient?: RobustHTTPClient) {
     this.baseUrl = FRAPPE_BASE_URL;
     this.apiKey = apiKey || FRAPPE_API_KEY;
     this.apiSecret = apiSecret || FRAPPE_API_SECRET;
+    this.httpClient = httpClient || new RobustHTTPClient();
   }
 
   private async request(
@@ -46,14 +51,8 @@ export class FrappeClient {
       options.body = JSON.stringify(data);
     }
 
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Frappe API Error: ${response.status} - ${error}`);
-    }
-
-    return response.json();
+    // Use robust HTTP client with retry, backoff, and circuit breaker
+    return this.httpClient.request(url, options);
   }
 
   async get(endpoint: string, userToken?: string) {
