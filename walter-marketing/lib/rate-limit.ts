@@ -32,6 +32,17 @@ export const leadCaptureRateLimit = redis
     })
   : null;
 
+// Reflections rate limiter
+// 10 reflections per hour per user
+export const reflectionsRateLimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(10, "1 h"),
+      analytics: true,
+      prefix: "ratelimit:reflections",
+    })
+  : null;
+
 /**
  * Development fallback rate limiter
  * WARNING: This is NOT secure for production!
@@ -128,4 +139,68 @@ export function getClientIP(request: Request): string {
 
   // Fallback to anonymous if no IP found
   return "anonymous";
+}
+
+/**
+ * Check rate limit for reflections API
+ * Uses user ID as identifier (10 reflections per hour per user)
+ */
+export async function checkReflectionRateLimit(
+  userId: string
+): Promise<{
+  success: boolean;
+  limit: number;
+  remaining: number;
+  reset: number;
+}> {
+  // Use Upstash rate limiter if configured
+  if (reflectionsRateLimit) {
+    const result = await reflectionsRateLimit.limit(userId);
+    return {
+      success: result.success,
+      limit: result.limit,
+      remaining: result.remaining,
+      reset: result.reset,
+    };
+  }
+
+  // Fallback to development rate limiter
+  console.warn(
+    "⚠️ Using in-memory rate limiting for reflections - NOT suitable for production!"
+  );
+
+  const now = Date.now();
+  const limit = devRateLimitMap.get(`reflection:${userId}`);
+  const windowMs = 60 * 60 * 1000; // 1 hour
+  const maxRequests = 10;
+
+  if (!limit || now > limit.resetTime) {
+    devRateLimitMap.set(`reflection:${userId}`, {
+      count: 1,
+      resetTime: now + windowMs,
+    });
+    return {
+      success: true,
+      limit: maxRequests,
+      remaining: maxRequests - 1,
+      reset: now + windowMs,
+    };
+  }
+
+  if (limit.count >= maxRequests) {
+    return {
+      success: false,
+      limit: maxRequests,
+      remaining: 0,
+      reset: limit.resetTime,
+    };
+  }
+
+  limit.count++;
+  return {
+    success: true,
+    limit: maxRequests,
+    remaining: maxRequests - limit.count,
+    reset: limit.resetTime,
+  };
 }

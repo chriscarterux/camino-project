@@ -7,6 +7,7 @@ import {
 } from '@/lib/analytics';
 import { generateInsightForUser } from '@/lib/insights/service';
 import { validateReflectionInput } from '@/lib/validation/reflection';
+import { checkReflectionRateLimit } from '@/lib/rate-limit';
 
 // Initialize server analytics
 initServerAnalytics();
@@ -51,6 +52,34 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // SECURITY: Rate limiting - 10 reflections per hour per user
+    const rateLimitResult = await checkReflectionRateLimit(user.id);
+    if (!rateLimitResult.success) {
+      console.warn('[Security] Reflection rate limit exceeded', {
+        userId: user.id,
+        limit: rateLimitResult.limit,
+        reset: new Date(rateLimitResult.reset).toISOString(),
+      });
+
+      return NextResponse.json(
+        {
+          error: 'Too many reflections. Please try again later.',
+          limit: rateLimitResult.limit,
+          remaining: rateLimitResult.remaining,
+          reset: rateLimitResult.reset,
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+            'Retry-After': Math.ceil((rateLimitResult.reset - Date.now()) / 1000).toString(),
+          },
+        }
+      );
     }
 
     let rawInput: unknown;
