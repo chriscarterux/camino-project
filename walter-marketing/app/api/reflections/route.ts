@@ -127,8 +127,17 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    // Update streak
-    await updateStreak(supabase, user.id);
+    // The streak is automatically updated by the database trigger (trigger_update_streak)
+    // Now get the updated streak information to include in the response
+    const { data: streakData } = await supabase.rpc('calculate_user_streak', {
+      p_user_id: user.id
+    });
+
+    const streakInfo = streakData && streakData.length > 0 ? streakData[0] : {
+      current_streak: 1,
+      record_streak: 1,
+      is_new_record: false
+    };
 
     // Get total reflection count
     const { count: reflectionCount } = await supabase
@@ -207,6 +216,9 @@ export async function POST(request: NextRequest) {
       reflection_count: reflectionCount,
       should_generate_insight: shouldGenerateInsight,
       insight,
+      streak_updated: true,
+      new_streak: streakInfo.current_streak,
+      is_record_streak: streakInfo.is_new_record,
     });
   } catch (error) {
     console.error('Create reflection error:', error);
@@ -217,43 +229,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper function to update user streak
-async function updateStreak(supabase: any, userId: string) {
-  const { data: reflections } = await supabase
-    .from('reflections')
-    .select('created_at')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(30);
-
-  if (!reflections || reflections.length === 0) {
-    return;
-  }
-
-  // Calculate streak
-  let streak = 1;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  for (let i = 0; i < reflections.length - 1; i++) {
-    const current = new Date(reflections[i].created_at);
-    const next = new Date(reflections[i + 1].created_at);
-
-    current.setHours(0, 0, 0, 0);
-    next.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.floor((current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 1) {
-      streak++;
-    } else if (diffDays > 1) {
-      break;
-    }
-  }
-
-  // Update profile
-  await supabase
-    .from('profiles')
-    .update({ streak_days: streak })
-    .eq('id', userId);
-}
+// Note: Streak calculation has been moved to the database layer
+// See migration: 20251109_streak_automation.sql
+// The trigger 'trigger_update_streak' automatically updates the streak
+// when a new reflection is inserted, improving performance and consistency.
