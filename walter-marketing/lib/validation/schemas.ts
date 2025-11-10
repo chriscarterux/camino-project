@@ -114,7 +114,7 @@ export const generateInsightSchema = z.object({
     .array(uuidSchema)
     .min(3, 'Need at least 3 reflections to generate insight')
     .max(10, 'Too many reflections (max 10)'),
-  dimension: dimensionSchema.optional().default('identity'),
+  dimension: dimensionSchema.default('identity'),
 });
 
 // =============================================================================
