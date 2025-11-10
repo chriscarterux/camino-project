@@ -23,14 +23,16 @@ export default function AppLayout({
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push('/login');
+        // Redirect to login with the current path as redirectTo parameter
+        const redirectUrl = `/login?redirectTo=${encodeURIComponent(pathname)}`;
+        router.push(redirectUrl);
       } else {
         setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, pathname]);
 
   const handleLogout = async () => {
     const supabase = createClient();
