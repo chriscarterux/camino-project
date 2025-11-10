@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/lib/onboarding/context";
-import { trackOnboardingStepViewed, trackOnboardingStepCompleted } from "@/lib/analytics";
+import { trackOnboardingStepViewed, trackOnboardingStepCompleted } from "@/lib/analytics/client";
 import { Bell, Calendar, Sparkles } from "lucide-react";
 
 /**

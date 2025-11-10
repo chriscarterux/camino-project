@@ -21,7 +21,7 @@
     "sanitize-svgs": "node scripts/sanitize-svgs.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.68.0",
+    "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-slot": "^1.2.3",
     "@stripe/stripe-js": "^8.0.0",
     "@supabase/ssr": "^0.7.0",

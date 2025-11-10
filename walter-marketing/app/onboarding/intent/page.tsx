@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/onboarding/ProgressBar";
 import { IntentSelector, Intent } from "@/components/onboarding/IntentSelector";
 import { useOnboarding } from "@/lib/onboarding/context";
-import { trackOnboardingStepViewed, trackOnboardingStepCompleted } from "@/lib/analytics";
+import { trackOnboardingStepViewed, trackOnboardingStepCompleted } from "@/lib/analytics/client";
 
 /**
  * Step 2: Choose Intent

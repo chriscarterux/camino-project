@@ -11,7 +11,7 @@ import {
   trackOnboardingStepViewed,
   trackOnboardingStepCompleted,
   trackReflectionCompleted,
-} from "@/lib/analytics";
+} from "@/lib/analytics/client";
 
 /**
  * Steps 3, 5, 7: Reflection Pages
