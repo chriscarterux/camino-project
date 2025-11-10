@@ -27,7 +27,7 @@ INSERT INTO public.prompts (text, dimension, day_number, phase, tags) VALUES
   ('What pattern did you notice in your day? What might it mean?', 'worldview', 14, 'foundation', ARRAY['patterns', 'meaning-making']),
   ('What surprised you about today? What does that surprise reveal about your expectations?', 'worldview', 17, 'foundation', ARRAY['expectations', 'surprise']),
   ('If today was a chapter in your life story, what would it be called and why?', 'worldview', 20, 'foundation', ARRAY['narrative', 'meaning']),
-  ('What did you believe was possible today that you didn't believe yesterday?', 'worldview', 23, 'foundation', ARRAY['beliefs', 'possibility']),
+  ('What did you believe was possible today that you didn''t believe yesterday?', 'worldview', 23, 'foundation', ARRAY['beliefs', 'possibility']),
   ('What did you pay attention to today? What does that tell you about what matters to you?', 'worldview', 26, 'foundation', ARRAY['attention', 'values']),
   ('How did you make sense of something confusing or uncertain today?', 'worldview', 28, 'foundation', ARRAY['uncertainty', 'sense-making']);
 

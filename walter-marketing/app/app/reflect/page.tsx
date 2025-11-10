@@ -17,6 +17,9 @@ export default function ReflectPage() {
   const [prompt, setPrompt] = useState<DailyPrompt | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [streak, setStreak] = useState<number>(0);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Fetch daily prompt on mount (per HOW-511)
   useEffect(() => {
@@ -44,9 +47,67 @@ export default function ReflectPage() {
     fetchDailyPrompt();
   }, []);
 
-  const handleSave = () => {
-    // Save reflection
-    console.log("Saving reflection:", { reflection, mood });
+  const handleSave = async () => {
+    if (!prompt) {
+      setError('No prompt available');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setSaveSuccess(false);
+      setError(null);
+
+      const response = await fetch('/api/reflections', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt_id: prompt.id,
+          prompt_text: prompt.text,
+          content: reflection,
+          mood: mood || undefined,
+          dimension: prompt.dimension,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save reflection');
+      }
+
+      const data = await response.json();
+
+      // Update streak from response
+      if (data.new_streak) {
+        setStreak(data.new_streak);
+      }
+
+      // Show success message
+      setSaveSuccess(true);
+
+      // Clear form after successful save
+      setReflection('');
+      setMood(null);
+
+      // If insight was generated, show it
+      if (data.insight) {
+        console.log('Generated insight:', data.insight);
+        // TODO: Show insight modal or navigate to insights page
+      }
+
+      // If this is a record streak, celebrate!
+      if (data.is_record_streak) {
+        console.log('🎉 New record streak!');
+        // TODO: Show celebration animation
+      }
+    } catch (err) {
+      console.error('Error saving reflection:', err);
+      setError(err instanceof Error ? err.message : 'Could not save reflection. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleGenerateInsight = () => {
@@ -138,11 +199,31 @@ export default function ReflectPage() {
           <p className="text-sm text-muted-foreground">
             {reflection.length} characters
           </p>
-          <p className="text-sm text-muted-foreground">
-            Streak: 7 days
-          </p>
+          {streak > 0 && (
+            <p className="text-sm text-muted-foreground">
+              🔥 Streak: {streak} {streak === 1 ? 'day' : 'days'}
+            </p>
+          )}
         </div>
       </div>
+
+      {/* Success/Error Messages */}
+      {saveSuccess && (
+        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-green-800 font-medium">✓ Reflection saved successfully!</p>
+          {streak > 0 && (
+            <p className="text-green-700 text-sm mt-1">
+              Your streak is now {streak} {streak === 1 ? 'day' : 'days'}! Keep it up!
+            </p>
+          )}
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800 font-medium">✗ {error}</p>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
@@ -151,10 +232,19 @@ export default function ReflectPage() {
           size="lg"
           variant="outline"
           className="flex-1"
-          disabled={reflection.length < 10}
+          disabled={reflection.length < 10 || saving || !prompt}
         >
-          <Save className="mr-2 h-4 w-4" />
-          Save & Close
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save & Close
+            </>
+          )}
         </Button>
         <Button
           onClick={handleGenerateInsight}

@@ -2,7 +2,7 @@
 -- Stores email signups before user conversion
 
 create table public.leads (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   email varchar(255) unique not null,
   name varchar(255),
   primary_interest varchar(50) check (primary_interest in ('identity', 'worldview', 'relationships')),

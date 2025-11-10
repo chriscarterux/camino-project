@@ -5,7 +5,7 @@
 
 -- 1. Create user_activations table
 CREATE TABLE IF NOT EXISTS user_activations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   activated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   reflection_count INTEGER NOT NULL,
@@ -46,7 +46,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_activated_at ON profiles(activated_at);
 
 -- 3. Create insights table if it doesn't exist
 CREATE TABLE IF NOT EXISTS insights (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   type VARCHAR(50) NOT NULL CHECK (type IN ('pattern', 'theme', 'lens_shift')),
   title TEXT NOT NULL,
