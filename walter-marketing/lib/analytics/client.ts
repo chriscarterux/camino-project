@@ -333,3 +333,45 @@ export function getConfig(): AnalyticsConfig {
 export function isEnabled(): boolean {
   return config.enabled;
 }
+
+/**
+ * Track onboarding step viewed (stub implementation)
+ * TODO: Implement proper onboarding analytics
+ */
+export function trackOnboardingStepViewed(
+  userId: string,
+  step: number,
+  stepName: string
+): void {
+  track({
+    event: 'onboarding_step_viewed',
+    user_id: userId,
+    timestamp: new Date().toISOString(),
+    properties: {
+      step,
+      step_name: stepName,
+    },
+  });
+}
+
+/**
+ * Track onboarding step completed (stub implementation)
+ * TODO: Implement proper onboarding analytics
+ */
+export function trackOnboardingStepCompleted(
+  userId: string,
+  step: number,
+  stepName: string,
+  timeSpent?: number
+): void {
+  track({
+    event: 'onboarding_step_completed',
+    user_id: userId,
+    timestamp: new Date().toISOString(),
+    properties: {
+      step,
+      step_name: stepName,
+      time_spent_seconds: timeSpent,
+    },
+  });
+}

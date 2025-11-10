@@ -17,6 +17,8 @@ export {
   resetAnalytics,
   getConfig,
   isEnabled,
+  trackOnboardingStepViewed,
+  trackOnboardingStepCompleted,
 } from './client';
 
 // Server-side exports

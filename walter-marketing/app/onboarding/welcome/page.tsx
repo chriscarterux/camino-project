@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { trackOnboardingStepViewed, trackOnboardingStepCompleted } from "@/lib/analytics";
+import { trackOnboardingStepViewed, trackOnboardingStepCompleted } from "@/lib/analytics/client";
 import { Sparkles } from "lucide-react";
 
 /**

@@ -10,7 +10,7 @@ import {
   trackInsightGenerated,
   trackInsightViewed,
   trackActivation,
-} from "@/lib/analytics";
+} from "@/lib/analytics/client";
 
 /**
  * Step 8: Activation Moment
