@@ -121,14 +121,23 @@ export async function generateInsightForUser(
 }
 
 /**
- * Initialize Google Generative AI client
+ * Lazy initialization of Google Generative AI client
+ * to avoid build-time errors
  */
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+let genAIInstance: GoogleGenerativeAI | null = null;
+
+function getGenAI(): GoogleGenerativeAI {
+  if (!genAIInstance) {
+    genAIInstance = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+  }
+  return genAIInstance;
+}
 
 /**
  * Helper function to generate insight using Gemini AI
  */
 async function generateInsightWithAI(reflections: any[]) {
+  const genAI = getGenAI();
   const reflectionTexts = reflections
     .map((r, i) => `Reflection ${i + 1}:\n${r.content}`)
     .join('\n\n');

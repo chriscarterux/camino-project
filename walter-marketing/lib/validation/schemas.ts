@@ -86,13 +86,55 @@ export const moodSchema = z.enum([
   'motivated',
 ]);
 
+/**
+ * Helper schemas for common name/content variations
+ * Note: Cannot chain .max() on existing schemas due to webpack bundling issues
+ */
+const name100Schema = z
+  .string()
+  .min(1, 'Name is required')
+  .max(100, 'Name too long (max 100 characters)')
+  .trim()
+  .refine(
+    (val) => !/<script|<iframe|javascript:/i.test(val),
+    { message: 'Name contains invalid characters' }
+  );
+
+const subject200Schema = z
+  .string()
+  .min(1, 'Subject is required')
+  .max(200, 'Subject too long (max 200 characters)')
+  .trim()
+  .refine(
+    (val) => !/<script|<iframe|javascript:/i.test(val),
+    { message: 'Subject contains invalid characters' }
+  );
+
+const message5000Schema = z
+  .string()
+  .min(1, 'Message is required')
+  .max(5000, 'Message too long (max 5000 characters)')
+  .trim()
+  .refine(
+    (val) => !/<script|<iframe|javascript:/i.test(val),
+    { message: 'Message contains potentially malicious code' }
+  );
+
 // =============================================================================
 // Reflection API Schemas (already implemented in Phase 1, included for completeness)
 // =============================================================================
 
 export const createReflectionSchema = z.object({
   prompt_id: uuidSchema,
-  prompt_text: contentSchema.max(1000, 'Prompt text too long (max 1000 characters)'),
+  prompt_text: z
+    .string()
+    .min(1, 'Prompt text is required')
+    .max(1000, 'Prompt text too long (max 1000 characters)')
+    .trim()
+    .refine(
+      (val) => !/<script|<iframe|javascript:/i.test(val),
+      { message: 'Prompt text contains potentially malicious code' }
+    ),
   content: contentSchema,
   mood: moodSchema.optional(),
   dimension: dimensionSchema.optional(),
@@ -122,10 +164,10 @@ export const generateInsightSchema = z.object({
 // =============================================================================
 
 export const contactFormSchema = z.object({
-  name: nameSchema.max(100, 'Name too long (max 100 characters)'),
+  name: name100Schema,
   email: emailSchema,
-  subject: nameSchema.max(200, 'Subject too long (max 200 characters)'),
-  message: contentSchema.max(5000, 'Message too long (max 5000 characters)'),
+  subject: subject200Schema,
+  message: message5000Schema,
 });
 
 // =============================================================================
@@ -134,7 +176,7 @@ export const contactFormSchema = z.object({
 
 export const leadCaptureSchema = z.object({
   email: emailSchema,
-  name: nameSchema.max(100, 'Name too long (max 100 characters)').optional(),
+  name: name100Schema.optional(),
   primary_interest: z
     .enum(['self_discovery', 'transformation', 'coaching', 'other'])
     .optional(),
@@ -158,7 +200,7 @@ export const leadCaptureSchema = z.object({
 // =============================================================================
 
 export const updateProfileSchema = z.object({
-  full_name: nameSchema.max(100, 'Name too long (max 100 characters)').optional(),
+  full_name: name100Schema.optional(),
   timezone: z.string().max(50, 'Timezone too long').optional(),
   notification_preferences: z
     .object({
@@ -223,7 +265,7 @@ export const generateCertificateSchema = z.object({
     .min(1, 'Course slug is required')
     .max(100, 'Course slug too long')
     .regex(/^[a-z0-9-]+$/, 'Invalid course slug format'),
-  user_name: nameSchema.max(100, 'Name too long (max 100 characters)'),
+  user_name: name100Schema,
   completion_date: z.string().datetime().optional(),
 });
 
