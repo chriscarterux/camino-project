@@ -3,7 +3,7 @@
 
 -- Create prompts table
 CREATE TABLE IF NOT EXISTS public.prompts (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   text TEXT NOT NULL,
   dimension TEXT CHECK (dimension IN ('identity', 'worldview', 'relationships')),
   day_number INTEGER NOT NULL CHECK (day_number >= 1 AND day_number <= 84),

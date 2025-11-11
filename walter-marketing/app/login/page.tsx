@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+function LoginForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirectTo') || '/app';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +33,8 @@ export default function LoginPage() {
         throw signInError;
       }
 
-      // Redirect to app
-      window.location.href = '/app';
+      // Redirect to the originally requested page or default to /app
+      window.location.href = redirectTo;
     } catch (error: any) {
       console.error('Login error:', error);
       setError(error.message || 'Invalid email or password. Please try again.');
@@ -109,8 +112,9 @@ export default function LoginPage() {
               size="lg"
               disabled={isLoading}
               className="w-full bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]"
+              data-testid="sign-in-button"
             >
-              {isLoading ? 'Logging in...' : 'Log in'}
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground">
@@ -130,5 +134,21 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-muted/30">
+        <div className="w-full max-w-md px-4">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-serif font-bold mb-2">Loading...</h1>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

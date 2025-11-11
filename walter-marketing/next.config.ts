@@ -27,7 +27,7 @@ const nextConfig: NextConfig = {
               // Allow fonts from self and data URIs
               "font-src 'self' data:",
               // Allow connections to self and trusted APIs
-              "connect-src 'self' https://app.posthog.com https://api.stripe.com https://46.202.93.22:8000",
+              "connect-src 'self' https://app.posthog.com https://api.stripe.com https://46.202.93.22:8000 https://cjechozcgxrjbsumltho.supabase.co",
               // Allow frames only from Stripe (for payment forms)
               "frame-src 'self' https://js.stripe.com",
               // Block object/embed tags (prevents SVG script execution)

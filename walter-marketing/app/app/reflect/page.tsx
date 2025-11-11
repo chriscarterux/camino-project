@@ -17,6 +17,11 @@ export default function ReflectPage() {
   const [prompt, setPrompt] = useState<DailyPrompt | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [streak, setStreak] = useState<number>(0);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [generatingInsight, setGeneratingInsight] = useState(false);
+  const [insightError, setInsightError] = useState<string | null>(null);
 
   // Fetch daily prompt on mount (per HOW-511)
   useEffect(() => {
@@ -44,18 +49,139 @@ export default function ReflectPage() {
     fetchDailyPrompt();
   }, []);
 
-  const handleSave = () => {
-    // Save reflection
-    console.log("Saving reflection:", { reflection, mood });
+  const handleSave = async () => {
+    if (!prompt) {
+      setError('No prompt available');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setSaveSuccess(false);
+      setError(null);
+
+      const response = await fetch('/api/reflections', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt_id: prompt.id,
+          prompt_text: prompt.text,
+          content: reflection,
+          mood: mood || undefined,
+          dimension: prompt.dimension,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save reflection');
+      }
+
+      const data = await response.json();
+
+      // Update streak from response
+      if (data.new_streak) {
+        setStreak(data.new_streak);
+      }
+
+      // Show success message
+      setSaveSuccess(true);
+
+      // Clear form after successful save
+      setReflection('');
+      setMood(null);
+
+      // If insight was generated, show it
+      if (data.insight) {
+        console.log('Generated insight:', data.insight);
+        // TODO: Show insight modal or navigate to insights page
+      }
+
+      // If this is a record streak, celebrate!
+      if (data.is_record_streak) {
+        console.log('🎉 New record streak!');
+        // TODO: Show celebration animation
+      }
+    } catch (err) {
+      console.error('Error saving reflection:', err);
+      setError(err instanceof Error ? err.message : 'Could not save reflection. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleGenerateInsight = () => {
-    // Navigate to insights or show modal
-    console.log("Generating insight");
+  const handleGenerateInsight = async () => {
+    if (!prompt) {
+      setError('No prompt available');
+      return;
+    }
+
+    try {
+      setGeneratingInsight(true);
+      setInsightError(null);
+
+      // First, fetch user's recent reflections to get reflection IDs
+      const reflectionsResponse = await fetch('/api/reflections');
+
+      if (!reflectionsResponse.ok) {
+        throw new Error('Failed to fetch reflections');
+      }
+
+      const reflectionsData = await reflectionsResponse.json();
+      const reflections = reflectionsData.reflections || [];
+
+      // Need at least 3 reflections to generate insight
+      if (reflections.length < 3) {
+        setInsightError('You need at least 3 reflections to generate insights. Keep reflecting!');
+        return;
+      }
+
+      // Get the most recent 3 reflections matching the current dimension
+      const dimensionReflections = reflections
+        .filter((r: any) => r.dimension === prompt.dimension)
+        .slice(0, 3);
+
+      // If not enough reflections for this dimension, use any 3 recent reflections
+      const reflectionIds = (dimensionReflections.length >= 3
+        ? dimensionReflections
+        : reflections.slice(0, 3)
+      ).map((r: any) => r.id);
+
+      // Generate insight
+      const insightResponse = await fetch('/api/insights', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reflection_ids: reflectionIds,
+          dimension: prompt.dimension,
+        }),
+      });
+
+      if (!insightResponse.ok) {
+        const errorData = await insightResponse.json();
+        throw new Error(errorData.error || 'Failed to generate insight');
+      }
+
+      const insightData = await insightResponse.json();
+
+      // TODO: Show insight in modal or navigate to insights page
+      console.log('Generated insight:', insightData.insight);
+      alert(`Insight generated! Check console for details. (TODO: Show in modal)`);
+
+    } catch (err) {
+      console.error('Error generating insight:', err);
+      setInsightError(err instanceof Error ? err.message : 'Could not generate insight. Please try again.');
+    } finally {
+      setGeneratingInsight(false);
+    }
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto">
+    <main className="p-6 md:p-10 max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-8 text-center">
         <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">
@@ -138,11 +264,37 @@ export default function ReflectPage() {
           <p className="text-sm text-muted-foreground">
             {reflection.length} characters
           </p>
-          <p className="text-sm text-muted-foreground">
-            Streak: 7 days
-          </p>
+          {streak > 0 && (
+            <p className="text-sm text-muted-foreground">
+              🔥 Streak: {streak} {streak === 1 ? 'day' : 'days'}
+            </p>
+          )}
         </div>
       </div>
+
+      {/* Success/Error Messages */}
+      {saveSuccess && (
+        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-green-800 font-medium">✓ Reflection saved successfully!</p>
+          {streak > 0 && (
+            <p className="text-green-700 text-sm mt-1">
+              Your streak is now {streak} {streak === 1 ? 'day' : 'days'}! Keep it up!
+            </p>
+          )}
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800 font-medium">✗ {error}</p>
+        </div>
+      )}
+
+      {insightError && (
+        <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-yellow-800 font-medium">⚠ {insightError}</p>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
@@ -151,19 +303,37 @@ export default function ReflectPage() {
           size="lg"
           variant="outline"
           className="flex-1"
-          disabled={reflection.length < 10}
+          disabled={reflection.length < 10 || saving || !prompt}
         >
-          <Save className="mr-2 h-4 w-4" />
-          Save & Close
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save & Close
+            </>
+          )}
         </Button>
         <Button
           onClick={handleGenerateInsight}
           size="lg"
           className="flex-1 bg-[#E2C379] hover:bg-[#E2C379]/90 text-[#2D2F33]"
-          disabled={reflection.length < 50}
+          disabled={generatingInsight}
         >
-          <TrendingUp className="mr-2 h-4 w-4" />
-          Generate Insight
+          {generatingInsight ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <TrendingUp className="mr-2 h-4 w-4" />
+              Generate Insight
+            </>
+          )}
         </Button>
       </div>
 
@@ -171,6 +341,6 @@ export default function ReflectPage() {
       <p className="text-center text-sm text-muted-foreground mt-8 italic">
         Every reflection is a step forward. Keep walking your Camino.
       </p>
-    </div>
+    </main>
   );
 }
