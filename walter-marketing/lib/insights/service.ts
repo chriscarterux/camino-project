@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
   trackServerInsightGenerated,
   calculateDaysSinceSignup,
@@ -101,7 +101,7 @@ export async function generateInsightForUser(
       reflection_ids: reflectionIds,
       dimension: dimension,
       generation_time_ms: generationTime,
-      ai_model: 'claude-3-5-sonnet-20241022',
+      ai_model: 'gemini-2.0-flash',
       tokens_used: insight.tokens_used,
       days_since_signup: calculateDaysSinceSignup(profile?.created_at),
     });
@@ -121,14 +121,12 @@ export async function generateInsightForUser(
 }
 
 /**
- * Initialize Anthropic client
+ * Initialize Google Generative AI client
  */
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
 /**
- * Helper function to generate insight using Claude AI
+ * Helper function to generate insight using Gemini AI
  */
 async function generateInsightWithAI(reflections: any[]) {
   const reflectionTexts = reflections
@@ -158,33 +156,28 @@ Guidelines:
 - Keep it concise but meaningful`;
 
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1024,
-      temperature: 0.7,
-      messages: [{
-        role: 'user',
-        content: prompt,
-      }],
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1024,
+        responseMimeType: 'application/json',
+      },
     });
 
-    // Extract text content from the response
-    const textContent = message.content.find(c => c.type === 'text');
-    if (!textContent || textContent.type !== 'text') {
-      throw new Error('No text content in Claude response');
-    }
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
 
     // Parse JSON response
-    const rawText = textContent.text.trim();
-    // Remove markdown code fences if present
-    const jsonText = rawText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-    const insightData = JSON.parse(jsonText);
+    const insightData = JSON.parse(text);
 
     // Log token usage for cost tracking
+    const usageMetadata = response.usageMetadata;
     console.log('[AI Insight] Tokens used:', {
-      input: message.usage.input_tokens,
-      output: message.usage.output_tokens,
-      total: message.usage.input_tokens + message.usage.output_tokens,
+      input: usageMetadata?.promptTokenCount || 0,
+      output: usageMetadata?.candidatesTokenCount || 0,
+      total: usageMetadata?.totalTokenCount || 0,
     });
 
     return {
@@ -193,10 +186,10 @@ Guidelines:
       content: insightData.content,
       themes: insightData.themes,
       suggestions: insightData.suggestions,
-      tokens_used: message.usage.input_tokens + message.usage.output_tokens,
+      tokens_used: usageMetadata?.totalTokenCount || 0,
     };
   } catch (error) {
-    console.error('[AI Insight] Claude API error:', error);
+    console.error('[AI Insight] Gemini API error:', error);
 
     // Fallback to graceful degradation
     return {
