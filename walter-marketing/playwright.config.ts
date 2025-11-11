@@ -1,4 +1,23 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Read and parse .env.local file
+const envPath = path.resolve(__dirname, '.env.local');
+const envConfig: Record<string, string> = {};
+
+if (fs.existsSync(envPath)) {
+  const envFile = fs.readFileSync(envPath, 'utf-8');
+  envFile.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [key, ...valueParts] = trimmed.split('=');
+      if (key && valueParts.length > 0) {
+        envConfig[key.trim()] = valueParts.join('=').trim();
+      }
+    }
+  });
+}
 
 export default defineConfig({
   testDir: './tests',
@@ -30,7 +49,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev -- -p 3003',
+    command: 'npx dotenv -e .env.local -- npm run dev -- -p 3003',
     url: 'http://localhost:3003',
     reuseExistingServer: true,
   },
