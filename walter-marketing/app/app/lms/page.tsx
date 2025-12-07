@@ -67,7 +67,7 @@ export default function LMSPage() {
           id="lms-iframe"
           src={lmsUrl}
           className="w-full h-full border-0"
-          title="Walter Learning Management System"
+          title="Camino Learning Management System"
           onLoad={handleIframeLoad}
           sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
         />

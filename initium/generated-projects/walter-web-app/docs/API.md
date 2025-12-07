@@ -1,12 +1,12 @@
-# Walter API Documentation
+# Camino API Documentation
 ## AI-Powered Reflection Platform API
 
 ---
 
 ## Base URL
 ```
-Production: https://api.walter.app/v1
-Staging: https://staging-api.walter.app/v1
+Production: https://api.camino.to/v1
+Staging: https://staging-api.camino.to/v1
 Development: http://localhost:3000/api/v1
 ```
 
@@ -469,7 +469,7 @@ All error responses follow this format:
       "current_tier": "free",
       "limit": 10,
       "used": 10,
-      "upgrade_url": "https://walter.app/pricing"
+      "upgrade_url": "https://camino.to/pricing"
     }
   }
 }
@@ -488,18 +488,18 @@ All error responses follow this format:
 
 ### JavaScript/TypeScript
 ```bash
-npm install @walter/sdk
+npm install @camino/sdk
 ```
 
 ```typescript
-import { WalterClient } from '@walter/sdk';
+import { CaminoClient } from '@camino/sdk';
 
-const walter = new WalterClient({
-  apiKey: process.env.WALTER_API_KEY
+const camino = new CaminoClient({
+  apiKey: process.env.CAMINO_API_KEY
 });
 
-const prompt = await walter.reflections.getPrompt();
-const reflection = await walter.reflections.submit({
+const prompt = await camino.reflections.getPrompt();
+const reflection = await camino.reflections.submit({
   promptId: prompt.id,
   responses: [...]
 });
@@ -507,13 +507,13 @@ const reflection = await walter.reflections.submit({
 
 ### Python
 ```bash
-pip install walter-sdk
+pip install camino-sdk
 ```
 
 ```python
-from walter import WalterClient
+from camino import CaminoClient
 
-client = WalterClient(api_key=os.getenv('WALTER_API_KEY'))
+client = CaminoClient(api_key=os.getenv('CAMINO_API_KEY'))
 
 prompt = client.reflections.get_prompt()
 reflection = client.reflections.submit(
@@ -543,10 +543,10 @@ reflection = client.reflections.submit(
 
 ## Support
 
-- **API Status:** https://status.walter.app
-- **Documentation:** https://docs.walter.app
-- **Support Email:** api-support@walter.app
-- **Developer Discord:** https://discord.gg/walter-dev
+- **API Status:** https://status.camino.to
+- **Documentation:** https://docs.camino.to
+- **Support Email:** api-support@camino.to
+- **Developer Discord:** https://discord.gg/camino-dev
 
 ---
 

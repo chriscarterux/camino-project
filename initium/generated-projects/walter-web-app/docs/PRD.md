@@ -1,12 +1,12 @@
 # Product Requirements Document (PRD)
-## Walter - Your AI-Powered Thinking Partner
+## Camino - Your AI-Powered Thinking Partner
 
 ---
 
 ## 1. Product Overview
 
 ### What are you building?
-- **Product Name:** Walter
+- **Product Name:** Camino
 - **Description:** An AI-powered thinking partner that transforms personal reflection into a guided philosophy for modern life
 - **Category:** Personal Development SaaS / AI-Enhanced Self-Improvement Platform
 - **Platform:** Web application (React/TypeScript), mobile-responsive, future native apps
@@ -14,7 +14,7 @@
 ### Mission Statement
 We believe that **self-aware professionals** should be able to **translate insights into consistent action** because **consuming growth content without structured reflection leads to knowledge without transformation**.
 
-Walter addresses the gap between insight and implementation — helping users move from thinking to doing through intelligent, adaptive reflection.
+Camino addresses the gap between insight and implementation — helping users move from thinking to doing through intelligent, adaptive reflection.
 
 ### Success Metrics
 - **Primary Metric:** Weekly Active Users (WAU) with 3+ reflection sessions
@@ -93,7 +93,7 @@ Walter addresses the gap between insight and implementation — helping users mo
 ### Must-Have Features (V1)
 
 1. **Guided Reflection System** - Daily/weekly AI-powered prompts that adapt to user progress
-   - Why Essential: The foundation of the entire experience; without this, Walter is just another blank journal
+   - Why Essential: The foundation of the entire experience; without this, Camino is just another blank journal
    - AI analyzes past entries and adjusts question depth and theme
    - Tracks reflection streaks and completion rates
 
@@ -166,7 +166,7 @@ Walter addresses the gap between insight and implementation — helping users mo
 
 ### Core User Journey
 
-1. **Discovery:** How users find Walter
+1. **Discovery:** How users find Camino
    - Social content marketing on LinkedIn, Substack, YouTube shorts
    - Content theme: "How to live a well-designed life"
    - SEO for "structured reflection" and "AI journaling"
@@ -192,7 +192,7 @@ Walter addresses the gap between insight and implementation — helping users mo
    - Gentle, non-pushy reminders that feel supportive
    - **Goal:** 3+ reflections per week for 30 days
 
-5. **Growth:** How they help Walter grow
+5. **Growth:** How they help Camino grow
    - Share weekly insight cards on social media
    - Invite friends to join reflection challenges
    - Testimonials about clarity and transformation
@@ -440,11 +440,11 @@ What's the smallest version that provides value?
 
 ## Document History
 - **Created:** 2025-10-09
-- **Last Updated:** 2025-10-09
-- **Version:** 1.0
-- **Owner:** Walter Product Team
+- **Last Updated:** 2025-12-02
+- **Version:** 1.1
+- **Owner:** Camino Product Team
 - **Status:** Living Document
 
 ---
 
-*Walter isn't just a journal — it's a thinking partner that transforms personal reflection into a guided philosophy for modern life, merging mindfulness, design thinking, and behavioral science.*
+*Camino isn't just a journal — it's a thinking partner that transforms personal reflection into a guided philosophy for modern life, merging mindfulness, design thinking, and behavioral science.*

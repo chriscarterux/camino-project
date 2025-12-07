@@ -32,8 +32,8 @@ export async function GET(request: NextRequest) {
             product_data: {
               name:
                 tier === "transformation"
-                  ? "Walter Transformation"
-                  : "Walter Mastery",
+                  ? "Camino Journey"
+                  : "Camino Mastery",
               description:
                 tier === "transformation"
                   ? "Unlimited AI reflections, 8-week programs, weekly summaries"

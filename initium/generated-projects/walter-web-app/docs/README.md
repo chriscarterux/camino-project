@@ -1,6 +1,6 @@
 # Documentation Index
 
-Welcome to the documentation for walter-web-app.
+Welcome to the documentation for camino-web-app.
 
 ## Available Documentation
 

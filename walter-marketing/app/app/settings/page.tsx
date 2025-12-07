@@ -7,7 +7,7 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-3xl font-serif font-bold mb-2">Settings</h1>
         <p className="text-muted-foreground">
-          Customize your Walter experience
+          Customize your Camino experience
         </p>
       </div>
 

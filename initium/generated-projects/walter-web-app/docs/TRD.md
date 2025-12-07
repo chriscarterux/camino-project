@@ -147,7 +147,7 @@ npm install --save-dev vitest @testing-library/react
 ```
 
 ### Git Workflow
-- **Repository:** GitHub (walter-project)
+- **Repository:** GitHub (camino-project)
 - **Branching Strategy:** Feature branches with main branch protection
 - **Commit Convention:** Conventional Commits (feat:, fix:, docs:, etc.)
 - **Code Review:** Required for all PRs

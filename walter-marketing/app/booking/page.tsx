@@ -8,7 +8,7 @@ export default function BookingPage() {
       <nav className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="text-2xl font-serif font-bold">
-            Walter
+            Camino
           </Link>
           <Button asChild variant="outline" size="sm">
             <Link href="/pricing">Back to Pricing</Link>
@@ -23,7 +23,7 @@ export default function BookingPage() {
             Book Your Coaching Consultation
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Schedule a 30-minute call with a Walter coach to discuss the Mastery tier
+            Schedule a 30-minute call with a Camino coach to discuss the Mastery tier
             and life architecture sessions.
           </p>
 
@@ -55,7 +55,7 @@ export default function BookingPage() {
                     4. Replace this div with:
                     <pre className="bg-background p-2 rounded mt-2 text-xs overflow-x-auto">
                       {`<Cal
-  calLink="walter/consultation"
+  calLink="camino/consultation"
   config={{theme: "light"}}
 />`}
                     </pre>
@@ -64,7 +64,7 @@ export default function BookingPage() {
               </div>
               <Button asChild className="mt-6">
                 <a
-                  href="mailto:hello@walter.app?subject=Mastery Consultation"
+                  href="mailto:hello@camino.to?subject=Mastery Consultation"
                 >
                   Or Email Us Directly
                 </a>
@@ -103,7 +103,7 @@ export default function BookingPage() {
       <footer className="border-t py-12">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm text-muted-foreground">
-            © 2025 Walter. Built with intention for those who seek clarity.
+            © 2025 Camino. Built with intention for those who seek clarity.
           </p>
         </div>
       </footer>

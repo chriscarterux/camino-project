@@ -1,0 +1,54 @@
+{
+  "scores": {
+    "analytics": 100,
+    "onboarding": 100,
+    "leadCapture": 100,
+    "logo": 100,
+    "favicon": 100
+  },
+  "overallScore": 100,
+  "results": {
+    "analytics": {
+      "eventOverhead": 0.0006448330000000003,
+      "queueOperations": 0.0703750000000003,
+      "maxQueueMemory": 14.94140625
+    },
+    "onboarding": {
+      "localStorageWrite": 0.0017516700000000007,
+      "localStorageRead": 0.003320419999999995,
+      "stateSize": 0.8212890625,
+      "textProcessing": 0.006233958999999999,
+      "stateUpdateOverhead": 0.003162079999999996
+    },
+    "leadCapture": {
+      "emailValidation": 0.0001343854999999996,
+      "payloadSize": 96,
+      "rateLimitCheck": 0.00004574999999999818,
+      "estimatedApiResponse": 60
+    },
+    "logo": {
+      "camino-logo.svg": 10.876953125,
+      "camino-logo-full.svg": 10.927734375,
+      "camino-logo-dark.svg": 10.884765625,
+      "camino-icon.svg": 2.791015625,
+      "totalSize": 35.48046875,
+      "parseTime": 0.0005822499999999984
+    },
+    "favicon": {
+      "favicon.ico": 7.232421875,
+      "favicon-16x16.png": 1.0947265625,
+      "favicon-32x32.png": 1.87109375,
+      "favicon-48x48.png": 2.3994140625,
+      "apple-touch-icon.png": 8.2666015625,
+      "android-chrome-192x192.png": 8.8984375,
+      "android-chrome-512x512.png": 35.369140625,
+      "mstile-150x150.png": 6.728515625,
+      "safari-pinned-tab.svg": 3.3779296875,
+      "site.webmanifest": 0.5068359375,
+      "browserconfig.xml": 0.2158203125,
+      "totalSize": 75.9609375,
+      "fileCount": 11,
+      "generationScriptSize": 15.330078125
+    }
+  }
+}

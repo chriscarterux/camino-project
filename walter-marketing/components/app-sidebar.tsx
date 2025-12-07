@@ -36,7 +36,7 @@ export function AppSidebar() {
       {/* Logo/Brand */}
       <div className="flex h-16 items-center border-b px-6">
         <Link href="/app/dashboard" className="text-2xl font-serif font-bold">
-          Walter
+          Camino
         </Link>
       </div>
 

@@ -1,6 +1,6 @@
-# walter-web-app
+# camino-web-app
 
-AI-powered web application for walter-project
+AI-powered web application for camino-project
 
 ## Project Type
 - Category: web-apps

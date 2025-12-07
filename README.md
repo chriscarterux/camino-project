@@ -54,8 +54,8 @@ See `.env.example` for detailed setup instructions.
 ## 🗂️ Project Structure
 
 ```
-walter-project/
-├── walter-marketing/          # Next.js marketing website
+camino-project/
+├── camino-marketing/          # Next.js marketing website
 │   ├── app/                   # App router pages
 │   │   ├── page.tsx          # Landing page
 │   │   ├── pricing/          # Pricing page
@@ -64,13 +64,13 @@ walter-project/
 │   ├── components/ui/        # shadcn/ui components
 │   └── .env.example          # Environment variables template
 │
-├── walter-lms/               # Frappe LMS (8-week programs)
+├── camino-lms/               # Frappe LMS (8-week programs)
 │   ├── docker-compose.yml   # Docker configuration
 │   └── SETUP.md             # Complete LMS setup guide
 │
-├── walter-web-app/          # React reflection app (future)
+├── camino-web-app/          # React reflection app (future)
 └── initium/                 # Project generator & docs
-    └── generated-projects/walter-web-app/docs/
+    └── generated-projects/camino-web-app/docs/
         ├── PRD.md          # Product Requirements (450 lines)
         ├── TRD.md          # Technical Requirements (280 lines)
         └── API.md          # API Specification (554 lines)
@@ -88,7 +88,7 @@ brew install --cask docker
 
 ### 2. Start Frappe LMS
 ```bash
-cd walter-lms
+cd camino-lms
 docker compose up -d
 
 # Wait ~2 minutes for initialization
@@ -98,7 +98,7 @@ docker compose up -d
 
 ### 3. Start Marketing Website
 ```bash
-cd walter-marketing
+cd camino-marketing
 
 # Install dependencies
 npm install
@@ -125,7 +125,7 @@ npm run dev
 
 ### Configure Environment
 ```bash
-cd walter-marketing
+cd camino-marketing
 cp .env.example .env.local
 ```
 
@@ -146,7 +146,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
 
 ## 📚 LMS Configuration
 
-See complete guide: `walter-lms/SETUP.md`
+See complete guide: `camino-lms/SETUP.md`
 
 ### Create Transformation Program
 
@@ -156,7 +156,7 @@ See complete guide: `walter-lms/SETUP.md`
 
 2. **Create Course:**
    - Go to: LMS → Course → New
-   - **Title:** Walter Transformation Program
+   - **Title:** Camino Journey Program
    - **Short Intro:** 8-week guided journey...
    - **Duration:** 8 weeks
    - Save
@@ -169,8 +169,8 @@ See complete guide: `walter-lms/SETUP.md`
 
 4. **Create Batch:**
    - LMS → Batch → New
-   - **Title:** Walter Cohort Q1 2025
-   - **Course:** Walter Transformation Program
+   - **Title:** Camino Cohort Q1 2025
+   - **Course:** Camino Journey Program
    - **Seats:** 20
    - Save
 
@@ -178,7 +178,7 @@ See complete guide: `walter-lms/SETUP.md`
 
 ## 🔗 Complete User Journey
 
-### 1. User discovers Walter
+### 1. User discovers Camino
 ```
 https://localhost:3000 (Marketing Site)
 ├── Reads about features
@@ -273,7 +273,7 @@ Authorization: token API_KEY:API_SECRET
 POST http://lms.localhost:8000/api/resource/LMS Enrollment
 {
   "member": "user@example.com",
-  "course": "walter-transformation-program"
+  "course": "camino-journey-program"
 }
 ```
 
@@ -283,7 +283,7 @@ POST http://lms.localhost:8000/api/resource/LMS Enrollment
 import Cal from "@calcom/embed-react";
 
 <Cal
-  calLink="walter/consultation"
+  calLink="camino/consultation"
   config={{theme: "light"}}
 />
 ```
@@ -294,7 +294,7 @@ import Cal from "@calcom/embed-react";
 
 ### Marketing Site
 ```bash
-cd walter-marketing
+cd camino-marketing
 
 npm run dev        # Development server (localhost:3000)
 npm run build      # Production build
@@ -304,7 +304,7 @@ npm run lint       # ESLint check
 
 ### LMS
 ```bash
-cd walter-lms
+cd camino-lms
 
 docker compose up -d           # Start LMS
 docker compose down            # Stop LMS
@@ -318,7 +318,7 @@ docker compose restart         # Restart services
 
 ### Marketing Site → Vercel
 ```bash
-cd walter-marketing
+cd camino-marketing
 
 # Install Vercel CLI
 npm i -g vercel
@@ -333,7 +333,7 @@ vercel --prod
 
 ### LMS → Frappe Cloud
 1. Sign up: https://frappecloud.com/lms/signup
-2. Deploy Walter LMS
+2. Deploy Camino LMS
 3. Configure domain
 4. Import course content
 
@@ -342,20 +342,20 @@ vercel --prod
 ## 📝 Documentation
 
 ### Product Vision
-- **PRD:** `initium/generated-projects/walter-web-app/docs/PRD.md`
+- **PRD:** `initium/generated-projects/camino-web-app/docs/PRD.md`
   - Complete product strategy
   - User personas (Sarah, Marcus, Leah)
   - 8-week transformation roadmap
   - Business model & pricing rationale
 
 ### Technical Specs
-- **TRD:** `initium/generated-projects/walter-web-app/docs/TRD.md`
+- **TRD:** `initium/generated-projects/camino-web-app/docs/TRD.md`
   - React + TypeScript stack
   - Deployment architecture
   - Security requirements
 
 ### API Reference
-- **API:** `initium/generated-projects/walter-web-app/docs/API.md`
+- **API:** `initium/generated-projects/camino-web-app/docs/API.md`
   - Complete endpoint specifications
   - Authentication flows
   - Webhook implementations
@@ -411,4 +411,4 @@ Proprietary - © 2025 Walter
 ---
 
 **Status:** ✅ Core infrastructure complete
-**Next:** Run `docker compose up -d` in `walter-lms/` to launch!
+**Next:** Run `docker compose up -d` in `camino-lms/` to launch!
